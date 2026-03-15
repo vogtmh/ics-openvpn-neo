@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:padding="8dp"
+    android:fitsSystemWindows="true">
+
+    <!-- Profiles Tab -->
+    <ImageButton
+        android:id="@+id/tab_profiles"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/icon_button_selector"
+        android:src="@mipmap/profiles"
+        android:contentDescription="@string/vpn_list_title"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        android:padding="8dp" />
+
+    <!-- Graph Tab -->
+    <ImageButton
+        android:id="@+id/tab_graph"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/icon_button_selector"
+        android:src="@mipmap/graph"
+        android:contentDescription="@string/graph"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        android:padding="8dp" />
+
+    <!-- Settings Tab -->
+    <ImageButton
+        android:id="@+id/tab_settings"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/icon_button_selector"
+        android:src="@mipmap/settings"
+        android:contentDescription="@string/generalsettings"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        android:padding="8dp" />
+
+    <!-- FAQ Tab -->
+    <ImageButton
+        android:id="@+id/tab_faq"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/icon_button_selector"
+        android:src="@mipmap/faq"
+        android:contentDescription="@string/faq"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        android:padding="8dp" />
+
+    <!-- About Tab -->
+    <ImageButton
+        android:id="@+id/tab_about"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/icon_button_selector"
+        android:src="@mipmap/about"
+        android:contentDescription="@string/about"
+        android:scaleType="centerInside"
+        android:tint="@android:color/white"
+        android:padding="8dp" />
+
+</LinearLayout>

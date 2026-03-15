@@ -391,7 +391,7 @@
     <string name="defaultvpnsummary">VPN used in places where a default VPN needed. These are currently on boot, for Always-On and the Quick Settings Tile.</string>
     <string name="vpnselected">Currently selected VPN: \'%s\'</string>
     <string name="reconnect">Reconnect</string>
-    <string name="qs_title">Toggle VPN</string>
+    <string name="qs_title">oVPN Neo</string>
     <string name="qs_connect">Connect to %s</string>
     <string name="qs_disconnect">Disconnect %s</string>
     <string name="connectretrymaxmessage">Enter the maximum time between connection attempts. OpenVPN will slowly raise its waiting time after an unsuccessful connection attempt up to this value. Defaults to 300s.</string>

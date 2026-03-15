@@ -6,24 +6,23 @@
 <resources>
 
     <style name="blinkt.baseTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">#9718EC</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
 
-
         <item name="android:navigationBarColor">
-            @android:color/transparent
+            @android:color/black
         </item>
 
         <!-- Optional: set to transparent if your app is drawing behind the status bar. -->
         <item name="android:statusBarColor">
-            @android:color/transparent
+            @android:color/black
         </item>
 
         <!-- Optional: set for a light status bar with dark content. -->
         <item name="android:windowLightStatusBar">
-            true
+            false
         </item>
     </style>
 

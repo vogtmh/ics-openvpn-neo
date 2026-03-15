@@ -200,6 +200,9 @@ public class GraphFragment extends Fragment implements VpnStatus.ByteCountListen
             holder.chart.setDrawGridBackground(false);
             holder.chart.getLegend().setTextColor(mTextColour);
 
+            // Set no data text color to match our purple theme
+            holder.chart.setNoDataTextColor(getResources().getColor(R.color.accent));
+
             XAxis xAxis = holder.chart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setDrawGridLines(false);

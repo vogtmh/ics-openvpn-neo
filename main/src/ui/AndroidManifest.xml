@@ -21,6 +21,7 @@
         <activity
                 android:exported="true"
                 android:name=".activities.MainActivity"
+                android:label="@string/app"
                 tools:ignore="ExportedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

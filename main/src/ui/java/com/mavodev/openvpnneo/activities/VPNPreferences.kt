@@ -15,8 +15,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
 import com.mavodev.openvpnneo.core.ProfileManager
@@ -114,7 +112,6 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = rootview.findViewById(R.id.pager)
-        val tablayout: TabLayout = rootview.findViewById(R.id.tab_layout)
         mPagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, lifecycle, this)
 
 
@@ -143,10 +140,6 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
 
         //TabBarView tabs = (TabBarView) findViewById(R.id.sliding_tabs);
         //tabs.setViewPager(mPager);
-
-        TabLayoutMediator(tablayout, mPager) { tab, position ->
-            tab.text = mPagerAdapter.getPageTitle(position)
-        }.attach()
 
         setContentView(rootview)
     }

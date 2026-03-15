@@ -11,7 +11,8 @@
             android:id="@+id/root_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:fitsSystemWindows="true">
 
 
         <com.google.android.material.tabs.TabLayout
@@ -20,6 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
+                android:visibility="gone"
                 app:tabMaxWidth="0dp"
                 app:tabMode="scrollable" />
 
@@ -28,6 +30,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3" />
+
+        <include layout="@layout/icon_tabs" />
 
     </LinearLayout>
 

@@ -383,7 +383,7 @@
     <string name="defaultvpnsummary">VPN digunakan di tempat VPN default dibutuhkan. Ini saat ini sedang boot, Always-On dan Quick Settings Tile.</string>
     <string name="vpnselected">VPN yang dipilih saat ini: \'%s\'</string>
     <string name="reconnect">Menghubungkan kembali</string>
-    <string name="qs_title">Toggle VPN</string>
+    <string name="qs_title">oVPN Neo</string>
     <string name="qs_connect">Menghubungkan ke %s</string>
     <string name="qs_disconnect">Memutuskan %s</string>
     <string name="connectretrymaxmessage">Masukkan waktu maksimum antara upaya koneksi. OpenVPN secara perlahan akan menaikkan waktu tunggunya setelah usaha koneksi gagal mencapai nilai ini. Default ke 300s.</string>

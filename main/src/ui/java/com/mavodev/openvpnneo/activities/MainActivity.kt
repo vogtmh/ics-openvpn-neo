@@ -7,9 +7,15 @@ package com.mavodev.openvpnneo.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -25,8 +31,28 @@ class MainActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (isAndroidTV) {
+            requestWindowFeature(android.view.Window.FEATURE_OPTIONS_PANEL)
+        }
+        // Override BaseActivity edge-to-edge with black status bar
+        enableEdgeToEdge(androidx.activity.SystemBarStyle.dark(android.graphics.Color.BLACK))
         super.onCreate(savedInstanceState)
+        
+        // Additional window flags to ensure status bar color
+        window.apply {
+            clearFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = android.graphics.Color.BLACK
+            navigationBarColor = android.graphics.Color.BLACK
+        }
+        
         val view = layoutInflater.inflate(R.layout.main_activity, null)
+
+        // Force status bar color after layout is ready
+        view.post {
+            window.statusBarColor = android.graphics.Color.BLACK
+            window.navigationBarColor = android.graphics.Color.BLACK
+        }
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = view.findViewById(R.id.pager)
@@ -58,17 +84,102 @@ class MainActivity : BaseActivity() {
         mPagerAdapter.addTab(R.string.about, AboutFragment::class.java)
         mPager.setAdapter(mPagerAdapter)
 
+        // Debug: Log actual tab positions and titles
+        for (i in 0 until mPagerAdapter.itemCount) {
+            Log.d("MainActivity", "Tab $i: ${mPagerAdapter.getPageTitle(i)}")
+        }
+
         TabLayoutMediator(tablayout, mPager) { tab, position ->
             tab.text = mPagerAdapter.getPageTitle(position)
+            // Update action bar title to match current tab
+            supportActionBar?.title = mPagerAdapter.getPageTitle(position)
         }.attach()
+
+        // Set initial position to Profiles (position 0) and update title
+        mPager.currentItem = 0
+        supportActionBar?.title = mPagerAdapter.getPageTitle(0)
+
+        // Add icon button click listeners for bottom navigation
+        val rootLayout = view.findViewById<LinearLayout>(R.id.root_linear_layout)
+        val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
+        val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
+        val settingsBtn = rootLayout.findViewById<ImageButton>(R.id.tab_settings)
+        val faqBtn = rootLayout.findViewById<ImageButton>(R.id.tab_faq)
+        val aboutBtn = rootLayout.findViewById<ImageButton>(R.id.tab_about)
+        
+        Log.d("MainActivity", "Profiles button found: ${profilesBtn != null}")
+        Log.d("MainActivity", "Graph button found: ${graphBtn != null}")
+        Log.d("MainActivity", "Settings button found: ${settingsBtn != null}")
+        Log.d("MainActivity", "FAQ button found: ${faqBtn != null}")
+        Log.d("MainActivity", "About button found: ${aboutBtn != null}")
+        
+        profilesBtn?.setOnClickListener {
+            Log.d("MainActivity", "PROFILES BUTTON CLICKED - going to position 0")
+            mPager.currentItem = 0  // Profiles is position 0
+            supportActionBar?.title = mPagerAdapter.getPageTitle(0)
+            updateButtonStates(0)
+        }
+        graphBtn?.setOnClickListener {
+            Log.d("MainActivity", "GRAPH BUTTON CLICKED - going to position 1")
+            mPager.currentItem = 1  // Graph is position 1
+            supportActionBar?.title = mPagerAdapter.getPageTitle(1)
+            updateButtonStates(1)
+        }
+        settingsBtn?.setOnClickListener {
+            Log.d("MainActivity", "SETTINGS BUTTON CLICKED - going to position 2")
+            mPager.currentItem = 2  // Settings is position 2
+            supportActionBar?.title = mPagerAdapter.getPageTitle(2)
+            updateButtonStates(2)
+        }
+        faqBtn?.setOnClickListener {
+            Log.d("MainActivity", "FAQ BUTTON CLICKED - going to position 3")
+            mPager.currentItem = 3  // FAQ is position 3
+            supportActionBar?.title = mPagerAdapter.getPageTitle(3)
+            updateButtonStates(3)
+        }
+        aboutBtn?.setOnClickListener {
+            val lastPosition = mPagerAdapter.itemCount - 1  // Go to last tab
+            Log.d("MainActivity", "ABOUT BUTTON CLICKED - going to position $lastPosition")
+            mPager.currentItem = lastPosition
+            supportActionBar?.title = mPagerAdapter.getPageTitle(lastPosition)
+            updateButtonStates(lastPosition)
+        }
+        
+        // Add ViewPager change listener to update button states when swiping
+        mPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                supportActionBar?.title = mPagerAdapter.getPageTitle(position)
+                updateButtonStates(position)
+            }
+        })
 
         setUpEdgeEdgeInsetsListener(view, R.id.root_linear_layout)
         setContentView(view)
+        
+        // Set initial button states after layout is set
+        updateButtonStates(0)
     }
 
 
     private fun disableToolbarElevation() {
         supportActionBar?.elevation = 0f
+    }
+    
+    private fun updateButtonStates(selectedPosition: Int) {
+        val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
+        val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
+        val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
+        val settingsBtn = rootLayout.findViewById<ImageButton>(R.id.tab_settings)
+        val faqBtn = rootLayout.findViewById<ImageButton>(R.id.tab_faq)
+        val aboutBtn = rootLayout.findViewById<ImageButton>(R.id.tab_about)
+        
+        val lastPosition = mPagerAdapter.itemCount - 1
+        
+        profilesBtn?.isSelected = selectedPosition == 0
+        graphBtn?.isSelected = selectedPosition == 1
+        settingsBtn?.isSelected = selectedPosition == 2
+        faqBtn?.isSelected = selectedPosition == 3
+        aboutBtn?.isSelected = selectedPosition == lastPosition
     }
 
     override fun onResume() {

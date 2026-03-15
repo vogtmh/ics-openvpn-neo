@@ -11,6 +11,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -109,6 +110,10 @@ public class OpenVPNTileService extends TileService implements VpnStatus.StateLi
     public void updateState(String state, String logmessage, int localizedResId, ConnectionStatus level, Intent intent) {
         VpnProfile vpn;
         Tile t = getQsTile();
+        
+        // Set monochrome icon for the tile
+        t.setIcon(Icon.createWithResource(this, R.drawable.ic_qs_tile));
+        
         if (level == ConnectionStatus.LEVEL_AUTH_FAILED || level == ConnectionStatus.LEVEL_NOTCONNECTED) {
             // No VPN connected, use standard VPN
             vpn = getQSVPN();
