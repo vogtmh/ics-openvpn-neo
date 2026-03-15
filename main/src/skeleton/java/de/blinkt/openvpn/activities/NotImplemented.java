@@ -1,4 +1,4 @@
-package de.blinkt.openvpn.activities;
+package com.mavodev.openvpnneo.activities;
 
 import android.app.Activity;
 import android.os.Bundle;

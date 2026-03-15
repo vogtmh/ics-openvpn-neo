@@ -439,7 +439,7 @@
     <string name="openvpn3_socksproxy">OpenVPN 3 C ++-implementering stöder inte anslutning via Socks-proxy</string>
     <string name="no_orbotfound">Orbot-appen kan inte hittas. Vänligen installera Orbot eller använd manuell Socks v5 integration.</string>
     <string name="faq_remote_api_title">Fjärr-API</string>
-    <string name="faq_remote_api">OpenVPN för Android stöder två fjärr API, ett sofistikerat API med hjälp av AIDL (remoteexample i git repository) och en enkel med Intents. &lt;p&gt;Exempel med adb shell och intentionerna. Ersätt profilnamn med ditt profilnamn&lt;p&gt;&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN de.blinkt.openvpn/.api.DisconnectVPN&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN -e de.blinkt.openvpn.api.profileName Blinkt de.blinkt.openvpn/.api.ConnectVPN</string>
+    <string name="faq_remote_api">OpenVPN för Android stöder två fjärr API, ett sofistikerat API med hjälp av AIDL (remoteexample i git repository) och en enkel med Intents. &lt;p&gt;Exempel med adb shell och intentionerna. Ersätt profilnamn med ditt profilnamn&lt;p&gt;&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN com.mavodev.openvpnneo/.api.DisconnectVPN&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN -e com.mavodev.openvpnneo.api.profileName Blinkt com.mavodev.openvpnneo/.api.ConnectVPN</string>
     <string name="enableproxyauth">Aktivera proxy-autentisering</string>
     <string name="error_orbot_and_proxy_options">Kan inte använda extra http-proxy-alternativet och Orbot-integration samtidigt</string>
     <string name="info_from_server">Info från servern: \'%s\'</string>

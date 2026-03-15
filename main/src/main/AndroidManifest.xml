@@ -57,7 +57,7 @@
             android:exported="true"
                 tools:ignore="ExportedService">
             <intent-filter>
-                <action android:name="de.blinkt.openvpn.api.IOpenVPNAPIService" />
+                <action android:name="com.mavodev.openvpnneo.api.IOpenVPNAPIService" />
             </intent-filter>
         </service>
         <service

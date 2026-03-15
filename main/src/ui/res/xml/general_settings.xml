@@ -33,7 +33,7 @@
                 android:title="OpenVPN 3 Core" />
 
 
-        <de.blinkt.openvpn.views.DefaultVPNListPreference
+        <com.mavodev.openvpnneo.views.DefaultVPNListPreference
                 android:key="alwaysOnVpn"
                 android:singleLineTitle="false"
                 android:title="@string/defaultvpn"

@@ -23,7 +23,7 @@
             android:labelFor="@id/LogLevelSlider"/>
 
 
-    <de.blinkt.openvpn.views.SeekBarTicks
+    <com.mavodev.openvpnneo.views.SeekBarTicks
             android:id="@+id/LogLevelSlider"
             android:layout_width="300dp"
             android:layout_height="wrap_content"

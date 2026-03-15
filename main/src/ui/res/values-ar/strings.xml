@@ -439,7 +439,7 @@
     <string name="openvpn3_socksproxy">لا يدعم تطبيق OpenVPN 3 C ++ الاتصال عبر بروكسي Socks</string>
     <string name="no_orbotfound">لا يمكن العثور على تطبيق Orbot. الرجاء تثبيت Orbot أو استخدام التكامل اليدوي Socks v5.</string>
     <string name="faq_remote_api_title">واجهة برمجة التطبيقات عن بُعد</string>
-    <string name="faq_remote_api">يدعم OpenVPN لنظام Android اثنين من واجهات برمجة التطبيقات البعيدة ، وواجهة برمجة تطبيقات متطورة تستخدم AIDL (عن بُعد في مستودع git) وواحدة بسيطة تستخدم Intents. &lt;p&gt;أمثلة باستخدام غلاف adb والأهداف. استبدل اسم ملف التعريف باسم ملفك الشخصي&lt;p&gt;&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN de.blinkt.openvpn / .api.DisconnectVPN&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN - e de.blinkt.openvpn.api.profile الاسم Blinkt de.blinkt.openvpn / .api.ConnectVPN</string>
+    <string name="faq_remote_api">يدعم OpenVPN لنظام Android اثنين من واجهات برمجة التطبيقات البعيدة ، وواجهة برمجة تطبيقات متطورة تستخدم AIDL (عن بُعد في مستودع git) وواحدة بسيطة تستخدم Intents. &lt;p&gt;أمثلة باستخدام غلاف adb والأهداف. استبدل اسم ملف التعريف باسم ملفك الشخصي&lt;p&gt;&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN com.mavodev.openvpnneo / .api.DisconnectVPN&lt;p&gt; adb shell am start-activity -a android.intent.action.MAIN - e com.mavodev.openvpnneo.api.profile الاسم Blinkt com.mavodev.openvpnneo / .api.ConnectVPN</string>
     <string name="enableproxyauth">تمكين مصادقة الوكيل</string>
     <string name="error_orbot_and_proxy_options">لا يمكن استخدام عبارة خيار وكيل http الإضافية وتكامل Orbot في نفس الوقت O</string>
     <string name="info_from_server">معلومات من الخادم: \"%s\"</string>

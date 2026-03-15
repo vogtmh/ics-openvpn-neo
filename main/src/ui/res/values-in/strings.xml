@@ -439,7 +439,7 @@
     <string name="openvpn3_socksproxy">Implementasi OpenVPN 3 C ++ tidak mendukung menghubungkan melalui proxy kaus kaki</string>
     <string name="no_orbotfound">Aplikasi Orbot tidak dapat ditemukan. Silakan instal Orbot atau gunakan integrasi Socks v5 manual.</string>
     <string name="faq_remote_api_title">API jarak jauh</string>
-    <string name="faq_remote_api">OpenVPN Android mendukung dua API jarak jauh, API canggih menggunakan AIDL (remoteexample dalam repositori git), serta API sederhana menggunakan Intents. &lt;p&gt;Contoh menggunakan adb shell dan intents. Ganti profilname dengan nama profil Anda&lt;p&gt;&lt;p&gt; adb shell am start-activity-a android.intent.action.MAIN de.blinkt.openvpn/.api.DisconnectVPN&lt;p&gt; adb shell am start-activity-a android.intent.action.MAIN - e de.blinkt.openvpn.api.profileName Blinkt de.blinkt.openvpn/.api.ConnectVPN</string>
+    <string name="faq_remote_api">OpenVPN Android mendukung dua API jarak jauh, API canggih menggunakan AIDL (remoteexample dalam repositori git), serta API sederhana menggunakan Intents. &lt;p&gt;Contoh menggunakan adb shell dan intents. Ganti profilname dengan nama profil Anda&lt;p&gt;&lt;p&gt; adb shell am start-activity-a android.intent.action.MAIN com.mavodev.openvpnneo/.api.DisconnectVPN&lt;p&gt; adb shell am start-activity-a android.intent.action.MAIN - e com.mavodev.openvpnneo.api.profileName Blinkt com.mavodev.openvpnneo/.api.ConnectVPN</string>
     <string name="enableproxyauth">Aktifkan Otentikasi Proksi</string>
     <string name="error_orbot_and_proxy_options">Tidak dapat menggunakan pernyataan opsi http-proxy-option dan integrasi Orbot pada saat yang samaO</string>
     <string name="info_from_server">Info dari server: \'%s\'</string>

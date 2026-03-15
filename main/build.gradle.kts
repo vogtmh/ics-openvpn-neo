@@ -15,7 +15,7 @@ android {
         aidl = true
         buildConfig = true
     }
-    namespace = "de.blinkt.openvpn"
+    namespace = "com.mavodev.openvpnneo"
     compileSdk = 36
     //compileSdkPreview = "UpsideDownCake"
 
@@ -23,6 +23,7 @@ android {
     ndkVersion = "29.0.14206865"
 
     defaultConfig {
+        applicationId = "com.mavodev.openvpnneo"
         minSdk = 21
         targetSdk = 36
         //targetSdkPreview = "UpsideDownCake"

@@ -18,7 +18,7 @@
 #include <array>
 
 
-extern "C" jstring Java_de_blinkt_openvpn_core_NativeUtils_getOpenSSLVersionString(JNIEnv *env, jclass jo)
+extern "C" jstring Java_com_mavodev_openvpnneo_core_NativeUtils_getOpenSSLVersionString(JNIEnv *env, jclass jo)
 {
   return env->NewStringUTF(OPENSSL_VERSION_TEXT);
 }
@@ -26,7 +26,7 @@ extern "C" jstring Java_de_blinkt_openvpn_core_NativeUtils_getOpenSSLVersionStri
 static const unsigned char zeroes[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 static char opensslerr[1024];
-extern "C" jbyteArray Java_de_blinkt_openvpn_core_NativeUtils_rsapss(JNIEnv *env,
+extern "C" jbyteArray Java_com_mavodev_openvpnneo_core_NativeUtils_rsapss(JNIEnv *env,
 								     jclass,
 								     jint hashtype,
 								     jint MSBits,

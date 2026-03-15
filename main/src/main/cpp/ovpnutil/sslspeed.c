@@ -206,7 +206,7 @@ static void* stop_run(void* arg)
     return NULL;
 }
 
-jdoubleArray Java_de_blinkt_openvpn_core_NativeUtils_getOpenSSLSpeed(JNIEnv* env, jclass thiz, jstring algorithm, jint testnumber)
+jdoubleArray Java_com_mavodev_openvpnneo_core_NativeUtils_getOpenSSLSpeed(JNIEnv* env, jclass thiz, jstring algorithm, jint testnumber)
 {
 
     OSSL_PROVIDER *legacy;

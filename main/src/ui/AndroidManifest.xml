@@ -17,7 +17,7 @@
         API 23 -->
     <uses-sdk tools:overrideLibrary="androidx.security"/>
 
-    <application android:banner="@mipmap/banner_tv">
+    <application>
         <activity
                 android:exported="true"
                 android:name=".activities.MainActivity"
@@ -162,7 +162,7 @@
                 android:parentActivityName=".activities.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="de.blinkt.openvpn.activities.MainActivity" />
+                    android:value="com.mavodev.openvpnneo.activities.MainActivity" />
         </activity>
 
 
