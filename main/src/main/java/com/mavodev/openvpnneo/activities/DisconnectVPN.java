@@ -88,7 +88,30 @@ public class DisconnectVPN extends Activity implements DialogInterface.OnClickLi
         builder.setNeutralButton(R.string.reconnect, this);
         builder.setOnCancelListener(this);
 
-        builder.show();
+        AlertDialog dialog = builder.create();
+        
+        // Set background color only in dark mode
+        dialog.setOnShowListener(d -> {
+            if (isInDarkMode()) {
+                android.graphics.drawable.ColorDrawable colorDrawable = 
+                    new android.graphics.drawable.ColorDrawable(android.graphics.Color.parseColor("#111111"));
+                dialog.getWindow().setBackgroundDrawable(colorDrawable);
+            }
+        });
+        
+        dialog.show();
+    }
+
+    private boolean isInDarkMode() {
+        int nightModeFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        switch (nightModeFlags) {
+            case android.content.res.Configuration.UI_MODE_NIGHT_YES:
+                return true;
+            case android.content.res.Configuration.UI_MODE_NIGHT_NO:
+                return false;
+            default:
+                return false;
+        }
     }
 
     @Override

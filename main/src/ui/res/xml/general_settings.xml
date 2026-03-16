@@ -9,7 +9,7 @@
             android:key="app_behaviour"
             android:title="@string/appbehaviour">
         <CheckBoxPreference
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:key="showlogwindow"
                 android:singleLineTitle="true"
                 android:summary="@string/show_log_summary"

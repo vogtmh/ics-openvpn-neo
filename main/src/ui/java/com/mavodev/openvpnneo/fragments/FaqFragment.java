@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import java.util.Vector;
 
 import com.mavodev.openvpnneo.R;
+import com.mavodev.openvpnneo.fragments.Utils;
 
 public class FaqFragment extends Fragment {
     static class FAQEntry {
@@ -172,21 +173,45 @@ public class FaqFragment extends Fragment {
         int columns = dpWidth / 360;
         columns = Math.max(1, columns);
 
-
         mRecyclerView = v.findViewById(R.id.faq_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL));
-
-        mRecyclerView.setAdapter(new FaqViewAdapter(getActivity(), getFAQEntries()));
 
         Utils.applyInsetListener(v);
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        // Post the adapter setup to ensure the RecyclerView is properly laid out
+        mRecyclerView.post(() -> {
+            try {
+                FAQEntry[] entries = getFAQEntries();
+                if (entries != null && entries.length > 0) {
+                    mRecyclerView.setAdapter(new FaqViewAdapter(getActivity(), entries));
+                }
+            } catch (Exception e) {
+                // If there's an error, try again after a short delay
+                mRecyclerView.postDelayed(() -> {
+                    try {
+                        FAQEntry[] entries = getFAQEntries();
+                        if (entries != null && entries.length > 0) {
+                            mRecyclerView.setAdapter(new FaqViewAdapter(getActivity(), entries));
+                        }
+                    } catch (Exception e2) {
+                        // Log error but don't crash
+                        android.util.Log.e("FaqFragment", "Failed to load FAQ entries", e2);
+                    }
+                }, 100);
+            }
+        });
     }
 
 

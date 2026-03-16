@@ -249,7 +249,7 @@ public class LaunchVPN extends Activity {
                     askForPW(needpw);
                 } else {
                     SharedPreferences prefs = Preferences.getDefaultSharedPreferences(this);
-                    boolean showLogWindow = prefs.getBoolean("showlogwindow", true);
+                    boolean showLogWindow = prefs.getBoolean("showlogwindow", false);
 
                     if (!mhideLog && showLogWindow)
                         showLogWindow();

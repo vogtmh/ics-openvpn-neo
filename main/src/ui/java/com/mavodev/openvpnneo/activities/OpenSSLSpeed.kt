@@ -6,9 +6,11 @@
 package com.mavodev.openvpnneo.activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -116,6 +118,23 @@ class OpenSSLSpeed : BaseActivity() {
         mAdapter = SpeedArrayAdapter(this)
         mListView.adapter = mAdapter
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                // Check if we came from settings
+                if (intent.getBooleanExtra("from_settings", false)) {
+                    // Simply go back
+                    finish()
+                    true
+                } else {
+                    // Use default behavior (go to profiles)
+                    super.onOptionsItemSelected(item)
+                }
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun runAlgorithms(algorithms: String) {
