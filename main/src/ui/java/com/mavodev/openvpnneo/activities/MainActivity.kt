@@ -92,6 +92,12 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         countryName = view.findViewById(R.id.country_name)
         countryIp = view.findViewById(R.id.country_ip)
         
+        // Set click listener for manual country update
+        countryBar.setOnClickListener {
+            Log.d("MainActivity", "Country bar clicked - manual update triggered")
+            updateCountryDisplay()
+        }
+        
         // Initialize SharedPreferences
         sharedPreferences = Preferences.getDefaultSharedPreferences(this)
 
@@ -268,12 +274,20 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         level: ConnectionStatus,
         intent: Intent?
     ) {
+        // Log VPN state changes for debugging
+        Log.d("MainActivity", "VPN State Changed - Level: $level, State: $state")
+        
         // Update country display when VPN state changes
+        // Handle: connect, disconnect, pause, resume, auth failures, network issues
         if (level == ConnectionStatus.LEVEL_CONNECTED || 
             level == ConnectionStatus.LEVEL_NOTCONNECTED ||
             level == ConnectionStatus.LEVEL_AUTH_FAILED ||
             level == ConnectionStatus.LEVEL_NONETWORK ||
-            level == ConnectionStatus.LEVEL_VPNPAUSED) {
+            level == ConnectionStatus.LEVEL_VPNPAUSED ||
+            level == ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET ||
+            level == ConnectionStatus.LEVEL_CONNECTING_SERVER_REPLIED ||
+            level == ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT) {
+            Log.d("MainActivity", "Triggering country display update for level: $level")
             updateCountryDisplay()
         }
     }
@@ -295,50 +309,85 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
 
     private fun updateCountryDisplay() {
         val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+        Log.d("MainActivity", "updateCountryDisplay called - display_vpn_country setting: $displayCountry")
+        
         if (displayCountry) {
             countryBar.visibility = View.VISIBLE
+            Log.d("MainActivity", "Country bar set to VISIBLE, fetching country info")
             fetchCountryInfo()
         } else {
             countryBar.visibility = View.GONE
+            Log.d("MainActivity", "Country bar set to GONE")
         }
     }
     
     private fun fetchCountryInfo() {
+        Log.d("MainActivity", "fetchCountryInfo called - starting API request")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val url = URL("https://api.country.is/")
-                val connection = url.openConnection()
+                val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.setRequestProperty("User-Agent", "OpenVPN-Neo/1.0")
-                val response = connection.getInputStream()
-                val jsonResponse = response.bufferedReader().use { it.readText() }
+                connection.connectTimeout = 5000 // 5 seconds timeout
+                connection.readTimeout = 5000 // 5 seconds timeout
+                
+                // Tag the socket for traffic stats to avoid StrictMode warning
+                try {
+                    android.net.TrafficStats.setThreadStatsTag(0x12345678)
+                    val responseCode = connection.responseCode
+                    Log.d("MainActivity", "API response code: $responseCode")
+                    
+                    if (responseCode == 200) {
+                        val response = connection.getInputStream()
+                        val jsonResponse = response.bufferedReader().use { it.readText() }
+                        Log.d("MainActivity", "API response received: $jsonResponse")
 
-                withContext(Dispatchers.Main) {
-                    try {
-                        val json = JSONObject(jsonResponse)
-                        val ip = json.getString("ip")
-                        val country = json.getString("country")
+                        withContext(Dispatchers.Main) {
+                            try {
+                                val json = JSONObject(jsonResponse)
+                                val ip = json.getString("ip")
+                                val country = json.getString("country")
 
-                        // Update UI with country info
-                        countryIp.text = ip
-                        countryName.text = getCountryName(country)
+                                Log.d("MainActivity", "Parsed response - IP: $ip, Country: $country")
 
-                        // Load country flag
-                        loadCountryFlag(country)
+                                // Update UI with country info
+                                countryIp.text = ip
+                                countryName.text = getCountryName(country)
 
-                    } catch (e: Exception) {
-                        Log.e("MainActivity", "Error parsing country response", e)
-                        countryName.text = "Unknown"
-                        countryIp.text = "Loading..."
+                                Log.d("MainActivity", "UI updated - calling loadCountryFlag for: $country")
+
+                                // Load country flag
+                                loadCountryFlag(country)
+
+                            } catch (e: Exception) {
+                                Log.e("MainActivity", "Error parsing country response", e)
+                                showFallbackInfo()
+                            }
+                        }
+                    } else {
+                        Log.e("MainActivity", "API returned non-200 response: $responseCode")
+                        withContext(Dispatchers.Main) {
+                            showFallbackInfo()
+                        }
                     }
+                } finally {
+                    android.net.TrafficStats.clearThreadStatsTag()
                 }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error fetching country info", e)
                 withContext(Dispatchers.Main) {
-                    countryName.text = "Error"
-                    countryIp.text = "Failed to load"
+                    showFallbackInfo()
                 }
             }
         }
+    }
+    
+    private fun showFallbackInfo() {
+        // Show fallback information when API fails
+        countryName.text = "VPN Connected"
+        countryIp.text = "Checking..."
+        // Try to load a generic VPN flag or use fallback
+        countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
     }
     
     private fun getCountryName(countryCode: String): String {
@@ -373,12 +422,16 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
             val flagResourceName = "flag_${countryCode.lowercase()}"
             val resourceId = resources.getIdentifier(flagResourceName, "drawable", packageName)
             
+            Log.d("MainActivity", "Loading flag - Country: $countryCode, Resource name: $flagResourceName, Resource ID: $resourceId")
+            
             if (resourceId != 0) {
                 countryFlag.setImageResource(resourceId)
                 // Scale the flag to proper size (24dp x 16dp)
                 countryFlag.scaleType = ImageView.ScaleType.FIT_CENTER
+                Log.d("MainActivity", "Flag loaded successfully: $flagResourceName")
             } else {
                 // Use a generic flag or placeholder if specific flag not found
+                Log.w("MainActivity", "Flag not found for: $flagResourceName, using fallback")
                 countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
             }
         } catch (e: Exception) {

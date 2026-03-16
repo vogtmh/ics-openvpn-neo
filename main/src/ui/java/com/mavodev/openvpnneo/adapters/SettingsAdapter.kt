@@ -58,8 +58,19 @@ class SettingsAdapter(
             SettingType.TOGGLE_SLIDER -> {
                 toggle.visibility = View.VISIBLE
                 actionButton.visibility = View.GONE
+                
+                // Debug logging
+                android.util.Log.d("SettingsAdapter", "Setting toggle for key: ${setting.key}, value: ${setting.value}")
+                
+                // Remove listener first to prevent triggering during state setting
+                toggle.setOnCheckedChangeListener(null)
+                
+                // Set the checked state without triggering listener
                 toggle.isChecked = setting.value
+                
+                // Set the listener after state is set
                 toggle.setOnCheckedChangeListener { _, isChecked ->
+                    android.util.Log.d("SettingsAdapter", "Toggle changed for key: ${setting.key}, new value: $isChecked")
                     setting.value = isChecked
                     onSettingChanged(setting.key, isChecked)
                 }
@@ -71,7 +82,19 @@ class SettingsAdapter(
                 // No manual padding override needed
                 
                 leftContainer.setOnClickListener {
+                    android.util.Log.d("SettingsAdapter", "Container clicked for key: ${setting.key}")
+                    // Manually trigger the toggle change without using the listener
+                    toggle.setOnCheckedChangeListener(null)
                     toggle.isChecked = !toggle.isChecked
+                    setting.value = toggle.isChecked
+                    onSettingChanged(setting.key, toggle.isChecked)
+                    
+                    // Re-set the listener
+                    toggle.setOnCheckedChangeListener { _, isChecked ->
+                        android.util.Log.d("SettingsAdapter", "Toggle changed for key: ${setting.key}, new value: $isChecked")
+                        setting.value = isChecked
+                        onSettingChanged(setting.key, isChecked)
+                    }
                 }
             }
             

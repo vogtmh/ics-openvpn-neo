@@ -250,7 +250,14 @@ class CustomSettingsFragment : ListFragment() {
             context = requireContext(),
             settings = settings,
             onSettingChanged = { key, value ->
+                // Update SharedPreferences
                 sharedPreferences.edit().putBoolean(key, value).apply()
+                
+                // Also update the local settings list to keep it synchronized
+                val settingItem = settings.find { it.key == key }
+                if (settingItem != null) {
+                    settingItem.value = value
+                }
                 
                 // Handle special cases
                 when (key) {

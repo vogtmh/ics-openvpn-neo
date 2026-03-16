@@ -164,7 +164,7 @@ public class AppRestrictions {
         applyBooleanDefaultPrefsRestriction(restrictions, "netchangereconnect", defaultPrefs, "netchangereconnect");
 
         boolean minimalUi = restrictions.getBoolean("minimal_ui", false);
-        if (minimalUi && defaultPrefs.getBoolean("showlogwindow", true)){
+        if (minimalUi) {
             /* always disable showing log window in minimal UI mode */
             SharedPreferences.Editor editor = defaultPrefs.edit();
             editor.putBoolean("showlogwindow", false);
