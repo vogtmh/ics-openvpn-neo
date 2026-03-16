@@ -51,8 +51,8 @@ class SettingsAdapter(
                 titleView.setTypeface(null, android.graphics.Typeface.BOLD)
                 actionButton.visibility = View.GONE
                 
-                // Further reduce padding for category headers
-                view.setPadding(view.paddingLeft, 2, view.paddingRight, 1)
+                // Reduce padding for category headers (less than regular items)
+                view.setPadding(view.paddingLeft, 4, view.paddingRight, 4)
             }
             
             SettingType.TOGGLE_SLIDER -> {
@@ -67,8 +67,8 @@ class SettingsAdapter(
                 titleView.setTextAppearance(android.R.style.TextAppearance_Small)
                 titleView.setTypeface(null, android.graphics.Typeface.BOLD)
                 
-                // Reset padding for regular items
-                view.setPadding(view.paddingLeft, 6, view.paddingRight, 6)
+                // Use layout padding and margins
+                // No manual padding override needed
                 
                 leftContainer.setOnClickListener {
                     toggle.isChecked = !toggle.isChecked
@@ -118,8 +118,8 @@ class SettingsAdapter(
                     actionButton.isEnabled = true
                 }
                 
-                // Reset padding for regular items
-                view.setPadding(view.paddingLeft, 6, view.paddingRight, 6)
+                // Use layout padding and margins
+                // No manual padding override needed
                 
                 // Move action to button click
                 actionButton.setOnClickListener {
