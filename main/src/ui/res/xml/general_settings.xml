@@ -11,14 +11,14 @@
         <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="showlogwindow"
-                android:singleLineTitle="false"
+                android:singleLineTitle="true"
                 android:summary="@string/show_log_summary"
                 android:title="@string/show_log_window" />
 
         <CheckBoxPreference
                 android:defaultValue="@bool/allowTranslationDefault"
                 android:key="allow_translation"
-                android:singleLineTitle="false"
+                android:singleLineTitle="true"
                 android:summary="@string/allow_translations_summary"
                 android:title="@string/allow_translations_title" />
 
@@ -27,7 +27,7 @@
                 android:defaultValue="false"
                 android:disableDependentsState="true"
                 android:key="ovpn3"
-                android:singleLineTitle="false"
+                android:singleLineTitle="true"
                 android:summaryOff="Use OpenVPN 2.x"
                 android:summaryOn="Use the C++ OpenVPN library (experimental)"
                 android:title="OpenVPN 3 Core" />
@@ -35,14 +35,14 @@
 
         <com.mavodev.openvpnneo.views.DefaultVPNListPreference
                 android:key="alwaysOnVpn"
-                android:singleLineTitle="false"
+                android:singleLineTitle="true"
                 android:title="@string/defaultvpn"
                 tools:summary="@string/defaultvpnsummary" />
 
         <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="restartvpnonboot"
-                android:singleLineTitle="false"
+                android:singleLineTitle="true"
                 android:summary="@string/keep_vpn_connected_summary"
                 android:title="@string/keep_vpn_connected" />
 
@@ -50,7 +50,7 @@
                 android:defaultValue="true"
 
                 android:key="preferencryption"
-                android:singleLineTitle="false"
+                android:singleLineTitle="true"
                 android:summary="@string/encrypt_profiles_summary"
                 android:title="@string/encrypt_profiles" />
 

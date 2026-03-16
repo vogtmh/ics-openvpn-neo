@@ -42,7 +42,7 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
             view.setPadding(0, view.paddingTop, view.paddingRight, view.paddingBottom)
         }
     }
-
+    
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.general_settings)

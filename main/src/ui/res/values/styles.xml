@@ -115,6 +115,10 @@
         <item name="preferenceCategoryStyle">@style/blinkt.preferenceCategory</item>
         <item name="preferenceStyle">@style/blinkt.preference</item>
         <item name="checkBoxPreferenceStyle">@style/blinkt.checkBoxPreference</item>
+        <item name="preferenceInformationStyle">@style/blinkt.preference</item>
+        <item name="dialogPreferenceStyle">@style/blinkt.preference</item>
+        <item name="editTextPreferenceStyle">@style/blinkt.preference</item>
+        <item name="preferenceStyle">@style/blinkt.preference</item>
     </style>
 
     <style name="blinkt.preferenceScreen" parent="Preference.PreferenceScreen">
@@ -125,6 +129,7 @@
     <style name="blinkt.preferenceCategory" parent="Preference.Category">
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingStart">0dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
     
     <style name="blinkt.preference" parent="Preference">
@@ -132,6 +137,8 @@
         <item name="android:paddingStart">0dp</item>
         <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginStart">0dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
     </style>
     
     <style name="blinkt.checkBoxPreference" parent="Preference.CheckBoxPreference">
@@ -139,6 +146,12 @@
         <item name="android:paddingStart">0dp</item>
         <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginStart">0dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
+    </style>
+    
+    <style name="blinkt.preferenceTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">

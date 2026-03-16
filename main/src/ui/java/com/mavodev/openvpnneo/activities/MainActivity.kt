@@ -164,7 +164,7 @@ class MainActivity : BaseActivity() {
         view.post {
             val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
             if (resourceId > 0) {
-                val statusBarHeight = resources.getDimensionPixelSize(resourceId)
+                val statusBarHeight = resources.getDimensionPixelSize(resourceId) / 2  // Reduce from full height to half
                 val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
                 
                 // Get navigation bar height
@@ -173,7 +173,7 @@ class MainActivity : BaseActivity() {
                     resources.getDimensionPixelSize(navBarResourceId)
                 } else 0
                 
-                // Set padding: top for status bar, bottom for navigation bar
+                // Set padding: top for status bar (reduced), bottom for navigation bar
                 rootLayout.setPadding(0, statusBarHeight, 0, navBarHeight)
             }
         }
