@@ -5,12 +5,16 @@
 package com.mavodev.openvpnneo.activities
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -155,6 +159,24 @@ class MainActivity : BaseActivity() {
 
         setUpEdgeEdgeInsetsListener(view, R.id.root_linear_layout)
         setContentView(view)
+        
+        // Manually add top padding for status bar since we removed fitsSystemWindows
+        view.post {
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                val statusBarHeight = resources.getDimensionPixelSize(resourceId)
+                val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
+                
+                // Get navigation bar height
+                val navBarResourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+                val navBarHeight = if (navBarResourceId > 0) {
+                    resources.getDimensionPixelSize(navBarResourceId)
+                } else 0
+                
+                // Set padding: top for status bar, bottom for navigation bar
+                rootLayout.setPadding(0, statusBarHeight, 0, navBarHeight)
+            }
+        }
         
         // Set initial button states after layout is set
         updateButtonStates(0)

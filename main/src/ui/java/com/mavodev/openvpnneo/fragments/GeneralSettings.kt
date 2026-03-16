@@ -14,6 +14,7 @@ import android.net.VpnService
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.*
@@ -29,6 +30,18 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
     DialogInterface.OnClickListener, Preference.OnPreferenceChangeListener {
     private lateinit var mExtapp: ExternalAppDatabase
     private lateinit var mAlwaysOnVPN: ListPreference
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Fix the left padding issue caused by fitsSystemWindows
+        // Apply to the RecyclerView that PreferenceFragmentCompat uses internally
+        view.post {
+            val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(androidx.preference.R.id.recycler_view)
+            recyclerView?.setPadding(0, recyclerView.paddingTop, recyclerView.paddingRight, recyclerView.paddingBottom)
+            // Also try setting padding on the root view
+            view.setPadding(0, view.paddingTop, view.paddingRight, view.paddingBottom)
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Load the preferences from an XML resource

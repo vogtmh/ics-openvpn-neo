@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2012-2016 Arne Schwabe
+  ~ Distributed under the GNU GPL v2 with additional terms. For full terms see the file doc/LICENSE.txt
+  -->
+
+<resources>
+    <!-- Night mode colors - force pure black backgrounds -->
+    <color name="primary">#000000</color>      <!-- Pure black for night mode -->
+    <color name="primary_dark">#000000</color> <!-- Pure black -->
+    <color name="accent">#9718EC</color>       <!-- Purple accent -->
+    
+    <!-- Override any other background colors that might be causing the dark gray -->
+    <color name="background_material_dark">@android:color/black</color>
+    <color name="background_dark">@android:color/black</color>
+</resources>
