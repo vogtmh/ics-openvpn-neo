@@ -5,6 +5,7 @@
 package com.mavodev.openvpnneo.activities
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -16,7 +17,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -25,13 +28,34 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.core.GlobalPreferences
+import com.mavodev.openvpnneo.core.Preferences
+import com.mavodev.openvpnneo.core.VpnStatus
+import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.fragments.*
 import com.mavodev.openvpnneo.fragments.ImportRemoteConfig.Companion.newInstance
 import com.mavodev.openvpnneo.views.ScreenSlidePagerAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URL
+import java.util.Timer
+import java.util.TimerTask
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var mPager: ViewPager2
     private lateinit var mPagerAdapter: ScreenSlidePagerAdapter
+    private lateinit var sharedPreferences: SharedPreferences
+    
+    // Country display views
+    private lateinit var countryBar: LinearLayout
+    private lateinit var countryFlag: ImageView
+    private lateinit var countryName: TextView
+    private lateinit var countryIp: TextView
+    
+    // Periodic update timer
+    private var updateTimer: Timer? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +85,15 @@ class MainActivity : BaseActivity() {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = view.findViewById(R.id.pager)
         val tablayout: TabLayout = view.findViewById(R.id.tab_layout)
+
+        // Initialize country display views
+        countryBar = view.findViewById(R.id.country_bar)
+        countryFlag = view.findViewById(R.id.country_flag)
+        countryName = view.findViewById(R.id.country_name)
+        countryIp = view.findViewById(R.id.country_ip)
+        
+        // Initialize SharedPreferences
+        sharedPreferences = Preferences.getDefaultSharedPreferences(this)
 
         mPagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, lifecycle, this)
 
@@ -180,6 +213,15 @@ class MainActivity : BaseActivity() {
         
         // Set initial button states after layout is set
         updateButtonStates(0)
+        
+        // Start periodic updates
+        startPeriodicUpdates()
+        
+        // Add VPN state listener
+        VpnStatus.addStateListener(this)
+        
+        // Register preference change listener
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
 
@@ -204,6 +246,147 @@ class MainActivity : BaseActivity() {
         aboutBtn?.isSelected = selectedPosition == lastPosition
     }
 
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences?,
+        key: String?
+    ) {
+        // Update country display when setting changes
+        if (key == "display_vpn_country") {
+            updateCountryDisplay()
+        }
+    }
+
+    override fun setConnectedVPN(uuid: String?) {
+        // Update country display when connection changes
+        updateCountryDisplay()
+    }
+
+    override fun updateState(
+        state: String?,
+        logmessage: String?,
+        localizedResId: Int,
+        level: ConnectionStatus,
+        intent: Intent?
+    ) {
+        // Update country display when VPN state changes
+        if (level == ConnectionStatus.LEVEL_CONNECTED || 
+            level == ConnectionStatus.LEVEL_NOTCONNECTED ||
+            level == ConnectionStatus.LEVEL_AUTH_FAILED ||
+            level == ConnectionStatus.LEVEL_NONETWORK ||
+            level == ConnectionStatus.LEVEL_VPNPAUSED) {
+            updateCountryDisplay()
+        }
+    }
+
+    private fun startPeriodicUpdates() {
+        // Update every 5 minutes
+        updateTimer = Timer()
+        updateTimer?.schedule(object : TimerTask() {
+            override fun run() {
+                updateCountryDisplay()
+            }
+        }, 5 * 60 * 1000L) // 5 minutes in milliseconds
+    }
+
+    private fun stopPeriodicUpdates() {
+        updateTimer?.cancel()
+        updateTimer = null
+    }
+
+    private fun updateCountryDisplay() {
+        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+        if (displayCountry) {
+            countryBar.visibility = View.VISIBLE
+            fetchCountryInfo()
+        } else {
+            countryBar.visibility = View.GONE
+        }
+    }
+    
+    private fun fetchCountryInfo() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = URL("https://api.country.is/")
+                val connection = url.openConnection()
+                connection.setRequestProperty("User-Agent", "OpenVPN-Neo/1.0")
+                val response = connection.getInputStream()
+                val jsonResponse = response.bufferedReader().use { it.readText() }
+
+                withContext(Dispatchers.Main) {
+                    try {
+                        val json = JSONObject(jsonResponse)
+                        val ip = json.getString("ip")
+                        val country = json.getString("country")
+
+                        // Update UI with country info
+                        countryIp.text = ip
+                        countryName.text = getCountryName(country)
+
+                        // Load country flag
+                        loadCountryFlag(country)
+
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Error parsing country response", e)
+                        countryName.text = "Unknown"
+                        countryIp.text = "Loading..."
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error fetching country info", e)
+                withContext(Dispatchers.Main) {
+                    countryName.text = "Error"
+                    countryIp.text = "Failed to load"
+                }
+            }
+        }
+    }
+    
+    private fun getCountryName(countryCode: String): String {
+        // Simple mapping of country codes to full names
+        return when (countryCode.uppercase()) {
+            "US" -> "United States"
+            "GB" -> "United Kingdom" 
+            "DE" -> "Germany"
+            "FR" -> "France"
+            "IT" -> "Italy"
+            "ES" -> "Spain"
+            "NL" -> "Netherlands"
+            "CA" -> "Canada"
+            "AU" -> "Australia"
+            "JP" -> "Japan"
+            "KR" -> "South Korea"
+            "IN" -> "India"
+            "BR" -> "Brazil"
+            "MX" -> "Mexico"
+            "RU" -> "Russia"
+            "CN" -> "China"
+            "TH" -> "Thailand"
+            "SG" -> "Singapore"
+            "HK" -> "Hong Kong"
+            else -> countryCode.uppercase()
+        }
+    }
+    
+    private fun loadCountryFlag(countryCode: String) {
+        try {
+            // Load flag from resources or use a placeholder
+            val flagResourceName = "flag_${countryCode.lowercase()}"
+            val resourceId = resources.getIdentifier(flagResourceName, "drawable", packageName)
+            
+            if (resourceId != 0) {
+                countryFlag.setImageResource(resourceId)
+                // Scale the flag to proper size (24dp x 16dp)
+                countryFlag.scaleType = ImageView.ScaleType.FIT_CENTER
+            } else {
+                // Use a generic flag or placeholder if specific flag not found
+                countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
+            }
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Error loading country flag for $countryCode", e)
+            countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         val intent = intent
@@ -219,6 +402,23 @@ class MainActivity : BaseActivity() {
             }
             setIntent(null)
         }
+        
+        // Restart periodic updates
+        startPeriodicUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Stop periodic updates
+        stopPeriodicUpdates()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Clean up
+        stopPeriodicUpdates()
+        VpnStatus.removeStateListener(this)
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     private fun checkUriForProfileImport(uri: Uri) {
