@@ -116,7 +116,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
 
             mPagerAdapter.addTab(R.string.vpn_list_title, VPNProfileList::class.java)
             mPagerAdapter.addTab(R.string.graph, GraphFragment::class.java)
-            mPagerAdapter.addTab(R.string.generalsettings, CustomSettingsFragment::class.java)
             if (SendDumpFragment.getLastestDump(this) != null) {
                 mPagerAdapter.addTab(R.string.crashdump, SendDumpFragment::class.java)
             }
@@ -146,11 +145,9 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         val rootLayout = view.findViewById<LinearLayout>(R.id.root_linear_layout)
         val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
         val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
-        val settingsBtn = rootLayout.findViewById<ImageButton>(R.id.tab_settings)
         
         Log.d("MainActivity", "Profiles button found: ${profilesBtn != null}")
         Log.d("MainActivity", "Graph button found: ${graphBtn != null}")
-        Log.d("MainActivity", "Settings button found: ${settingsBtn != null}")
         
         profilesBtn?.setOnClickListener {
             Log.d("MainActivity", "PROFILES BUTTON CLICKED - going to position 0")
@@ -163,12 +160,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
             mPager.currentItem = 1  // Graph is position 1
             supportActionBar?.title = mPagerAdapter.getPageTitle(1)
             updateButtonStates(1)
-        }
-        settingsBtn?.setOnClickListener {
-            Log.d("MainActivity", "SETTINGS BUTTON CLICKED - going to position 2")
-            mPager.currentItem = 2  // Settings is position 2
-            supportActionBar?.title = mPagerAdapter.getPageTitle(2)
-            updateButtonStates(2)
         }
         
         // Add ViewPager change listener to update button states when swiping
@@ -222,11 +213,9 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
         val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
         val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
-        val settingsBtn = rootLayout.findViewById<ImageButton>(R.id.tab_settings)
         
         profilesBtn?.isSelected = selectedPosition == 0
         graphBtn?.isSelected = selectedPosition == 1
-        settingsBtn?.isSelected = selectedPosition == 2
     }
 
     override fun onSharedPreferenceChanged(

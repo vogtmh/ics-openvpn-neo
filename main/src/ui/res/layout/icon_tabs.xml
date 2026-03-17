@@ -37,19 +37,4 @@
         android:tint="@android:color/white"
         android:padding="8dp" />
 
-    <!-- Settings Tab -->
-    <ImageButton
-        android:id="@+id/tab_settings"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/icon_button_selector"
-        android:src="@mipmap/settings"
-        android:contentDescription="@string/generalsettings"
-        android:scaleType="centerInside"
-        android:tint="@android:color/white"
-        android:padding="8dp" />
-
 </LinearLayout>

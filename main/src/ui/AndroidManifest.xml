@@ -186,6 +186,16 @@
                     android:value="com.mavodev.openvpnneo.activities.MainActivity" />
         </activity>
 
+        <activity
+                android:exported="false"
+                android:name=".activities.SettingsActivity"
+                android:label="@string/generalsettings"
+                android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.mavodev.openvpnneo.activities.MainActivity" />
+        </activity>
+
 
         <provider
                 android:name=".FileProvider"
