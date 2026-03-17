@@ -6,17 +6,22 @@ package com.mavodev.openvpnneo.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -30,12 +35,25 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.core.GlobalPreferences
+import com.mavodev.openvpnneo.core.OpenVPNManagement
+import com.mavodev.openvpnneo.core.OpenVPNService
 import com.mavodev.openvpnneo.core.Preferences
+import com.mavodev.openvpnneo.core.TrafficHistory
 import com.mavodev.openvpnneo.core.VpnStatus
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.fragments.*
 import com.mavodev.openvpnneo.fragments.ImportRemoteConfig.Companion.newInstance
 import com.mavodev.openvpnneo.views.ScreenSlidePagerAdapter
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import java.util.*
+import kotlin.math.max
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +63,12 @@ import java.net.URL
 import java.util.Timer
 import java.util.TimerTask
 
-class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.OnSharedPreferenceChangeListener {
+// Extension function to convert dp to pixels
+fun Int.dpToPx(): Int {
+    return (this * Resources.getSystem().displayMetrics.density).toInt()
+}
+
+class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCountListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var mPager: ViewPager2
     private lateinit var mPagerAdapter: ScreenSlidePagerAdapter
     private lateinit var sharedPreferences: SharedPreferences
@@ -55,6 +78,18 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
     private lateinit var countryFlag: ImageView
     private lateinit var countryName: TextView
     private lateinit var countryIp: TextView
+    
+    // Mini chart views (only initialized when VPN connects)
+    private var miniChartContainer: LinearLayout? = null
+    private var miniChart: LineChart? = null
+    
+    // Chart data (only used when chart is initialized)
+    private var firstTs = 0L
+    private var colourIn = 0
+    private var colourOut = 0
+    private var colourPoint = 0
+    private var textColour = 0
+    private var chartInitialized = false
     
     // Periodic update timer
     private var updateTimer: Timer? = null
@@ -163,8 +198,8 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
                     resources.getDimensionPixelSize(navBarResourceId)
                 } else 0
                 
-                // Set padding: top for status bar (reduced), bottom for navigation bar
-                rootLayout.setPadding(0, statusBarHeight, 0, navBarHeight)
+                // Set padding: only bottom for navigation bar (no top padding)
+                rootLayout.setPadding(0, 0, 0, navBarHeight)
             }
         }
         
@@ -182,6 +217,83 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
     private fun disableToolbarElevation() {
         supportActionBar?.elevation = 0f
     }
+    
+    private fun initializeMiniChart() {
+        Log.d("MainActivity", "initializeMiniChart called")
+        
+        // Find chart views (they exist in layout but weren't initialized before)
+        val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
+        miniChartContainer = rootLayout.findViewById(R.id.mini_chart_container)
+        miniChart = rootLayout.findViewById(R.id.mini_chart)
+        
+        // Set click listener to open full GraphActivity
+        miniChartContainer?.setOnClickListener {
+            Log.d("MainActivity", "Mini chart clicked - opening GraphActivity")
+            val intent = Intent(this, GraphActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Set up chart colors
+        colourIn = resources.getColor(R.color.dataIn)
+        colourOut = resources.getColor(R.color.dataOut)
+        colourPoint = resources.getColor(android.R.color.white) // White points for visibility
+        
+        // Force white text for dark background
+        textColour = resources.getColor(android.R.color.white)
+        
+        // Configure chart appearance
+        miniChart?.description?.isEnabled = false
+        miniChart?.setDrawGridBackground(false)
+        miniChart?.legend?.textColor = textColour
+        miniChart?.setNoDataTextColor(resources.getColor(R.color.accent))
+        
+        val xAxis = miniChart?.xAxis
+        xAxis?.position = XAxis.XAxisPosition.BOTTOM
+        xAxis?.setDrawGridLines(false)
+        xAxis?.setDrawAxisLine(true)
+        xAxis?.textColor = textColour
+        xAxis?.labelCount = 3
+        
+        xAxis?.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return String.format(Locale.getDefault(), "%.0f\u2009s ago", (xAxis.axisMaximum - value) / 10.0)
+            }
+        }
+        
+        val yAxis = miniChart?.axisLeft
+        yAxis?.labelCount = 3
+        yAxis?.setLabelCount(3, false)
+        yAxis?.textColor = textColour
+        miniChart?.axisRight?.isEnabled = false
+        
+        yAxis?.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                if (value < 2.1f)
+                    return "< 100\u2009bit/s"
+                val scaledValue = Math.pow(10.0, value.toDouble()) / 8.0
+                return OpenVPNService.humanReadableByteCount(scaledValue.toLong(), true, resources)
+            }
+        }
+        
+        // Set initial empty data
+        miniChart?.data = LineData()
+        miniChart?.invalidate()
+        
+        Log.d("MainActivity", "Mini chart initialization complete")
+    }
+    
+    private fun cleanupMiniChart() {
+        Log.d("MainActivity", "cleanupMiniChart called")
+        
+        // Only clear chart data, keep everything else intact
+        miniChart?.data = null
+        miniChart?.invalidate()
+        
+        // Reset initialization flag
+        chartInitialized = false
+        
+        Log.d("MainActivity", "Mini chart cleanup complete")
+    }
 
     override fun onSharedPreferenceChanged(
         sharedPreferences: SharedPreferences?,
@@ -197,7 +309,121 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         // Update country display when connection changes
         updateCountryDisplay()
     }
-
+    
+    private fun updateMiniChart() {
+        if (!chartInitialized || miniChart == null) {
+            Log.d("MainActivity", "updateMiniChart called but chart not initialized")
+            return
+        }
+        
+        Log.d("MainActivity", "updateMiniChart called")
+        
+        val list = VpnStatus.trafficHistory.seconds
+        Log.d("MainActivity", "Traffic history list size: ${list.size}")
+        
+        val workingList = if (list.size == 0) {
+            Log.d("MainActivity", "Using dummy list")
+            TrafficHistory.getDummyList()
+        } else {
+            Log.d("MainActivity", "Using real traffic data")
+            list
+        }
+        
+        Log.d("MainActivity", "Working list size: ${workingList.size}")
+        
+        val dataIn = LinkedList<Entry>()
+        val dataOut = LinkedList<Entry>()
+        
+        val interval = OpenVPNManagement.mBytecountInterval * 1000L
+        val now = System.currentTimeMillis()
+        
+        var firstTimestamp = 0L
+        var lastBytecountOut = 0L
+        var lastBytecountIn = 0L
+        
+        // Initialize first timestamp from the first item
+        if (workingList.isNotEmpty()) {
+            val firstItem = workingList.first
+            firstTimestamp = firstItem.timestamp
+            lastBytecountIn = firstItem.`in`
+            lastBytecountOut = firstItem.`out`
+            Log.d("MainActivity", "First timestamp: $firstTimestamp, in: $lastBytecountIn, out: $lastBytecountOut")
+        }
+        
+        for (tdp in workingList) {
+            val t = (tdp.timestamp - firstTimestamp) / 100f
+            
+            val `in` = (tdp.`in` - lastBytecountIn) / (interval / 1000f).toFloat()
+            val out = (tdp.`out` - lastBytecountOut) / (interval / 1000f).toFloat()
+            
+            lastBytecountIn = tdp.`in`
+            lastBytecountOut = tdp.`out`
+            
+            val processedIn = max(2f, Math.log10(`in`.toDouble() * 8.0).toFloat())
+            val processedOut = max(2f, Math.log10(out.toDouble() * 8.0).toFloat())
+            
+            dataIn.add(Entry(t, processedIn))
+            dataOut.add(Entry(t, processedOut))
+        }
+        
+        Log.d("MainActivity", "Data points created: in=${dataIn.size}, out=${dataOut.size}")
+        
+        val dataSets = ArrayList<ILineDataSet>()
+        
+        val indata = LineDataSet(dataIn, getString(R.string.data_in))
+        val outdata = LineDataSet(dataOut, getString(R.string.data_out))
+        
+        setLineDataAttributes(indata, colourIn)
+        setLineDataAttributes(outdata, colourOut)
+        
+        dataSets.add(indata)
+        dataSets.add(outdata)
+        
+        val lineData = LineData(dataSets)
+        
+        if (lineData.getDataSetByIndex(0).entryCount < 3) {
+            Log.d("MainActivity", "Not enough data points, setting null data")
+            miniChart?.data = null
+        } else {
+            Log.d("MainActivity", "Setting chart data with ${lineData.getDataSetByIndex(0).entryCount} points")
+            miniChart?.data = lineData
+            
+            val ymax = lineData.yMax
+            val yAxis = miniChart?.axisLeft
+            yAxis?.axisMinimum = 2f
+            yAxis?.axisMaximum = Math.ceil(ymax.toDouble()).toFloat()
+            yAxis?.labelCount = Math.ceil(ymax.toDouble() - 2.0).toInt()
+        }
+        
+        miniChart?.setNoDataText(getString(R.string.notenoughdata))
+        miniChart?.invalidate()
+        
+        Log.d("MainActivity", "Mini chart updated and invalidated")
+    }
+    
+    private fun setLineDataAttributes(dataSet: LineDataSet, colour: Int) {
+        dataSet.lineWidth = 3f  // Slightly thicker lines
+        dataSet.circleRadius = 2f  // Slightly larger circles
+        dataSet.setDrawCircles(true)
+        dataSet.setCircleColor(colourPoint)
+        dataSet.setDrawFilled(true)
+        dataSet.fillAlpha = 30  // Slightly more transparent fill
+        dataSet.fillColor = colour
+        dataSet.color = colour
+        dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER  // Smooth curved lines
+        dataSet.setDrawValues(false)
+        dataSet.valueTextColor = textColour
+    }
+    
+    override fun updateByteCount(inBytes: Long, outBytes: Long, diffIn: Long, diffOut: Long) {
+        if (firstTs == 0L)
+            firstTs = System.currentTimeMillis() / 100L
+        
+        runOnUiThread {
+            updateMiniChart()
+        }
+    }
+    
     override fun updateState(
         state: String?,
         logmessage: String?,
@@ -220,6 +446,59 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
             level == ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT) {
             Log.d("MainActivity", "Triggering country display update for level: $level")
             updateCountryDisplay()
+            
+            // Handle mini chart initialization and visibility
+            when (level) {
+                ConnectionStatus.LEVEL_CONNECTED -> {
+                    // Initialize chart with delay to ensure VPN is fully connected
+                    if (!chartInitialized) {
+                        Log.d("MainActivity", "Scheduling mini chart initialization after VPN connection")
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            if (!chartInitialized) { // Double-check in case VPN disconnected during delay
+                                Log.d("MainActivity", "Initializing mini chart after delay")
+                                initializeMiniChart()
+                                chartInitialized = true
+                                
+                                // Show chart and set height
+                                miniChartContainer?.visibility = View.VISIBLE
+                                miniChartContainer?.layoutParams?.height = 120.dpToPx()
+                                miniChartContainer?.requestLayout()
+                                
+                                VpnStatus.addByteCountListener(this)
+                                updateMiniChart()
+                                Log.d("MainActivity", "Mini chart shown and listener registered")
+                            }
+                        }, 2000) // 2 second delay to ensure VPN is fully established
+                    } else {
+                        // Chart already initialized, just show it
+                        miniChartContainer?.visibility = View.VISIBLE
+                        miniChartContainer?.layoutParams?.height = 120.dpToPx()
+                        miniChartContainer?.requestLayout()
+                        
+                        VpnStatus.addByteCountListener(this)
+                        updateMiniChart()
+                        Log.d("MainActivity", "Mini chart shown (already initialized)")
+                    }
+                }
+                ConnectionStatus.LEVEL_NOTCONNECTED -> {
+                    // Hide chart and unregister listener
+                    miniChartContainer?.visibility = View.GONE
+                    miniChartContainer?.layoutParams?.height = 0
+                    miniChartContainer?.requestLayout()
+                    
+                    VpnStatus.removeByteCountListener(this)
+                    Log.d("MainActivity", "Mini chart hidden and listener unregistered")
+                    
+                    // Clean up chart data
+                    cleanupMiniChart()
+                }
+                else -> {
+                    // For other states, just hide chart
+                    miniChartContainer?.visibility = View.GONE
+                    miniChartContainer?.layoutParams?.height = 0
+                    miniChartContainer?.requestLayout()
+                }
+            }
         }
     }
 

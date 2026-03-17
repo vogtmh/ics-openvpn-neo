@@ -20,9 +20,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:padding="12dp"
-            android:background="#80000000"
-            android:alpha="0.8"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:background="#111111"
             android:visibility="gone">
 
             <ImageView
@@ -48,6 +50,23 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Mini Traffic Chart Preview - Hidden until VPN connects -->
+        <LinearLayout
+            android:id="@+id/mini_chart_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:background="#1a1a1a"
+            android:padding="8dp"
+            android:visibility="gone">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/mini_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
