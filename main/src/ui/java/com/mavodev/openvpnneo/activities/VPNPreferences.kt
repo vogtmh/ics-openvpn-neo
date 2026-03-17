@@ -104,6 +104,10 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
 
         title = getString(R.string.edit_profile_title, mProfile!!.name)
 
+        // Enable back button in action bar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
 
         val rootview = layoutInflater.inflate(R.layout.main_activity, null)
         setUpEdgeEdgeInsetsListener(rootview, R.id.root_linear_layout)
@@ -151,12 +155,19 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.remove_vpn) askProfileRemoval()
-        if (item.itemId == R.id.duplicate_vpn) {
-            val data = Intent()
-            data.putExtra(VpnProfile.EXTRA_PROFILEUUID, mProfileUUID)
-            setResult(VPNProfileList.RESULT_VPN_DUPLICATE, data)
-            finish()
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle back button click
+                onBackPressed()
+                return true
+            }
+            R.id.remove_vpn -> askProfileRemoval()
+            R.id.duplicate_vpn -> {
+                val data = Intent()
+                data.putExtra(VpnProfile.EXTRA_PROFILEUUID, mProfileUUID)
+                setResult(VPNProfileList.RESULT_VPN_DUPLICATE, data)
+                finish()
+            }
         }
 
         return super.onOptionsItemSelected(item)

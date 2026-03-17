@@ -11,6 +11,8 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -314,15 +316,18 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         if (displayCountry) {
             countryBar.visibility = View.VISIBLE
             Log.d("MainActivity", "Country bar set to VISIBLE, fetching country info")
-            fetchCountryInfo()
+            // Add 100ms delay to give VPN routing a moment to establish
+            Handler(Looper.getMainLooper()).postDelayed({
+                fetchCountryInfo()
+            }, 100)
         } else {
             countryBar.visibility = View.GONE
             Log.d("MainActivity", "Country bar set to GONE")
         }
     }
     
-    private fun fetchCountryInfo() {
-        Log.d("MainActivity", "fetchCountryInfo called - starting API request")
+    private fun fetchCountryInfo(retryCount: Int = 0) {
+        Log.d("MainActivity", "fetchCountryInfo called - starting API request (retry $retryCount)")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val url = URL("https://api.country.is/")
@@ -368,6 +373,13 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
                         Log.e("MainActivity", "API returned non-200 response: $responseCode")
                         withContext(Dispatchers.Main) {
                             showFallbackInfo()
+                            // Retry after 2 seconds if this was triggered by VPN connection and we haven't retried too many times
+                            if (retryCount < 3) {
+                                Log.d("MainActivity", "Scheduling retry ${retryCount + 1} in 2 seconds")
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    fetchCountryInfo(retryCount + 1)
+                                }, 2000)
+                            }
                         }
                     }
                 } finally {
@@ -377,12 +389,20 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
                 Log.e("MainActivity", "Error fetching country info", e)
                 withContext(Dispatchers.Main) {
                     showFallbackInfo()
+                    // Retry after 2 seconds if this was triggered by VPN connection and we haven't retried too many times
+                    if (retryCount < 3) {
+                        Log.d("MainActivity", "Scheduling retry ${retryCount + 1} in 2 seconds due to exception")
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            fetchCountryInfo(retryCount + 1)
+                        }, 2000)
+                    }
                 }
             }
         }
     }
     
     private fun showFallbackInfo() {
+        Log.w("MainActivity", "showFallbackInfo called - API likely failed")
         // Show fallback information when API fails
         countryName.text = "VPN Connected"
         countryIp.text = "Checking..."
