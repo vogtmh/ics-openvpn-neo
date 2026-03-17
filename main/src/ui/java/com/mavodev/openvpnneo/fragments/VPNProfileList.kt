@@ -47,6 +47,7 @@ import com.mavodev.openvpnneo.activities.DisconnectVPN
 import com.mavodev.openvpnneo.activities.FileSelect
 import com.mavodev.openvpnneo.activities.LogWindow
 import com.mavodev.openvpnneo.activities.VPNPreferences
+import com.mavodev.openvpnneo.activities.AboutActivity
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.core.OpenVPNService
 import com.mavodev.openvpnneo.core.PasswordDialogFragment.Companion.newInstance
@@ -253,6 +254,12 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
 
         val newvpntext = v.findViewById<View?>(R.id.add_new_vpn_hint) as TextView
         val importvpntext = v.findViewById<View?>(R.id.import_vpn_hint) as TextView
+        
+        // Set up floating add profile button
+        val fabAddProfile = v.findViewById<ImageButton>(R.id.fab_add_profile)
+        fabAddProfile.setOnClickListener {
+            onAddOrDuplicateProfile(null)
+        }
 
         newvpntext.setText(
             Html.fromHtml(
@@ -322,12 +329,6 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.add(0, MENU_ADD_PROFILE, 0, R.string.menu_add_profile)
-            .setIcon(R.drawable.ic_menu_add)
-            .setAlphabeticShortcut('a')
-            .setTitleCondensed(getActivity()!!.getString(R.string.add))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-
         menu.add(0, MENU_CHANGE_SORTING, 0, R.string.change_sorting)
             .setIcon(R.drawable.ic_sort)
             .setAlphabeticShortcut('s')
@@ -340,6 +341,11 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             .setTitleCondensed(getString(R.string.show_log))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
+        menu.add(0, MENU_ABOUT, 0, R.string.about)
+            .setIcon(R.drawable.ic_menu_add)
+            .setTitleCondensed(getString(R.string.about))
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
         menu.add(0, MENU_IMPORT_AS, 0, R.string.import_from_as)
             .setIcon(R.drawable.ic_menu_import_download)
             .setAlphabeticShortcut('p')
@@ -349,13 +355,14 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.getItemId()
-        if (itemId == MENU_ADD_PROFILE) {
-            onAddOrDuplicateProfile(null)
-            return true
-        } else if (itemId == MENU_CHANGE_SORTING) {
+        if (itemId == MENU_CHANGE_SORTING) {
             return changeSorting()
         } else if (itemId == MENU_SHOW_LOG) {
             val intent = Intent(getActivity(), LogWindow::class.java as Class<LogWindow>)
+            startActivity(intent)
+            return true
+        } else if (itemId == MENU_ABOUT) {
+            val intent = Intent(getActivity(), AboutActivity::class.java as Class<AboutActivity>)
             startActivity(intent)
             return true
         } else if (itemId == MENU_IMPORT_AS) {
@@ -652,6 +659,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         private val MENU_IMPORT_PROFILE = Menu.FIRST + 1
         private val MENU_CHANGE_SORTING = Menu.FIRST + 2
         private val MENU_SHOW_LOG = Menu.FIRST + 4
+        private val MENU_ABOUT = Menu.FIRST + 5
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"
     }
