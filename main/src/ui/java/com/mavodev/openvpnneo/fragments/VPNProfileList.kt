@@ -48,6 +48,7 @@ import com.mavodev.openvpnneo.activities.FileSelect
 import com.mavodev.openvpnneo.activities.LogWindow
 import com.mavodev.openvpnneo.activities.VPNPreferences
 import com.mavodev.openvpnneo.activities.AboutActivity
+import com.mavodev.openvpnneo.activities.FAQActivity
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.core.OpenVPNService
 import com.mavodev.openvpnneo.core.PasswordDialogFragment.Companion.newInstance
@@ -346,6 +347,10 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             .setTitleCondensed(getString(R.string.about))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
+        menu.add(0, MENU_FAQ, 0, R.string.faq)
+            .setIcon(R.drawable.ic_menu_add)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
         menu.add(0, MENU_IMPORT_AS, 0, R.string.import_from_as)
             .setIcon(R.drawable.ic_menu_import_download)
             .setAlphabeticShortcut('p')
@@ -363,6 +368,10 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             return true
         } else if (itemId == MENU_ABOUT) {
             val intent = Intent(getActivity(), AboutActivity::class.java as Class<AboutActivity>)
+            startActivity(intent)
+            return true
+        } else if (itemId == MENU_FAQ) {
+            val intent = Intent(getActivity(), FAQActivity::class.java as Class<FAQActivity>)
             startActivity(intent)
             return true
         } else if (itemId == MENU_IMPORT_AS) {
@@ -660,6 +669,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         private val MENU_CHANGE_SORTING = Menu.FIRST + 2
         private val MENU_SHOW_LOG = Menu.FIRST + 4
         private val MENU_ABOUT = Menu.FIRST + 5
+        private val MENU_FAQ = Menu.FIRST + 6
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"
     }

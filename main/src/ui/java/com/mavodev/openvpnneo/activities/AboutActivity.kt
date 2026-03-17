@@ -17,6 +17,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.mavodev.openvpnneo.BuildConfig
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.core.NativeUtils
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.nio.charset.Charset
 import java.util.*
 
 class AboutActivity : BaseActivity() {
@@ -68,11 +73,42 @@ class AboutActivity : BaseActivity() {
             verO3.text = "(OpenVPN 2.x only build. No OpenVPN 3.x core in this app)"
         
         osslVer.text = String.format(Locale.US, "OpenSSL version: %s", NativeUtils.getOpenSSLVersion())
+        
+        // Setup translation info - same as AboutFragment
+        val translation = findViewById<TextView>(R.id.translation)
+        
+        // Don't print a text for myself
+        if (getString(R.string.translationby).contains("Arne Schwabe"))
+            translation.text = ""
+        else
+            translation.setText(R.string.translationby)
+        
+        // Setup full licenses - same as AboutFragment
+        val fullLicenses = findViewById<TextView>(R.id.full_licenses)
+        fullLicenses.text = Html.fromHtml(readHtmlFromAssets())
+        fullLicenses.movementMethod = LinkMovementMethod.getInstance()
     }
     
     private fun setupLinks() {
         // Links are automatically handled by autoLink="all" in the layout
         // No additional setup needed
+    }
+    
+    // Copy from AboutFragment - read full licenses from assets
+    private fun readHtmlFromAssets(): String {
+        return try {
+            val inputStream = assets.open("full_licenses.html")
+            val reader = BufferedReader(InputStreamReader(inputStream, Charset.forName("UTF-8")))
+            val sb = StringBuilder()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                sb.append(line).append("\n")
+            }
+            reader.close()
+            sb.toString()
+        } catch (e: IOException) {
+            "full_licenses.html not found"
+        }
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
