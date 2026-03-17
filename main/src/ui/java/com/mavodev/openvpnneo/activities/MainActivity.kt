@@ -117,7 +117,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
             mPagerAdapter.addTab(R.string.vpn_list_title, VPNProfileList::class.java)
             mPagerAdapter.addTab(R.string.graph, GraphFragment::class.java)
             mPagerAdapter.addTab(R.string.generalsettings, CustomSettingsFragment::class.java)
-            mPagerAdapter.addTab(R.string.faq, FaqFragment::class.java)
             if (SendDumpFragment.getLastestDump(this) != null) {
                 mPagerAdapter.addTab(R.string.crashdump, SendDumpFragment::class.java)
             }
@@ -126,7 +125,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         if (isAndroidTV || minimalUi)
             mPagerAdapter.addTab(R.string.openvpn_log, LogFragment::class.java)
 
-        mPagerAdapter.addTab(R.string.about, AboutFragment::class.java)
         mPager.setAdapter(mPagerAdapter)
 
         // Debug: Log actual tab positions and titles
@@ -149,14 +147,10 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
         val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
         val settingsBtn = rootLayout.findViewById<ImageButton>(R.id.tab_settings)
-        val faqBtn = rootLayout.findViewById<ImageButton>(R.id.tab_faq)
-        val aboutBtn = rootLayout.findViewById<ImageButton>(R.id.tab_about)
         
         Log.d("MainActivity", "Profiles button found: ${profilesBtn != null}")
         Log.d("MainActivity", "Graph button found: ${graphBtn != null}")
         Log.d("MainActivity", "Settings button found: ${settingsBtn != null}")
-        Log.d("MainActivity", "FAQ button found: ${faqBtn != null}")
-        Log.d("MainActivity", "About button found: ${aboutBtn != null}")
         
         profilesBtn?.setOnClickListener {
             Log.d("MainActivity", "PROFILES BUTTON CLICKED - going to position 0")
@@ -175,19 +169,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
             mPager.currentItem = 2  // Settings is position 2
             supportActionBar?.title = mPagerAdapter.getPageTitle(2)
             updateButtonStates(2)
-        }
-        faqBtn?.setOnClickListener {
-            Log.d("MainActivity", "FAQ BUTTON CLICKED - going to position 3")
-            mPager.currentItem = 3  // FAQ is position 3
-            supportActionBar?.title = mPagerAdapter.getPageTitle(3)
-            updateButtonStates(3)
-        }
-        aboutBtn?.setOnClickListener {
-            val lastPosition = mPagerAdapter.itemCount - 1  // Go to last tab
-            Log.d("MainActivity", "ABOUT BUTTON CLICKED - going to position $lastPosition")
-            mPager.currentItem = lastPosition
-            supportActionBar?.title = mPagerAdapter.getPageTitle(lastPosition)
-            updateButtonStates(lastPosition)
         }
         
         // Add ViewPager change listener to update button states when swiping
@@ -242,16 +223,10 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
         val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
         val settingsBtn = rootLayout.findViewById<ImageButton>(R.id.tab_settings)
-        val faqBtn = rootLayout.findViewById<ImageButton>(R.id.tab_faq)
-        val aboutBtn = rootLayout.findViewById<ImageButton>(R.id.tab_about)
-        
-        val lastPosition = mPagerAdapter.itemCount - 1
         
         profilesBtn?.isSelected = selectedPosition == 0
         graphBtn?.isSelected = selectedPosition == 1
         settingsBtn?.isSelected = selectedPosition == 2
-        faqBtn?.isSelected = selectedPosition == 3
-        aboutBtn?.isSelected = selectedPosition == lastPosition
     }
 
     override fun onSharedPreferenceChanged(

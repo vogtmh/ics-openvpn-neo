@@ -52,34 +52,4 @@
         android:tint="@android:color/white"
         android:padding="8dp" />
 
-    <!-- FAQ Tab -->
-    <ImageButton
-        android:id="@+id/tab_faq"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/icon_button_selector"
-        android:src="@mipmap/faq"
-        android:contentDescription="@string/faq"
-        android:scaleType="centerInside"
-        android:tint="@android:color/white"
-        android:padding="8dp" />
-
-    <!-- About Tab -->
-    <ImageButton
-        android:id="@+id/tab_about"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/icon_button_selector"
-        android:src="@mipmap/about"
-        android:contentDescription="@string/about"
-        android:scaleType="centerInside"
-        android:tint="@android:color/white"
-        android:padding="8dp" />
-
 </LinearLayout>
