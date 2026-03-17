@@ -115,7 +115,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         if (!minimalUi) {
 
             mPagerAdapter.addTab(R.string.vpn_list_title, VPNProfileList::class.java)
-            mPagerAdapter.addTab(R.string.graph, GraphFragment::class.java)
             if (SendDumpFragment.getLastestDump(this) != null) {
                 mPagerAdapter.addTab(R.string.crashdump, SendDumpFragment::class.java)
             }
@@ -140,33 +139,11 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         // Set initial position to Profiles (position 0) and update title
         mPager.currentItem = 0
         supportActionBar?.title = mPagerAdapter.getPageTitle(0)
-
-        // Add icon button click listeners for bottom navigation
-        val rootLayout = view.findViewById<LinearLayout>(R.id.root_linear_layout)
-        val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
-        val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
         
-        Log.d("MainActivity", "Profiles button found: ${profilesBtn != null}")
-        Log.d("MainActivity", "Graph button found: ${graphBtn != null}")
-        
-        profilesBtn?.setOnClickListener {
-            Log.d("MainActivity", "PROFILES BUTTON CLICKED - going to position 0")
-            mPager.currentItem = 0  // Profiles is position 0
-            supportActionBar?.title = mPagerAdapter.getPageTitle(0)
-            updateButtonStates(0)
-        }
-        graphBtn?.setOnClickListener {
-            Log.d("MainActivity", "GRAPH BUTTON CLICKED - going to position 1")
-            mPager.currentItem = 1  // Graph is position 1
-            supportActionBar?.title = mPagerAdapter.getPageTitle(1)
-            updateButtonStates(1)
-        }
-        
-        // Add ViewPager change listener to update button states when swiping
+        // Add ViewPager change listener to update title when swiping
         mPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 supportActionBar?.title = mPagerAdapter.getPageTitle(position)
-                updateButtonStates(position)
             }
         })
 
@@ -191,9 +168,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
             }
         }
         
-        // Set initial button states after layout is set
-        updateButtonStates(0)
-        
         // Start periodic updates
         startPeriodicUpdates()
         
@@ -207,15 +181,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
 
     private fun disableToolbarElevation() {
         supportActionBar?.elevation = 0f
-    }
-    
-    private fun updateButtonStates(selectedPosition: Int) {
-        val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
-        val profilesBtn = rootLayout.findViewById<ImageButton>(R.id.tab_profiles)
-        val graphBtn = rootLayout.findViewById<ImageButton>(R.id.tab_graph)
-        
-        profilesBtn?.isSelected = selectedPosition == 0
-        graphBtn?.isSelected = selectedPosition == 1
     }
 
     override fun onSharedPreferenceChanged(
