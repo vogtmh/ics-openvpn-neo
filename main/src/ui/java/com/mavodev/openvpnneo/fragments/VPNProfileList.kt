@@ -344,15 +344,6 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             .setTitleCondensed(getString(R.string.show_log))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_ABOUT, 0, R.string.about)
-            .setIcon(R.drawable.ic_menu_add)
-            .setTitleCondensed(getString(R.string.about))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-
-        menu.add(0, MENU_FAQ, 0, R.string.faq)
-            .setIcon(R.drawable.ic_menu_add)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-
         menu.add(0, MENU_SETTINGS, 0, R.string.generalsettings)
             .setIcon(R.drawable.ic_menu_add)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
@@ -365,6 +356,14 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             .setIcon(R.drawable.ic_menu_import_download)
             .setAlphabeticShortcut('p')
             .setTitleCondensed("Import AS")
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
+        menu.add(0, MENU_FAQ, 0, R.string.faq)
+            .setIcon(R.drawable.ic_menu_add)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
+        menu.add(0, MENU_ABOUT, 0, R.string.about)
+            .setIcon(R.drawable.ic_menu_add)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
     }
 
