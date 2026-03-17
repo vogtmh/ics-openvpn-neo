@@ -45,6 +45,7 @@ import com.mavodev.openvpnneo.activities.BaseActivity
 import com.mavodev.openvpnneo.activities.ConfigConverter
 import com.mavodev.openvpnneo.activities.DisconnectVPN
 import com.mavodev.openvpnneo.activities.FileSelect
+import com.mavodev.openvpnneo.activities.LogWindow
 import com.mavodev.openvpnneo.activities.VPNPreferences
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.core.OpenVPNService
@@ -327,23 +328,23 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             .setTitleCondensed(getActivity()!!.getString(R.string.add))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
-        menu.add(0, MENU_IMPORT_PROFILE, 0, R.string.menu_import)
-            .setIcon(R.drawable.ic_menu_import)
-            .setAlphabeticShortcut('i')
-            .setTitleCondensed(getActivity()!!.getString(R.string.menu_import_short))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-
         menu.add(0, MENU_CHANGE_SORTING, 0, R.string.change_sorting)
             .setIcon(R.drawable.ic_sort)
             .setAlphabeticShortcut('s')
             .setTitleCondensed(getString(R.string.sort))
-            .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
+        menu.add(0, MENU_SHOW_LOG, 0, R.string.show_log)
+            .setIcon(R.drawable.ic_menu_import_grey)
+            .setAlphabeticShortcut('l')
+            .setTitleCondensed(getString(R.string.show_log))
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
         menu.add(0, MENU_IMPORT_AS, 0, R.string.import_from_as)
             .setIcon(R.drawable.ic_menu_import_download)
             .setAlphabeticShortcut('p')
             .setTitleCondensed("Import AS")
-            .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -351,10 +352,12 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         if (itemId == MENU_ADD_PROFILE) {
             onAddOrDuplicateProfile(null)
             return true
-        } else if (itemId == MENU_IMPORT_PROFILE) {
-            return startImportConfigFilePicker()
         } else if (itemId == MENU_CHANGE_SORTING) {
             return changeSorting()
+        } else if (itemId == MENU_SHOW_LOG) {
+            val intent = Intent(getActivity(), LogWindow::class.java as Class<LogWindow>)
+            startActivity(intent)
+            return true
         } else if (itemId == MENU_IMPORT_AS) {
             return startASProfileImport()
         } else {
@@ -648,6 +651,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         private const val FILE_PICKER_RESULT_KITKAT = 392
         private val MENU_IMPORT_PROFILE = Menu.FIRST + 1
         private val MENU_CHANGE_SORTING = Menu.FIRST + 2
+        private val MENU_SHOW_LOG = Menu.FIRST + 4
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"
     }

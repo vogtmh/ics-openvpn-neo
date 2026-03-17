@@ -514,18 +514,4 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, SharedPreferences.
         val asImportFrag = newInstance(url)
         asImportFrag.show(supportFragmentManager, "dialog")
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (!GlobalPreferences.getMinimalUi())
-            menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.show_log) {
-            val showLog = Intent(this, LogWindow::class.java)
-            startActivity(showLog)
-        }
-        return super.onOptionsItemSelected(item)
-    }
 }

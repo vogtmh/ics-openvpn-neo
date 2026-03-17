@@ -6,10 +6,4 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/show_log"
-        android:icon="@drawable/ic_receipt"
-        app:showAsAction="ifRoom"
-        android:title="@string/show_log_window"
-        android:titleCondensed="@string/show_log"/>
 </menu>
