@@ -11,6 +11,10 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -91,8 +95,14 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private var textColour = 0
     private var chartInitialized = false
     
-    // Periodic update timer
-    private var updateTimer: Timer? = null
+    // Periodic country refresh timer
+    private var countryRefreshTimer: Timer? = null
+    
+    // Track last VPN level to detect real state transitions
+    private var lastKnownLevel: ConnectionStatus? = null
+    
+    // Network connectivity callback for WiFi connect/disconnect
+    private lateinit var networkCallback: ConnectivityManager.NetworkCallback
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -203,7 +213,10 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             }
         }
         
-        // Start periodic updates
+        // Register network connectivity listener
+        registerNetworkCallback()
+        
+        // Start periodic country refresh (every 5 minutes)
         startPeriodicUpdates()
         
         // Add VPN state listener
@@ -211,6 +224,35 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         
         // Register preference change listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        
+        // Fetch country info once on launch
+        updateCountryDisplay()
+    }
+
+    private fun registerNetworkCallback() {
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                Log.d("MainActivity", "Network available - scheduling country refresh")
+                // Delay to let DHCP/routing settle before querying
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+                    if (displayCountry) fetchCountryInfo()
+                }, 1500)
+            }
+            override fun onLost(network: Network) {
+                Log.d("MainActivity", "Network lost - refreshing country info")
+                Handler(Looper.getMainLooper()).post {
+                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+                    if (displayCountry) fetchCountryInfo()
+                }
+            }
+        }
+        val request = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        val cm = getSystemService(ConnectivityManager::class.java)
+        cm.registerNetworkCallback(request, networkCallback)
     }
 
 
@@ -285,12 +327,18 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private fun cleanupMiniChart() {
         Log.d("MainActivity", "cleanupMiniChart called")
         
-        // Only clear chart data, keep everything else intact
+        // Clear chart data
         miniChart?.data = null
         miniChart?.invalidate()
         
         // Reset initialization flag
         chartInitialized = false
+        
+        // Reset traffic history so the next session starts with a fresh baseline.
+        // Without this, session-2 datapoints get plotted relative to session-1's
+        // timestamps, causing a massively skewed X-axis.
+        VpnStatus.setTrafficHistory(TrafficHistory())
+        firstTs = 0L
         
         Log.d("MainActivity", "Mini chart cleanup complete")
     }
@@ -306,8 +354,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
 
     override fun setConnectedVPN(uuid: String?) {
-        // Update country display when connection changes
-        updateCountryDisplay()
+        // Country display is handled by updateState() on LEVEL_CONNECTED/LEVEL_NOTCONNECTED
     }
     
     private fun updateMiniChart() {
@@ -402,10 +449,8 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
     
     private fun setLineDataAttributes(dataSet: LineDataSet, colour: Int) {
-        dataSet.lineWidth = 3f  // Slightly thicker lines
-        dataSet.circleRadius = 2f  // Slightly larger circles
-        dataSet.setDrawCircles(true)
-        dataSet.setCircleColor(colourPoint)
+        dataSet.lineWidth = 3f
+        dataSet.setDrawCircles(false)
         dataSet.setDrawFilled(true)
         dataSet.fillAlpha = 30  // Slightly more transparent fill
         dataSet.fillColor = colour
@@ -431,69 +476,72 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         level: ConnectionStatus,
         intent: Intent?
     ) {
-        // Log VPN state changes for debugging
         Log.d("MainActivity", "VPN State Changed - Level: $level, State: $state")
         
-        // Update country display when VPN state changes
-        // Handle: connect, disconnect, pause, resume, auth failures, network issues
-        if (level == ConnectionStatus.LEVEL_CONNECTED || 
-            level == ConnectionStatus.LEVEL_NOTCONNECTED ||
-            level == ConnectionStatus.LEVEL_AUTH_FAILED ||
-            level == ConnectionStatus.LEVEL_NONETWORK ||
-            level == ConnectionStatus.LEVEL_VPNPAUSED ||
-            level == ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET ||
-            level == ConnectionStatus.LEVEL_CONNECTING_SERVER_REPLIED ||
-            level == ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT) {
-            Log.d("MainActivity", "Triggering country display update for level: $level")
-            updateCountryDisplay()
-            
-            // Handle mini chart initialization and visibility
+        // Only act on stable terminal states, and only when the level actually changed
+        val levelChanged = level != lastKnownLevel
+        lastKnownLevel = level
+        
+        // Fetch country info only on real connect/disconnect transitions
+        if (levelChanged && (level == ConnectionStatus.LEVEL_CONNECTED || level == ConnectionStatus.LEVEL_NOTCONNECTED)) {
+            Log.d("MainActivity", "Stable VPN state reached ($level) - refreshing country info")
+            runOnUiThread {
+                val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+                if (displayCountry) {
+                    countryBar.visibility = View.VISIBLE
+                    if (level == ConnectionStatus.LEVEL_CONNECTED) {
+                        // Delay the fetch so VPN routing has time to fully establish.
+                        // Without this, the request goes out on the old route and returns
+                        // the pre-VPN IP/country.
+                        Log.d("MainActivity", "Delaying country fetch 2s to let VPN routing settle")
+                        Handler(Looper.getMainLooper()).postDelayed({ fetchCountryInfo() }, 2000)
+                    } else {
+                        // Disconnect is immediate — no routing change to wait for
+                        fetchCountryInfo()
+                    }
+                } else {
+                    countryBar.visibility = View.GONE
+                }
+            }
+        }
+        
+        // Handle mini chart visibility (always runs, not just on change)
+        runOnUiThread {
             when (level) {
                 ConnectionStatus.LEVEL_CONNECTED -> {
-                    // Initialize chart with delay to ensure VPN is fully connected
                     if (!chartInitialized) {
                         Log.d("MainActivity", "Scheduling mini chart initialization after VPN connection")
                         Handler(Looper.getMainLooper()).postDelayed({
-                            if (!chartInitialized) { // Double-check in case VPN disconnected during delay
+                            if (!chartInitialized) {
                                 Log.d("MainActivity", "Initializing mini chart after delay")
                                 initializeMiniChart()
                                 chartInitialized = true
-                                
-                                // Show chart and set height
                                 miniChartContainer?.visibility = View.VISIBLE
                                 miniChartContainer?.layoutParams?.height = 120.dpToPx()
                                 miniChartContainer?.requestLayout()
-                                
                                 VpnStatus.addByteCountListener(this)
                                 updateMiniChart()
                                 Log.d("MainActivity", "Mini chart shown and listener registered")
                             }
-                        }, 2000) // 2 second delay to ensure VPN is fully established
+                        }, 2000)
                     } else {
-                        // Chart already initialized, just show it
                         miniChartContainer?.visibility = View.VISIBLE
                         miniChartContainer?.layoutParams?.height = 120.dpToPx()
                         miniChartContainer?.requestLayout()
-                        
                         VpnStatus.addByteCountListener(this)
                         updateMiniChart()
                         Log.d("MainActivity", "Mini chart shown (already initialized)")
                     }
                 }
                 ConnectionStatus.LEVEL_NOTCONNECTED -> {
-                    // Hide chart and unregister listener
                     miniChartContainer?.visibility = View.GONE
                     miniChartContainer?.layoutParams?.height = 0
                     miniChartContainer?.requestLayout()
-                    
                     VpnStatus.removeByteCountListener(this)
                     Log.d("MainActivity", "Mini chart hidden and listener unregistered")
-                    
-                    // Clean up chart data
                     cleanupMiniChart()
                 }
                 else -> {
-                    // For other states, just hide chart
                     miniChartContainer?.visibility = View.GONE
                     miniChartContainer?.layoutParams?.height = 0
                     miniChartContainer?.requestLayout()
@@ -503,18 +551,24 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
 
     private fun startPeriodicUpdates() {
-        // Update every 5 minutes
-        updateTimer = Timer()
-        updateTimer?.schedule(object : TimerTask() {
+        countryRefreshTimer?.cancel()
+        countryRefreshTimer = Timer()
+        val periodMs = 5 * 60 * 1000L // 5 minutes
+        countryRefreshTimer?.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-                updateCountryDisplay()
+                Log.d("MainActivity", "Periodic country refresh triggered")
+                // Only fetch if the feature is enabled; no need to touch visibility
+                val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+                if (displayCountry) {
+                    runOnUiThread { fetchCountryInfo() }
+                }
             }
-        }, 5 * 60 * 1000L) // 5 minutes in milliseconds
+        }, periodMs, periodMs)
     }
 
     private fun stopPeriodicUpdates() {
-        updateTimer?.cancel()
-        updateTimer = null
+        countryRefreshTimer?.cancel()
+        countryRefreshTimer = null
     }
 
     private fun updateCountryDisplay() {
@@ -524,10 +578,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         if (displayCountry) {
             countryBar.visibility = View.VISIBLE
             Log.d("MainActivity", "Country bar set to VISIBLE, fetching country info")
-            // Add 100ms delay to give VPN routing a moment to establish
-            Handler(Looper.getMainLooper()).postDelayed({
-                fetchCountryInfo()
-            }, 100)
+            fetchCountryInfo()
         } else {
             countryBar.visibility = View.GONE
             Log.d("MainActivity", "Country bar set to GONE")
@@ -700,6 +751,8 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         stopPeriodicUpdates()
         VpnStatus.removeStateListener(this)
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        val cm = getSystemService(ConnectivityManager::class.java)
+        cm.unregisterNetworkCallback(networkCallback)
     }
 
     private fun checkUriForProfileImport(uri: Uri) {
