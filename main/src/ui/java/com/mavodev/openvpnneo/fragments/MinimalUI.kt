@@ -19,7 +19,10 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.RemoteException
 import android.security.KeyChain
+import android.net.Uri
+import android.provider.DocumentsContract
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -27,8 +30,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Button
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,6 +47,7 @@ import com.mavodev.openvpnneo.VpnProfile.TYPE_KEYSTORE
 import com.mavodev.openvpnneo.VpnProfile.TYPE_USERPASS_KEYSTORE
 import com.mavodev.openvpnneo.activities.BaseActivity
 import com.mavodev.openvpnneo.activities.ConfigConverter
+import com.mavodev.openvpnneo.activities.MainActivity
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.core.GlobalPreferences
 import com.mavodev.openvpnneo.core.IOpenVPNServiceInternal
@@ -61,6 +67,9 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
     private var mService: IOpenVPNServiceInternal? = null
     private lateinit var vpnstatus: TextView
     private lateinit var vpntoggle: CompoundButton
+    private lateinit var importProfileButton: Button
+    private lateinit var importAsButton: Button
+    private lateinit var importButtonsLayout: LinearLayout
 
     private lateinit var view: View
     private var mImportMenuActive = false
@@ -90,16 +99,33 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
 
     private fun registerStartFileImportReceiver()
     {
+        Log.d("MinimalUI", "Registering file import receiver")
         mFileImportReceiver = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult())
         {
                 result: ActivityResult ->
+            Log.d("MinimalUI", "File picker result: $result")
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri = result.data?.data
-                val startImport = Intent(getActivity(), ConfigConverter::class.java)
-                startImport.setAction(ConfigConverter.IMPORT_PROFILE)
-                startImport.setData(uri)
-                startActivity(startImport)
+                Log.d("MinimalUI", "Selected URI: $uri")
+                
+                // Import any selected file directly
+                if (uri != null) {
+                    Log.d("MinimalUI", "Importing file: $uri")
+                    val startImport = Intent(getActivity(), ConfigConverter::class.java)
+                    startImport.setAction(ConfigConverter.IMPORT_PROFILE)
+                    startImport.setData(uri)
+                    startActivity(startImport)
+                    
+                    // Request focus back to import button after import dialog closes
+                    importProfileButton.postDelayed({
+                        importProfileButton.requestFocus()
+                    }, 500)
+                } else {
+                    Log.e("MinimalUI", "No file selected")
+                }
+            } else {
+                Log.d("MinimalUI", "File picker cancelled or failed. Result code: ${result.resultCode}")
             }
         }
     }
@@ -115,19 +141,34 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (GlobalPreferences.getAllowInitialImport() && ProfileManager.getAlwaysOnVPN(requireContext()) == null ) {
+        Log.d("MinimalUI", "onCreateOptionsMenu called")
+        Log.d("MinimalUI", "AllowInitialImport: ${GlobalPreferences.getAllowInitialImport()}")
+        val alwaysOnVPN = ProfileManager.getAlwaysOnVPN(requireContext())
+        Log.d("MinimalUI", "AlwaysOnVPN: $alwaysOnVPN")
+        
+        if (GlobalPreferences.getAllowInitialImport() && alwaysOnVPN == null ) {
+            Log.d("MinimalUI", "Import menu should be visible")
             mImportMenuActive = true
-            menu.add(0, MENU_IMPORT_PROFILE, 0, R.string.menu_import)
-                .setIcon(R.drawable.ic_menu_import)
-                .setAlphabeticShortcut('i')
-                .setTitleCondensed(getActivity()!!.getString(R.string.menu_import_short))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-
-            menu.add(0, MENU_IMPORT_AS, 0, R.string.import_from_as)
-                .setIcon(R.drawable.ic_menu_import_download)
-                .setAlphabeticShortcut('p')
-                .setTitleCondensed("Import AS")
-                .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            // Show import buttons in layout for better accessibility
+            importButtonsLayout.visibility = View.VISIBLE
+            importProfileButton.requestFocus()  // Set initial focus for remote navigation
+        } else {
+            Log.d("MinimalUI", "Import menu hidden - AllowInitialImport: ${GlobalPreferences.getAllowInitialImport()}, AlwaysOnVPN: $alwaysOnVPN")
+            // Hide import buttons in layout
+            importButtonsLayout.visibility = View.GONE
+        }
+        
+        // Always show VPN controls when there's a profile or when there's no profile
+        if (alwaysOnVPN != null) {
+            // Show VPN controls when no profile exists
+            vpnstatus.visibility = View.VISIBLE
+            vpntoggle.visibility = View.VISIBLE
+            Log.d("MinimalUI", "VPN controls visible - no profile exists")
+        } else {
+            // Show VPN controls when profile exists
+            vpnstatus.visibility = View.VISIBLE
+            vpntoggle.visibility = View.VISIBLE
+            Log.d("MinimalUI", "VPN controls visible - profile exists: $alwaysOnVPN")
         }
     }
 
@@ -136,21 +177,6 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
         asImportFrag.show(getParentFragmentManager(), "dialog")
         invalidateOptionsMenu(activity)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val itemId = item.getItemId()
-
-         if (itemId == MENU_IMPORT_PROFILE) {
-            val intent =  Utils.getFilePickerIntent(getActivity()!!, Utils.FileType.OVPN_CONFIG)
-             mFileImportReceiver.launch(intent)
-             invalidateOptionsMenu(activity)
-
-        } else if (itemId == MENU_IMPORT_AS) {
-            return startASProfileImport()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
@@ -253,10 +279,35 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
     ): View {
         view = inflater.inflate(R.layout.minimalui, container, false)
         vpntoggle = view.findViewById(R.id.vpntoggle)
+        importProfileButton = view.findViewById(R.id.import_profile_button)
+        importAsButton = view.findViewById(R.id.import_as_button)
+        importButtonsLayout = view.findViewById(R.id.import_buttons)
         vpnstatus = view.findViewById(R.id.vpnstatus)
 
         vpntoggle.setOnClickListener { view ->
             toggleSwitchPressed(view as CompoundButton)
+        }
+        
+        importProfileButton.setOnClickListener {
+            // Import profile from file
+            Log.d("MinimalUI", "Import from file button clicked")
+            // Simple file picker that should work with any file manager
+            try {
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "application/octet-stream"
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                Log.d("MinimalUI", "File picker intent: $intent")
+                mFileImportReceiver.launch(intent)
+            } catch (e: Exception) {
+                Log.e("MinimalUI", "Error opening file picker: ${e.message}", e)
+                Toast.makeText(requireContext(), "Unable to open file picker", Toast.LENGTH_LONG).show()
+            }
+        }
+        
+        importAsButton.setOnClickListener {
+            // Import from remote URL
+            startASProfileImport()
         }
         if ((activity as BaseActivity).isAndroidTV)
         {
@@ -269,9 +320,11 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             checkForNotificationPermission(view)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-        checkForKeychainPermission(view)
+        fun checkForKeychainPermission(view: View) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                checkForKeychainPermission(view)
             }
+        }
         view.setOnKeyListener { v, key, event ->
             Toast.makeText(activity, "Got key event " + event + " key " + key + " view " + v, Toast.LENGTH_LONG).show();
             false;
@@ -302,7 +355,7 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
                     requireContext(),
                     R.string.cannot_start_vpn_not_configured,
                     Toast.LENGTH_SHORT
-                ).show();
+                ).show()
             }
             return null
         }
@@ -359,7 +412,5 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
     }
 
     companion object {
-        private val MENU_IMPORT_PROFILE = Menu.FIRST + 1
-        private val MENU_IMPORT_AS = Menu.FIRST + 3
     }
 }

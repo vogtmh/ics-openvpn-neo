@@ -21,7 +21,13 @@
             android:id="@+id/fdButtonSelect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_file" >
+            android:text="@string/select_file"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusUp="@+id/fdClear"
+            android:nextFocusDown="@+id/doinline"
+            android:nextFocusLeft="@+id/doinline"
+            android:nextFocusRight="@+id/fdClear" >
         </Button>
 
         <CheckBox
@@ -29,6 +35,10 @@
             android:checked="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusUp="@+id/fdButtonSelect"
+            android:nextFocusDown="@+id/fdClear"
             android:text="@string/make_selection_inline" />
 
         <Space
@@ -41,6 +51,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:nextFocusUp="@+id/doinline"
+            android:nextFocusDown="@+id/doinline"
             android:text="@string/clear" >
         </Button>
     </LinearLayout>

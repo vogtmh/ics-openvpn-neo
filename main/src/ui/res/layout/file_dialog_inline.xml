@@ -14,14 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Inline File Data"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:nextFocusUp="@+id/inlineFileData"
+        android:nextFocusDown="@+id/inlineFileData"
+        android:nextFocusLeft="@+id/inlineFileData"
+        android:nextFocusRight="@+id/inlineFileData" />
  -->
     <EditText
         android:id="@+id/inlineFileData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine|textNoSuggestions"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:nextFocusUp="@+id/textView1"
+        android:nextFocusDown="@+id/textView1"
+        android:nextFocusLeft="@+id/textView1"
+        android:nextFocusRight="@+id/textView1" />
 
 
 </LinearLayout>

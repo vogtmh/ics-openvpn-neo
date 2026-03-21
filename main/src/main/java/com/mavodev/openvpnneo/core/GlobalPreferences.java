@@ -9,7 +9,7 @@ package com.mavodev.openvpnneo.core;
 public class GlobalPreferences {
     boolean minimalUi = false;
     boolean forceConnected = false;
-    boolean initialImport = false;
+    boolean initialImport = true;
 
     /* will be set by AppRestrictions */
     static GlobalPreferences instance = null;

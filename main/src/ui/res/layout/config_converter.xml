@@ -37,6 +37,12 @@
                         android:id="@+id/profilename"
                         style="@style/item"
                         android:inputType="text"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:nextFocusUp="@+id/make_default_profile"
+                        android:nextFocusDown="@+id/make_default_profile"
+                        android:nextFocusLeft="@+id/make_default_profile"
+                        android:nextFocusRight="@+id/make_default_profile"
                         tools:visibility="visible"
                         android:visibility="gone" />
 
@@ -58,7 +64,13 @@
                         <Switch
                                 android:id="@+id/make_default_profile"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:nextFocusUp="@+id/profilename"
+                                android:nextFocusDown="@+id/compatmode"
+                                android:nextFocusLeft="@+id/profilename"
+                                android:nextFocusRight="@+id/compatmode" />
                                 
                 </LinearLayout>
 
@@ -76,6 +88,12 @@
                         style="@style/item"
                         android:entries="@array/compat_mode"
                         android:prompt="@string/compatmode"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:nextFocusUp="@+id/make_default_profile"
+                        android:nextFocusDown="@+id/tls_profile"
+                        android:nextFocusLeft="@+id/make_default_profile"
+                        android:nextFocusRight="@+id/tls_profile"
                         android:visibility="gone"
                         tools:visibility="visible" />
 
@@ -93,6 +111,12 @@
                         style="@style/item"
                         android:entries="@array/tls_profile_entries"
                         android:prompt="@string/compatmode"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:nextFocusUp="@+id/compatmode"
+                        android:nextFocusDown="@+id/fab_save"
+                        android:nextFocusLeft="@+id/compatmode"
+                        android:nextFocusRight="@+id/fab_save"
                         android:visibility="gone"
                         tools:visibility="visible" />
 
@@ -134,7 +158,13 @@
                                 android:id="@+id/importpkcs12"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="true" />
+                                android:checked="true"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:nextFocusUp="@+id/tls_profile"
+                                android:nextFocusDown="@+id/fab_save"
+                                android:nextFocusLeft="@+id/tls_profile"
+                                android:nextFocusRight="@+id/fab_save" />
                                 
                 </LinearLayout>
 

@@ -111,8 +111,8 @@ public class OpenVPNTileService extends TileService implements VpnStatus.StateLi
         VpnProfile vpn;
         Tile t = getQsTile();
         
-        // Set monochrome icon for the tile
-        t.setIcon(Icon.createWithResource(this, R.drawable.ic_qs_tile));
+        // Set icon for the tile
+        t.setIcon(Icon.createWithResource(this, R.drawable.ic_quick));
         
         if (level == ConnectionStatus.LEVEL_AUTH_FAILED || level == ConnectionStatus.LEVEL_NOTCONNECTED) {
             // No VPN connected, use standard VPN

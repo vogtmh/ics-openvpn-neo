@@ -172,7 +172,7 @@ public class AppRestrictions {
         }
 
         boolean forceConnected = restrictions.getBoolean("always_connected", false);
-        boolean allowInitialImport = restrictions.getBoolean("minimal_ui_import", false);
+        boolean allowInitialImport = restrictions.getBoolean("minimal_ui_import", true);
         GlobalPreferences.setInstance(minimalUi, forceConnected, allowInitialImport);
     }
 
@@ -415,7 +415,7 @@ public class AppRestrictions {
         addChangesListener(c);
         boolean applied = applyRestrictions(c);
         if (!applied)
-            GlobalPreferences.setInstance(false, false, false);
+            GlobalPreferences.setInstance(false, false, true);
     }
 
     public void pauseCheckRestrictions(Context c) {
