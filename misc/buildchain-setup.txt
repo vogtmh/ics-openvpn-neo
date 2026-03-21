@@ -1,0 +1,7 @@
+Clone the repository including all submodules:
+git clone --recursive git@github.com:vogtmh/ics-openvpn-neo.git
+
+On CachyOS:
+1. paru -S android-sdk swig jdk17-openjdk
+2. In Android Studio: select build variant uiOvpn23Debug
+3. For Emulator: choose "main" application
