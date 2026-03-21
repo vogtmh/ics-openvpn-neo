@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +27,8 @@ public class Settings_Basic extends KeyChainSettingsFragment implements OnItemSe
     private FileSelectLayout mClientCert;
     private FileSelectLayout mCaCert;
     private FileSelectLayout mClientKey;
-    private CheckBox mUseLzo;
-    private CheckBox mUseLegacyProvider;
+    private Switch mUseLzo;
+    private Switch mUseLegacyProvider;
     private Spinner mType;
     private Spinner mCompatMode;
     private FileSelectLayout mpkcs12;
@@ -37,8 +39,9 @@ public class Settings_Basic extends KeyChainSettingsFragment implements OnItemSe
     private View mView;
     private EditText mProfileName;
     private EditText mKeyPassword;
-    private CheckBox mEnablePeerFingerprint;
+    private Switch mEnablePeerFingerprint;
     private EditText mPeerFingerprints;
+    private Switch mMakeDefaultProfile;
 
     private SparseArray<FileSelectLayout> fileselects = new SparseArray<>();
     private Spinner mAuthRetry;
@@ -75,6 +78,7 @@ public class Settings_Basic extends KeyChainSettingsFragment implements OnItemSe
         mPKCS12Password = mView.findViewById(id.pkcs12password);
         mEnablePeerFingerprint = mView.findViewById(id.enable_peer_fingerprint);
         mPeerFingerprints = mView.findViewById(id.peer_fingerprint);
+        mMakeDefaultProfile = mView.findViewById(id.make_default_profile);
 
         mUserName = mView.findViewById(id.auth_username);
         mPassword = mView.findViewById(id.auth_password);
@@ -204,6 +208,12 @@ public class Settings_Basic extends KeyChainSettingsFragment implements OnItemSe
         mAuthRetry.setSelection(mProfile.mAuthRetry);
         mEnablePeerFingerprint.setChecked(mProfile.mCheckPeerFingerprint);
         mPeerFingerprints.setText(mProfile.mPeerFingerPrints);
+        
+        // Check if this profile is currently the default
+        SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String currentDefaultUUID = defaultPrefs.getString("alwaysOnVpn", "");
+        boolean isDefault = mProfile.getUUIDString().equals(currentDefaultUUID);
+        mMakeDefaultProfile.setChecked(isDefault);
     }
 
     protected void savePreferences() {
@@ -227,6 +237,20 @@ public class Settings_Basic extends KeyChainSettingsFragment implements OnItemSe
         mProfile.mCheckPeerFingerprint = mEnablePeerFingerprint.isChecked();
         mProfile.mPeerFingerPrints = mPeerFingerprints.getText().toString();
         mProfile.mCompatMode = Utils.mapCompatMode(mCompatMode.getSelectedItemPosition());
+        
+        // Save default profile setting
+        SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = defaultPrefs.edit();
+        if (mMakeDefaultProfile.isChecked()) {
+            editor.putString("alwaysOnVpn", mProfile.getUUIDString());
+        } else {
+            // If unchecked, check if this was the default and remove it
+            String currentDefaultUUID = defaultPrefs.getString("alwaysOnVpn", "");
+            if (mProfile.getUUIDString().equals(currentDefaultUUID)) {
+                editor.putString("alwaysOnVpn", "");
+            }
+        }
+        editor.apply();
     }
 
     @Override

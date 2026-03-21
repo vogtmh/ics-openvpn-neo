@@ -29,6 +29,28 @@
             style="@style/item"
             android:inputType="text" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:layout_marginBottom="16dp">
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Set as default profile"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+                
+            <Switch
+                android:id="@+id/make_default_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+                
+        </LinearLayout>
+
         <TextView
                 style="@style/item"
                 android:text="@string/compat_mode_label"
@@ -40,15 +62,47 @@
                 android:entries="@array/compat_mode"
             />
 
-        <CheckBox
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp">
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/loadossllegacy"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+                
+            <Switch
                 android:id="@+id/legacyprovider"
-                style="@style/item"
-                android:text="@string/loadossllegacy" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+                
+        </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/lzo"
-            style="@style/item"
-            android:text="@string/useLZO" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp">
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/useLZO"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+                
+            <Switch
+                android:id="@+id/lzo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+                
+        </LinearLayout>
 
         <TextView
             style="@style/item"
@@ -103,11 +157,26 @@
                 blinkt:showClear="true"
                 blinkt:fileTitle="@string/ca_title" />
 
-            <CheckBox
-                android:id="@+id/enable_peer_fingerprint"
-                style="@style/item"
-                android:text="@string/check_peer_fingerprint"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="4dp">
+                
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/check_peer_fingerprint"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    
+                <Switch
+                    android:id="@+id/enable_peer_fingerprint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                    
+            </LinearLayout>
 
             <EditText
                     android:id="@+id/peer_fingerprint"

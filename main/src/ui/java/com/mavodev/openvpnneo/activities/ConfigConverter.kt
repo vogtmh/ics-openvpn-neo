@@ -67,7 +67,7 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     private lateinit var mTLSProfileLabel: TextView
     private lateinit var mLogLayout: LinearLayout
     private lateinit var mProfilenameLabel: TextView
-    private lateinit var mMakeDefaultProfile: CheckBox
+    private lateinit var mMakeDefaultProfile: Switch
 
     override fun onClick(v: View) {
         if (v.id == R.id.fab_save)
@@ -264,7 +264,7 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
 
     private fun installPKCS12(): Intent? {
 
-        if (!(findViewById<View>(R.id.importpkcs12) as CheckBox).isChecked) {
+        if (!(findViewById<View>(R.id.importpkcs12) as Switch).isChecked) {
             setAuthTypeToEmbeddedPKCS12()
             return null
 
@@ -653,7 +653,7 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         mTLSProfile = findViewById(R.id.tls_profile) as Spinner
         mTLSProfileLabel = findViewById(R.id.tls_profile_label) as TextView
 
-        mMakeDefaultProfile = findViewById(R.id.make_default_profile ) as CheckBox
+        mMakeDefaultProfile = findViewById(R.id.make_default_profile ) as Switch
 
         if (savedInstanceState != null && savedInstanceState.containsKey(VPNPROFILE)) {
             mResult = savedInstanceState.getSerializable(VPNPROFILE) as VpnProfile?

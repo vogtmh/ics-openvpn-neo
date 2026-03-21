@@ -83,11 +83,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private lateinit var mPagerAdapter: ScreenSlidePagerAdapter
     private lateinit var sharedPreferences: SharedPreferences
     
-    // Country display views
-    private lateinit var countryBar: LinearLayout
-    private lateinit var countryFlag: ImageView
-    private lateinit var countryName: TextView
-    private lateinit var countryIp: TextView
+    // Country display views - only action bar variables used
     
     // Action bar custom views
     private lateinit var actionBarCountryFlag: ImageView
@@ -743,10 +739,11 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private fun showFallbackInfo() {
         Log.w("MainActivity", "showFallbackInfo called - API likely failed")
         // Show fallback information when API fails
-        countryName.text = "VPN Connected"
-        countryIp.text = "Checking..."
+        // Old country bar removed - no fallback UI needed
+        // countryName.text = "VPN Connected"
+        // countryIp.text = "Checking..."
         // Try to load a generic VPN flag or use fallback
-        countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
+        // countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
     }
     
     private fun getCountryName(countryCode: String): String {
