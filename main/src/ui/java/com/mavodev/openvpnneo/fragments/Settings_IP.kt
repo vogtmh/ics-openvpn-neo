@@ -15,11 +15,11 @@ class Settings_IP : OpenVpnPreferencesFragment(), Preference.OnPreferenceChangeL
     private lateinit var mIPv4: EditTextPreference
     private lateinit var mIPv6: EditTextPreference
     private lateinit var mUsePull: SwitchPreference
-    private lateinit var mOverrideDNS: CheckBoxPreference
+    private lateinit var mOverrideDNS: SwitchPreference
     private lateinit var mSearchdomain: EditTextPreference
     private lateinit var mDNS1: EditTextPreference
     private lateinit var mDNS2: EditTextPreference
-    private lateinit var mNobind: CheckBoxPreference
+    private lateinit var mNobind: SwitchPreference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

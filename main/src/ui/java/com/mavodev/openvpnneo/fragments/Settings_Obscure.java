@@ -13,6 +13,7 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.SwitchPreference;
 
 import java.util.Locale;
 
@@ -20,15 +21,15 @@ import com.mavodev.openvpnneo.R;
 import com.mavodev.openvpnneo.VpnProfile;
 
 public class Settings_Obscure extends OpenVpnPreferencesFragment implements Preference.OnPreferenceChangeListener {
-	private CheckBoxPreference mUseRandomHostName;
-	private CheckBoxPreference mUseFloat;
-	private CheckBoxPreference mUseCustomConfig;
+	private SwitchPreference mUseRandomHostName;
+	private SwitchPreference mUseFloat;
+	private SwitchPreference mUseCustomConfig;
 	private EditTextPreference mCustomConfig;
     private EditTextPreference mMssFixValue;
-    private CheckBoxPreference mMssFixCheckBox;
-    private CheckBoxPreference mPeerInfo;
+    private SwitchPreference mMssFixCheckBox;
+    private SwitchPreference mPeerInfo;
 
-    private CheckBoxPreference mPersistent;
+    private SwitchPreference mPersistent;
     private ListPreference mConnectRetrymax;
     private EditTextPreference mConnectRetry;
     private EditTextPreference mConnectRetryMaxTime;
@@ -36,12 +37,12 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
 
     public void onCreateBehaviour(Bundle savedInstanceState) {
 
-        mPersistent = (CheckBoxPreference) findPreference("usePersistTun");
+        mPersistent = (SwitchPreference) findPreference("usePersistTun");
         mConnectRetrymax = (ListPreference) findPreference("connectretrymax");
         mConnectRetry = (EditTextPreference) findPreference("connectretry");
         mConnectRetryMaxTime = (EditTextPreference) findPreference("connectretrymaxtime");
 
-        mPeerInfo = (CheckBoxPreference) findPreference("peerInfo");
+        mPeerInfo = (SwitchPreference) findPreference("peerInfo");
 
         mConnectRetrymax.setOnPreferenceChangeListener(this);
         mConnectRetrymax.setSummary("%s");
@@ -112,11 +113,11 @@ public class Settings_Obscure extends OpenVpnPreferencesFragment implements Pref
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.vpn_obscure);
 
-		mUseRandomHostName = (CheckBoxPreference) findPreference("useRandomHostname");
-		mUseFloat = (CheckBoxPreference) findPreference("useFloat");
-		mUseCustomConfig = (CheckBoxPreference) findPreference("enableCustomOptions");
+		mUseRandomHostName = (SwitchPreference) findPreference("useRandomHostname");
+		mUseFloat = (SwitchPreference) findPreference("useFloat");
+		mUseCustomConfig = (SwitchPreference) findPreference("enableCustomOptions");
 		mCustomConfig = (EditTextPreference) findPreference("customOptions");
-        mMssFixCheckBox = (CheckBoxPreference) findPreference("mssFix");
+        mMssFixCheckBox = (SwitchPreference) findPreference("mssFix");
         mMssFixValue = (EditTextPreference) findPreference("mssFixValue");
         mMssFixValue.setOnPreferenceChangeListener(this);
         mTunMtu = (EditTextPreference) findPreference("tunmtu");

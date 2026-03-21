@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.preference.PreferenceActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.mavodev.openvpnneo.R
@@ -142,8 +143,13 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
 
         mPager.setAdapter(mPagerAdapter)
 
-        //TabBarView tabs = (TabBarView) findViewById(R.id.sliding_tabs);
-        //tabs.setViewPager(mPager);
+        // Show tabs in VPN preferences (unlike main activity where they're hidden)
+        val tabLayout: com.google.android.material.tabs.TabLayout = rootview.findViewById(R.id.tab_layout)
+        tabLayout.visibility = View.VISIBLE
+        
+        com.google.android.material.tabs.TabLayoutMediator(tabLayout, mPager) { tab, position ->
+            tab.text = mPagerAdapter.getPageTitle(position)
+        }.attach()
 
         setContentView(rootview)
     }

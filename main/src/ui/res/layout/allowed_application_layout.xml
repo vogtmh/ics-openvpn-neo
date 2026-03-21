@@ -39,7 +39,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textAlignment="viewStart" />
 
-    <CheckBox android:id="@+id/app_selected"
+    <Switch android:id="@+id/app_selected"
         android:layout_marginStart="8dip"
         android:layout_gravity="center_vertical"
         android:layout_rowSpan="1"

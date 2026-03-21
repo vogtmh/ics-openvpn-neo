@@ -7,31 +7,31 @@
     android:title="@string/advanced_settings">
     <PreferenceCategory android:title="@string/client_behaviour">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="usePersistTun"
             android:persistent="false"
             android:summary="@string/persisttun_summary"
             android:title="@string/persistent_tun_title" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="peerInfo"
             android:summary="@string/pushpeerinfosummary"
             android:title="@string/pushpeerinfo" />
     </PreferenceCategory>
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="useRandomHostname"
         android:persistent="false"
         android:summary="@string/random_host_summary"
         android:title="@string/random_host_prefix" />
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="useFloat"
         android:persistent="false"
         android:summary="@string/float_summary"
         android:title="@string/float_title" />
 
     <PreferenceCategory android:title="@string/payload_options">
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="mssFix"
             android:persistent="false"
             android:title="@string/mssfix_checkbox" />
@@ -47,7 +47,7 @@
             android:title="Tunnel MTU (tun-mtu)"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/custom_config_title">
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="enableCustomOptions"
             android:persistent="false"
             android:summary="@string/custom_config_summary"

@@ -65,7 +65,7 @@
 
     </RadioGroup>
 
-    <CheckBox
+    <Switch
         tools:checked="true"
         android:id="@+id/clearlogconnect"
         android:text="@string/clear_log_on_connect"

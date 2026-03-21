@@ -11,20 +11,21 @@ import androidx.lifecycle.Lifecycle;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
+import androidx.preference.SwitchPreference;
 
 import com.mavodev.openvpnneo.R;
 
 
 public class Settings_Routing extends OpenVpnPreferencesFragment implements Preference.OnPreferenceChangeListener {
 	private EditTextPreference mCustomRoutes;
-	private CheckBoxPreference mUseDefaultRoute;
+	private SwitchPreference mUseDefaultRoute;
 	private EditTextPreference mCustomRoutesv6;
-	private CheckBoxPreference mUseDefaultRoutev6;
-	private CheckBoxPreference mRouteNoPull;
-    private CheckBoxPreference mLocalVPNAccess;
+	private SwitchPreference mUseDefaultRoutev6;
+	private SwitchPreference mRouteNoPull;
+    private SwitchPreference mLocalVPNAccess;
     private EditTextPreference mExcludedRoutes;
     private EditTextPreference mExcludedRoutesv6;
-	private CheckBoxPreference mBlockUnusedAF;
+	private SwitchPreference mBlockUnusedAF;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

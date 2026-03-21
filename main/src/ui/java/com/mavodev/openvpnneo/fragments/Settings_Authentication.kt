@@ -28,8 +28,8 @@ import java.io.IOException
 class Settings_Authentication : OpenVpnPreferencesFragment(), Preference.OnPreferenceClickListener {
     private lateinit var handleFileSelectResult: ActivityResultLauncher<Intent>
     private lateinit var handleSystemChooserResult: ActivityResultLauncher<Intent>
-    private lateinit var mExpectTLSCert: CheckBoxPreference
-    private lateinit var mCheckRemoteCN: CheckBoxPreference
+    private lateinit var mExpectTLSCert: SwitchPreference
+    private lateinit var mCheckRemoteCN: SwitchPreference
     private lateinit var mRemoteCN: RemoteCNPreference
     private lateinit var mTLSAuthDirection: ListPreference
     private lateinit var mTLSAuthFile: Preference

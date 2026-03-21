@@ -63,7 +63,7 @@ public class FileSelect extends BaseActivity {
 
         mData = getIntent().getStringExtra(START_DATA);
 		if(mData==null)
-			mData=Environment.getExternalStorageDirectory().getPath();
+			mData=null; // Remove default external storage - will use SAF instead
 
 		String title = getIntent().getStringExtra(WINDOW_TITLE);
 		int titleId = getIntent().getIntExtra(WINDOW_TITLE, 0);
@@ -225,7 +225,7 @@ public class FileSelect extends BaseActivity {
 		if(VpnProfile.isEmbedded(mData))
 			return mData;
 		else
-			return Environment.getExternalStorageDirectory().getPath();
+			return null; // Remove external storage access - use SAF instead
 	}
 
 	public CharSequence getInlineData() {

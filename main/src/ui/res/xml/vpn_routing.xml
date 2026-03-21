@@ -6,24 +6,24 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="routenopull"
         android:summary="@string/ignore_routes_summary"
         android:title="@string/ignored_pushed_routes" />
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:title="@string/blocklocal_title"
         android:summary="@string/blocklocal_summary"
         android:key="unblockLocal"
     />
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:title="@string/title_block_address_families"
         android:key="blockUnusedAF"
         android:summary="@string/summary_block_address_families"
         />
     <PreferenceCategory android:title="@string/ipv4" >
-        <CheckBoxPreference
+        <SwitchPreference
             android:disableDependentsState="true"
             android:key="useDefaultRoute"
             android:summary="@string/default_route_summary"
@@ -42,7 +42,7 @@
             android:title="@string/custom_routes_title_excluded" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/ipv6" >
-        <CheckBoxPreference
+        <SwitchPreference
             android:disableDependentsState="true"
             android:key="useDefaultRoutev6"
             android:summary="@string/default_route_summary"

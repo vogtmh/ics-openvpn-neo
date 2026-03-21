@@ -180,7 +180,7 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
         private final Switch mRemoteSwitch;
         private final RadioGroup mProtoGroup;
         private final EditText mCustomOptionText;
-        private final CheckBox mCustomOptionCB;
+        private final Switch mCustomOptionCB;
         private final View mCustomOptionsLayout;
         private final ImageButton mDeleteButton;
         private final EditText mConnectText;
@@ -194,7 +194,7 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
         private final View mProxyAuthLayout;
         private final EditText mProxyAuthUser;
         private final EditText mProxyAuthPassword;
-        private final CheckBox mProxyAuthCb;
+        private final Switch mProxyAuthCb;
 
         protected Connection mConnection; // Set to null on update
 

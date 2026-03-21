@@ -30,7 +30,7 @@
             android:nextFocusRight="@+id/fdClear" >
         </Button>
 
-        <CheckBox
+        <Switch
             android:id="@+id/doinline"
             android:checked="true"
             android:layout_width="wrap_content"

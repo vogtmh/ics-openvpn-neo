@@ -27,14 +27,14 @@
                 android:title="@string/ipv6_address"
                 app:useSimpleSummaryProvider="true" />
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:key="nobind"
                 android:persistent="false"
                 android:summary="@string/nobind_summary"
                 android:title="@string/no_bind" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/dns">
-        <CheckBoxPreference
+        <SwitchPreference
                 android:key="overrideDNS"
                 android:summary="@string/dns_override_summary"
                 android:title="@string/override_dns" />

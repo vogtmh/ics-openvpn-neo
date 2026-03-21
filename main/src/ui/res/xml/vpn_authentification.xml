@@ -13,11 +13,11 @@
                 android:persistent="false"
                 android:title="@string/tls_profile"
                 app:useSimpleSummaryProvider="true" />
-        <CheckBoxPreference
+        <SwitchPreference
                 android:key="remoteServerTLS"
                 android:summary="@string/check_remote_tlscert"
                 android:title="@string/check_remote_tlscert_title" />
-        <CheckBoxPreference
+        <SwitchPreference
                 android:key="checkRemoteCN"
                 android:summary="@string/remote_tlscn_check_summary"
                 android:title="@string/remote_tlscn_check_title" />

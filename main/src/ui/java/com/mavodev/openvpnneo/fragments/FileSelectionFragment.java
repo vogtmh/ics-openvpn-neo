@@ -49,7 +49,9 @@ public class FileSelectionFragment extends ListFragment {
 
 
     private String parentPath;
-    private String currentPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    // Remove external storage access - use SAF directory browsing instead
+    // private String currentPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private String currentPath = "/"; // Default to root for SAF
 
 
     private String[] formatFilter = null;
@@ -139,7 +141,9 @@ public class FileSelectionFragment extends ListFragment {
     }
 
     public void refresh() {
-        getDir(Environment.getExternalStorageDirectory().getAbsolutePath());
+        // Remove external storage access - no directory browsing with SAF
+        // getDir(Environment.getExternalStorageDirectory().getAbsolutePath());
+        getDir("/"); // Default to root for SAF
     }
 
     @Override
@@ -269,14 +273,9 @@ public class FileSelectionFragment extends ListFragment {
     }
 
     private Collection<String> getExternalStorages() {
+        // Remove external storage access - SAF doesn't need directory listing
         Vector<String> dirs = new Vector<>();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            for (File d : getActivity().getExternalFilesDirs(null))
-                dirs.add(getRootOfInnerSdCardFolder(d));
-        } else {
-            dirs.add(Environment.getExternalStorageDirectory().getAbsolutePath());
-        }
+        // dirs.add("/Documents"); // Add Documents folder as default
         return dirs;
     }
 
@@ -286,8 +285,7 @@ public class FileSelectionFragment extends ListFragment {
         final long totalSpace = file.getTotalSpace();
         while (true) {
             final File parentFile = file.getParentFile();
-            if (parentFile == null || parentFile.getTotalSpace() != totalSpace
-                    || file.equals(Environment.getExternalStorageDirectory()))
+            if (parentFile == null || parentFile.getTotalSpace() != totalSpace)
                 return file.getAbsolutePath();
             file = parentFile;
         }
