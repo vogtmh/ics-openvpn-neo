@@ -49,6 +49,8 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
         val devHacks = findPreference<PreferenceCategory>("device_hacks") as PreferenceCategory
         mAlwaysOnVPN = findPreference("alwaysOnVpn")!!
         mAlwaysOnVPN.onPreferenceChangeListener = this
+        val themePref = findPreference<ListPreference>("theme")
+        themePref?.onPreferenceChangeListener = this
         val loadtun = findPreference<Preference>("loadTunModule")!!
         if (!isTunModuleAvailable) {
             loadtun.isEnabled = false
@@ -149,6 +151,12 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
         if (preference === mAlwaysOnVPN) {
             val vpn = ProfileManager.get(activity, newValue as String)
             mAlwaysOnVPN.summary = vpn.name
+        } else if (preference.key == "theme") {
+            when (newValue as String) {
+                "light" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO)
+                "dark" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES)
+                else -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
         }
         return true
     }

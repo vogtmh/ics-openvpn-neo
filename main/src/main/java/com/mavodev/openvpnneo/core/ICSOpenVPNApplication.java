@@ -14,12 +14,12 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
-
 import android.os.StrictMode;
 import android.os.strictmode.Violation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import java.util.concurrent.Executors;
 
@@ -40,6 +40,20 @@ public class ICSOpenVPNApplication extends Application {
 
         LocaleHelper.setDesiredLocale(this);
         super.onCreate();
+
+        SharedPreferences prefs = Preferences.getDefaultSharedPreferences(this);
+        String theme = prefs.getString("theme", "system");
+        switch (theme) {
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannels();

@@ -4,6 +4,8 @@
   -->
 <resources>
     <string name="app">OpenVPN Neo</string>
+    <string name="theme">Theme</string>
+    <string name="theme_summary">Select the application theme</string>
     <string name="address">Server Address:</string>
     <string name="port">Server Port:</string>
     <string name="location">Location</string>
@@ -176,7 +178,7 @@
     <string name="extracahint">The CA cert is usually returned from the Android keystore. Specify a separate certificate if you get certificate verification errors.</string>
     <string name="select_file">Select</string>
     <string name="keychain_nocacert">No CA Certificate returned while reading from Android keystore. Authentication will probably fail.</string>
-    <string name="show_log_summary">Shows the log window on connect. The log window can always be accessed from the notification status.</string>
+    <string name="show_log_summary">Shows the log window on connect. The log window can always be accessed from the menu.</string>
     <string name="show_log_window">Show log window</string>
     <string name="mobile_info">%10$s %9$s running on %3$s %1$s (%2$s), Android %6$s (%7$s) API %4$d, ABI %5$s, (%8$s)</string>
     <string name="error_rsa_sign">Error signing with Android keystore key %1$s: %2$s</string>
@@ -502,7 +504,7 @@
     <string name="dnsserver_no_valid_server">No valid DNS server left. Terminating connection.</string>
     <string name="editor_close_profile_changed">Profile has changed outside the editor. Closing configuration editor.</string>
     <string name="confirmations_title">Disable VPN connection confirmations</string>
-    <string name="confirmations_summary">(Not recommended) Disables confirmations when connecting/disconnecting VPN. This disables the safeguard to accidientially disconnect VPN connections</string>
+    <string name="confirmations_summary">Disable prompt when disconnecting VPN.</string>
     <string name="cannot_start_vpn_not_configured">Cannot start VPN. No default VPN has been configured.</string>
     <string name="minimal_ui_not_available">Functionality not available when minimal UI is enabled</string>
     <string name="missing_keychain_access">Access to Android keychain certificate is missing. Tap this notification to select/import a certificate</string>

@@ -9,7 +9,7 @@ enum class SettingType {
 data class SettingItem(
     val key: String,
     val title: String,
-    val description: String,
+    var description: String,
     val type: SettingType,
     var value: Boolean = false,
     val action: (() -> Unit)? = null

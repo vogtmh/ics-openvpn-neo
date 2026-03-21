@@ -8,6 +8,14 @@
     <PreferenceCategory
             android:key="app_behaviour"
             android:title="@string/appbehaviour">
+        <ListPreference
+                android:key="theme"
+                android:title="@string/theme"
+                android:summary="@string/theme_summary"
+                android:entries="@array/theme_entries"
+                android:entryValues="@array/theme_values"
+                android:defaultValue="system" />
+
         <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="showlogwindow"

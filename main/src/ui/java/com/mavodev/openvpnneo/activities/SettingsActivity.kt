@@ -58,6 +58,28 @@ class SettingsActivity : BaseActivity() {
             type = SettingType.CATEGORY
         ))
 
+        val themeValues = resources.getStringArray(R.array.theme_values)
+        val themeEntries = resources.getStringArray(R.array.theme_entries)
+        val currentThemeValue = sharedPreferences.getString("theme", "system")
+        val currentIndex = themeValues.indexOf(currentThemeValue).takeIf { it >= 0 } ?: 0
+        val currentThemeName = themeEntries[currentIndex]
+
+        settings.add(SettingItem(
+            key = "theme",
+            title = getString(R.string.theme),
+            description = "Current: $currentThemeName",
+            type = SettingType.ACTION,
+            action = { showThemeSelectionDialog() }
+        ))
+
+        settings.add(SettingItem(
+            key = "display_vpn_country",
+            title = "Display VPN country",
+            description = "Request and display the country of your current connection via https://api.country.is/",
+            type = SettingType.TOGGLE_SLIDER,
+            value = sharedPreferences.getBoolean("display_vpn_country", true)
+        ))
+
         settings.add(SettingItem(
             key = "showlogwindow",
             title = getString(R.string.show_log_window),
@@ -80,14 +102,6 @@ class SettingsActivity : BaseActivity() {
             description = "Use the C++ OpenVPN library (experimental)",
             type = SettingType.TOGGLE_SLIDER,
             value = sharedPreferences.getBoolean("ovpn3", false)
-        ))
-
-        settings.add(SettingItem(
-            key = "display_vpn_country",
-            title = "Display VPN country",
-            description = "Request and display the country of your current connection via https://api.country.is/",
-            type = SettingType.TOGGLE_SLIDER,
-            value = sharedPreferences.getBoolean("display_vpn_country", true)
         ))
 
         settings.add(SettingItem(
@@ -393,5 +407,47 @@ class SettingsActivity : BaseActivity() {
             android.content.res.Configuration.UI_MODE_NIGHT_NO -> false
             else -> false
         }
+    }
+
+    private fun showThemeSelectionDialog() {
+        val themeEntries = resources.getStringArray(R.array.theme_entries)
+        val themeValues = resources.getStringArray(R.array.theme_values)
+        
+        val currentTheme = sharedPreferences.getString("theme", "system")
+        val currentIndex = themeValues.indexOf(currentTheme).takeIf { it >= 0 } ?: 0
+        
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.theme))
+            .setSingleChoiceItems(themeEntries, currentIndex) { dialog, which ->
+                val selectedValue = themeValues[which]
+                val selectedName = themeEntries[which]
+                sharedPreferences.edit().putString("theme", selectedValue).apply()
+                
+                val settingItem = settings.find { it.key == "theme" }
+                if (settingItem != null) {
+                    settingItem.description = "Current: $selectedName"
+                    settingsAdapter.notifyDataSetChanged()
+                }
+
+                // Apply theme immediately
+                when (selectedValue) {
+                    "light" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO)
+                    "dark" -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES)
+                    else -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            
+        // Set background color only in dark mode
+        dialog.setOnShowListener {
+            if (isInDarkMode()) {
+                val colorDrawable = android.graphics.drawable.ColorDrawable(android.graphics.Color.parseColor("#111111"))
+                dialog.window?.setBackgroundDrawable(colorDrawable)
+            }
+        }
+        dialog.show()
     }
 }

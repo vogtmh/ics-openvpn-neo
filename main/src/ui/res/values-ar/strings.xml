@@ -172,7 +172,7 @@
     <string name="extracahint">عادةً ما يتم إرجاع شهادة المرجع المصدق (CA) من لوحة مفاتيح Android. حدد شهادة منفصلة إذا حصلت على أخطاء التحقق من الشهادة.</string>
     <string name="select_file">اختر</string>
     <string name="keychain_nocacert">لم يتم إرجاع شهادة CA أثناء القراءة من keystore Android. ربما ستفشل المصادقة.</string>
-    <string name="show_log_summary">Shows the log window on connect. The log window can always be accessed from the notification status.</string>
+    <string name="show_log_summary">Shows the log window on connect. The log window can always be accessed from the menu.</string>
     <string name="show_log_window">إظهار نافذة سجل</string>
     <string name="mobile_info">%10$s %9$s running on %3$s %1$s (%2$s), Android %6$s (%7$s) API %4$d, ABI %5$s, (%8$s)</string>
     <string name="error_rsa_sign">خطأ في التوقيع باستخدام مفتاح keystore في Android %1$s: %2$s</string>
