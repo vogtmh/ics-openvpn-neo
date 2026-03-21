@@ -15,16 +15,20 @@ import android.content.pm.PackageManager
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Html
 import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +77,8 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
     private var defaultVPN: VpnProfile? = null
     private lateinit var mPermissionView: View
     private lateinit var mPermReceiver: ActivityResultLauncher<String>
+    private var currentConnectionLevel: ConnectionStatus = ConnectionStatus.LEVEL_NOTCONNECTED
+    private var connectingProfileUUID: String? = null // Track profile being connected
 
     override fun updateState(
         state: String?,
@@ -81,6 +87,36 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         level: ConnectionStatus?,
         intent: Intent?
     ) {
+        // Store the current connection level
+        currentConnectionLevel = level ?: ConnectionStatus.LEVEL_NOTCONNECTED
+        
+        // Detect when a new VPN connection is starting (from any source)
+        if (level == ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET && connectingProfileUUID == null) {
+            val currentVpnUUID = VpnStatus.getLastConnectedVPNProfile()
+            if (currentVpnUUID != null) {
+                Log.d("VPNProfileList", "New VPN connection detected, setting connectingProfileUUID: $currentVpnUUID")
+                connectingProfileUUID = currentVpnUUID
+            }
+        }
+        
+        // Clear connectingProfileUUID when VPN successfully connects
+        if (level == ConnectionStatus.LEVEL_CONNECTED && connectingProfileUUID != null) {
+            Log.d("VPNProfileList", "VPN connected, clearing connectingProfileUUID: $connectingProfileUUID")
+            connectingProfileUUID = null
+        }
+        
+        // Clear connectingProfileUUID when VPN connection fails
+        if ((level == ConnectionStatus.LEVEL_AUTH_FAILED || level == ConnectionStatus.LEVEL_NONETWORK) && connectingProfileUUID != null) {
+            Log.d("VPNProfileList", "VPN connection failed, clearing connectingProfileUUID: $connectingProfileUUID")
+            connectingProfileUUID = null
+        }
+        
+        // Clear connectingProfileUUID when VPN disconnects
+        if (level == ConnectionStatus.LEVEL_NOTCONNECTED && connectingProfileUUID != null) {
+            Log.d("VPNProfileList", "VPN disconnected, clearing connectingProfileUUID: $connectingProfileUUID")
+            connectingProfileUUID = null
+        }
+        
         requireActivity().runOnUiThread(Runnable {
             mLastStatusMessage = VpnStatus.getLastCleanLogMessage(getActivity())
             mLastIntent = intent
@@ -574,8 +610,26 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         startActivityForResult(vprefintent, EDIT_VPN_CONFIG)
     }
 
+    // Simple method to stop all animations (called from MainActivity)
+    fun stopAllAnimations() {
+        Log.d("VPNProfileList", "stopAllAnimations() called - clearing connectingProfileUUID")
+        // Only clear if we had a connecting profile that needs to be stopped
+        if (connectingProfileUUID != null) {
+            Log.d("VPNProfileList", "Had connecting profile, clearing animation")
+            connectingProfileUUID = null
+            mArrayadapter?.notifyDataSetChanged()
+        } else {
+            Log.d("VPNProfileList", "No connecting profile to clear")
+        }
+    }
+    
     private fun startVPN(profile: VpnProfile) {
         ProfileManager.saveProfile(getActivity(), profile)
+        
+        // Start animation immediately when user clicks
+        Log.d("VPNProfileList", "startVPN called for profile: " + profile.getUUIDString() + " - starting animation")
+        connectingProfileUUID = profile.getUUIDString()
+        mArrayadapter?.notifyDataSetChanged()
 
         val intent = Intent(getActivity(), LaunchVPN::class.java)
         intent.putExtra(LaunchVPN.EXTRA_KEY, profile.getUUID().toString())
@@ -639,13 +693,31 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
                 warningText.append(SpannableString("Default VPN"))
             }
 
-            if (profile.getUUIDString() == VpnStatus.getLastConnectedVPNProfile()) {
+            // Very simple logic: Show animation only for connecting profile
+            if (profile.getUUIDString() == connectingProfileUUID) {
+                // User clicked to connect this profile - show pulsing animation
+                subtitle.setText("Connecting...")
+                subtitle.setVisibility(View.VISIBLE)
+                val container = v.findViewById<View>(R.id.vpn_item_container)
+                container.setBackgroundResource(R.drawable.vpn_item_border_pulse)
+                val animationDrawable = container.background as AnimationDrawable
+                animationDrawable.start()
+                Log.d("VPNProfileList", "Show pulsing border for connecting profile: ${profile.name}")
+            } else if (profile.getUUIDString() == VpnStatus.getLastConnectedVPNProfile() && currentConnectionLevel == ConnectionStatus.LEVEL_CONNECTED) {
+                // VPN is connected - show solid border
                 subtitle.setText(mLastStatusMessage)
                 subtitle.setVisibility(View.VISIBLE)
+                val container = v.findViewById<View>(R.id.vpn_item_container)
+                container.setBackgroundResource(R.drawable.vpn_item_border)
+                Log.d("VPNProfileList", "Show solid border for connected profile: ${profile.name}")
             } else {
+                // Not connecting and not connected - no border
                 subtitle.setText(warningText)
                 if (warningText.length > 0) subtitle.setVisibility(View.VISIBLE)
                 else subtitle.setVisibility(View.GONE)
+                val container = v.findViewById<View>(R.id.vpn_item_container)
+                container.background = null
+                Log.d("VPNProfileList", "No border for profile: ${profile.name}")
             }
 
 

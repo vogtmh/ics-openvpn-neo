@@ -4,6 +4,7 @@
  */
 package com.mavodev.openvpnneo.activities
 
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -20,6 +21,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -27,6 +30,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -38,13 +42,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mavodev.openvpnneo.R
-import com.mavodev.openvpnneo.core.GlobalPreferences
-import com.mavodev.openvpnneo.core.OpenVPNManagement
-import com.mavodev.openvpnneo.core.OpenVPNService
-import com.mavodev.openvpnneo.core.Preferences
-import com.mavodev.openvpnneo.core.TrafficHistory
+import com.mavodev.openvpnneo.fragments.VPNProfileList
 import com.mavodev.openvpnneo.core.VpnStatus
 import com.mavodev.openvpnneo.core.ConnectionStatus
+import com.mavodev.openvpnneo.core.OpenVPNService
+import com.mavodev.openvpnneo.core.OpenVPNManagement
+import com.mavodev.openvpnneo.core.TrafficHistory
+import com.mavodev.openvpnneo.core.Preferences
+import com.mavodev.openvpnneo.core.GlobalPreferences
 import com.mavodev.openvpnneo.fragments.*
 import com.mavodev.openvpnneo.fragments.ImportRemoteConfig.Companion.newInstance
 import com.mavodev.openvpnneo.views.ScreenSlidePagerAdapter
@@ -89,11 +94,12 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     
     // Chart data (only used when chart is initialized)
     private var firstTs = 0L
+    private var trafficHistory: TrafficHistory? = null
+    private var chartInitialized = false
     private var colourIn = 0
     private var colourOut = 0
     private var colourPoint = 0
     private var textColour = 0
-    private var chartInitialized = false
     
     // Periodic country refresh timer
     private var countryRefreshTimer: Timer? = null
@@ -317,6 +323,9 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             }
         }
         
+        // Set initial no data text to "Initializing.." for mini chart
+        miniChart?.setNoDataText(getString(R.string.initializing))
+        
         // Set initial empty data
         miniChart?.data = LineData()
         miniChart?.invalidate()
@@ -442,10 +451,10 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             yAxis?.labelCount = Math.ceil(ymax.toDouble() - 2.0).toInt()
         }
         
-        miniChart?.setNoDataText(getString(R.string.notenoughdata))
+        miniChart?.setNoDataText(getString(R.string.initializing))
         miniChart?.invalidate()
         
-        Log.d("MainActivity", "Mini chart updated and invalidated")
+        Log.d("MainActivity", "Mini chart updated and invalidated - dataPoints: ${lineData.getDataSetByIndex(0).entryCount}")
     }
     
     private fun setLineDataAttributes(dataSet: LineDataSet, colour: Int) {
@@ -516,35 +525,40 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                                 Log.d("MainActivity", "Initializing mini chart after delay")
                                 initializeMiniChart()
                                 chartInitialized = true
-                                miniChartContainer?.visibility = View.VISIBLE
-                                miniChartContainer?.layoutParams?.height = 120.dpToPx()
-                                miniChartContainer?.requestLayout()
+                                animateMiniChartShow()
                                 VpnStatus.addByteCountListener(this)
-                                updateMiniChart()
+                                // Don't call updateMiniChart() here - let it be called when data arrives
                                 Log.d("MainActivity", "Mini chart shown and listener registered")
                             }
                         }, 2000)
                     } else {
-                        miniChartContainer?.visibility = View.VISIBLE
-                        miniChartContainer?.layoutParams?.height = 120.dpToPx()
-                        miniChartContainer?.requestLayout()
+                        animateMiniChartShow()
                         VpnStatus.addByteCountListener(this)
-                        updateMiniChart()
+                        // Don't call updateMiniChart() here either - let it be called when data arrives
                         Log.d("MainActivity", "Mini chart shown (already initialized)")
                     }
                 }
                 ConnectionStatus.LEVEL_NOTCONNECTED -> {
-                    miniChartContainer?.visibility = View.GONE
-                    miniChartContainer?.layoutParams?.height = 0
-                    miniChartContainer?.requestLayout()
+                    animateMiniChartHide()
                     VpnStatus.removeByteCountListener(this)
                     Log.d("MainActivity", "Mini chart hidden and listener unregistered")
                     cleanupMiniChart()
                 }
-                else -> {
-                    miniChartContainer?.visibility = View.GONE
-                    miniChartContainer?.layoutParams?.height = 0
-                    miniChartContainer?.requestLayout()
+                ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET,
+                ConnectionStatus.LEVEL_CONNECTING_SERVER_REPLIED,
+                ConnectionStatus.LEVEL_AUTH_FAILED,
+                ConnectionStatus.LEVEL_NONETWORK -> {
+                    // Don't hide mini chart or stop animations during connection attempts
+                    // Only hide when actually disconnected or failed
+                    if (level == ConnectionStatus.LEVEL_AUTH_FAILED || level == ConnectionStatus.LEVEL_NONETWORK) {
+                        animateMiniChartHide()
+                    }
+                }
+                ConnectionStatus.LEVEL_VPNPAUSED,
+                ConnectionStatus.LEVEL_START,
+                ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT,
+                ConnectionStatus.UNKNOWN_LEVEL -> {
+                    // For other states, don't do anything with the mini chart
                 }
             }
         }
@@ -743,6 +757,78 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         super.onPause()
         // Stop periodic updates
         stopPeriodicUpdates()
+    }
+
+    // Animation methods for smooth mini chart transitions
+    private fun animateMiniChartShow() {
+        miniChartContainer?.let { container ->
+            // Set initial state
+            container.visibility = View.VISIBLE
+            container.layoutParams?.height = 0
+            container.requestLayout()
+            
+            // Animate to full height
+            val targetHeight = 120.dpToPx()
+            val animator = ValueAnimator.ofInt(0, targetHeight)
+            animator.duration = 300 // 300ms animation
+            animator.interpolator = AccelerateDecelerateInterpolator()
+            
+            animator.addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Int
+                container.layoutParams?.height = animatedValue
+                container.requestLayout()
+            }
+            
+            animator.start()
+            
+            // Stop VPN profile list animations when connection is established
+            stopVPNProfileAnimations()
+            
+            Log.d("MainActivity", "Animating mini chart show")
+        }
+    }
+    
+    private fun animateMiniChartHide() {
+        miniChartContainer?.let { container ->
+            val currentHeight = container.height
+            
+            val animator = ValueAnimator.ofInt(currentHeight, 0)
+            animator.duration = 300 // 300ms animation
+            animator.interpolator = AccelerateDecelerateInterpolator()
+            
+            animator.addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Int
+                container.layoutParams?.height = animatedValue
+                container.requestLayout()
+            }
+            
+            animator.addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    container.visibility = View.GONE
+                }
+            })
+            
+            animator.start()
+            
+            // Stop VPN profile list animations when connection fails/disconnects
+            stopVPNProfileAnimations()
+            
+            Log.d("MainActivity", "Animating mini chart hide")
+        }
+    }
+
+    // Stop VPN profile list animations when connection state changes
+    private fun stopVPNProfileAnimations() {
+        Log.d("MainActivity", "stopVPNProfileAnimations() called")
+        // Find the VPNProfileList fragment and stop animations
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment is VPNProfileList) {
+                Log.d("MainActivity", "Found VPNProfileList fragment, stopping animations")
+                fragment.stopAllAnimations()
+                return@forEach
+            }
+        }
+        Log.d("MainActivity", "stopVPNProfileAnimations() completed - no VPNProfileList fragment found")
     }
 
     override fun onDestroy() {

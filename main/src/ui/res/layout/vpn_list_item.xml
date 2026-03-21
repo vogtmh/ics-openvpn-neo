@@ -22,19 +22,35 @@
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight">
 
+    <!-- Container for potential border around active VPN -->
+    <LinearLayout
+        android:id="@+id/vpn_item_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
     <LinearLayout
         android:id="@+id/vpn_list_item_left"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:background="?android:attr/selectableItemBackground"
         android:focusable="true"
-        android:layout_weight="1"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
 
         <LinearLayout
             android:id="@android:id/widget_frame"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -72,7 +88,7 @@
     <ImageView
         android:id="@+id/quickedit_settings"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@string/configure_the_vpn"
@@ -82,5 +98,7 @@
         android:paddingRight="?android:attr/scrollbarSize"
         android:paddingStart="15dip"
         android:src="@drawable/ic_edit" />
+
+    </LinearLayout>
 
 </LinearLayout>

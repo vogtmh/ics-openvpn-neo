@@ -57,16 +57,17 @@
         <LinearLayout
             android:id="@+id/mini_chart_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="#1a1a1a"
             android:padding="8dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:minHeight="0dp">
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/mini_chart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="120dp" />
 
         </LinearLayout>
 
