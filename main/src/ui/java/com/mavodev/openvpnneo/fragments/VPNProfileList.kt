@@ -25,16 +25,17 @@ import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Html
 import android.text.SpannableString
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.util.Log
-import android.view.MenuItem
 import android.view.View
+import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
@@ -686,7 +687,22 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             settingsview.setOnClickListener(View.OnClickListener { view: View? -> editVPN(profile) })
 
             val subtitle = v.findViewById<TextView>(R.id.vpn_item_subtitle)
+            val countryFlag = v.findViewById<ImageView>(R.id.vpn_item_country_flag)
+            val defaultStar = v.findViewById<ImageView>(R.id.vpn_item_default_star)
             val warningText = getWarningText(requireContext(), profile)
+            
+            // Load country flag for this profile
+            loadProfileCountryFlag(profile, countryFlag)
+            
+            // Show/hide default profile star
+            Log.d("VPNProfileList", "Profile: ${profile.name}, defaultVPN: ${defaultVPN?.name}")
+            if (profile === defaultVPN) {
+                defaultStar.visibility = View.VISIBLE
+                Log.d("VPNProfileList", "Showing star for default profile: ${profile.name}")
+            } else {
+                defaultStar.visibility = View.GONE
+                Log.d("VPNProfileList", "Hiding star for profile: ${profile.name}")
+            }
 
             if (profile === defaultVPN) {
                 if (warningText.length > 0) warningText.append(" ")
@@ -697,7 +713,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             if (profile.getUUIDString() == connectingProfileUUID) {
                 // User clicked to connect this profile - show pulsing animation
                 subtitle.setText("Connecting...")
-                subtitle.setVisibility(View.VISIBLE)
+                subtitle.setVisibility(View.GONE)  // Hide log output
                 val container = v.findViewById<View>(R.id.vpn_item_container)
                 container.setBackgroundResource(R.drawable.vpn_item_border_pulse)
                 val animationDrawable = container.background as AnimationDrawable
@@ -706,14 +722,14 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             } else if (profile.getUUIDString() == VpnStatus.getLastConnectedVPNProfile() && currentConnectionLevel == ConnectionStatus.LEVEL_CONNECTED) {
                 // VPN is connected - show solid border
                 subtitle.setText(mLastStatusMessage)
-                subtitle.setVisibility(View.VISIBLE)
+                subtitle.setVisibility(View.GONE)  // Hide log output
                 val container = v.findViewById<View>(R.id.vpn_item_container)
                 container.setBackgroundResource(R.drawable.vpn_item_border)
                 Log.d("VPNProfileList", "Show solid border for connected profile: ${profile.name}")
             } else {
                 // Not connecting and not connected - no border
                 subtitle.setText(warningText)
-                if (warningText.length > 0) subtitle.setVisibility(View.VISIBLE)
+                if (warningText.length > 0) subtitle.setVisibility(View.GONE)  // Hide log output
                 else subtitle.setVisibility(View.GONE)
                 val container = v.findViewById<View>(R.id.vpn_item_container)
                 container.background = null
@@ -763,5 +779,48 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         private val MENU_GRAPH = Menu.FIRST + 8
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"
+    }
+    
+    private fun loadProfileCountryFlag(profile: VpnProfile, flagImageView: ImageView) {
+        val prefs = requireContext().getSharedPreferences("profile_countries", Context.MODE_PRIVATE)
+        val countryCode = prefs.getString(profile.getUUIDString(), null)
+        
+        Log.d("VPNProfileList", "Loading flag for profile ${profile.getUUIDString()}, country: $countryCode")
+        
+        if (countryCode != null) {
+            // Load flag for stored country
+            try {
+                val flagResourceName = "flag_${countryCode.lowercase()}"
+                val resourceId = resources.getIdentifier(flagResourceName, "drawable", requireContext().packageName)
+                
+                Log.d("VPNProfileList", "Looking for flag resource: $flagResourceName, ID: $resourceId")
+                
+                if (resourceId != 0) {
+                    flagImageView.setImageResource(resourceId)
+                    Log.d("VPNProfileList", "Loaded flag for $countryCode")
+                } else {
+                    flagImageView.setImageResource(R.drawable.ic_placeholder_flag)
+                    Log.d("VPNProfileList", "Flag not found for $countryCode, using placeholder")
+                }
+            } catch (e: Exception) {
+                Log.e("VPNProfileList", "Error loading flag for $countryCode", e)
+                flagImageView.setImageResource(R.drawable.ic_placeholder_flag)
+            }
+        } else {
+            // Show placeholder flag
+            flagImageView.setImageResource(R.drawable.ic_placeholder_flag)
+            Log.d("VPNProfileList", "No country stored for profile ${profile.getUUIDString()}, using placeholder")
+        }
+    }
+    
+    private fun saveProfileCountry(profileUUID: String, countryCode: String) {
+        val prefs = requireContext().getSharedPreferences("profile_countries", Context.MODE_PRIVATE)
+        Log.d("VPNProfileList", "Saving country $countryCode for profile $profileUUID")
+        prefs.edit().putString(profileUUID, countryCode).apply()
+    }
+    
+    fun refreshFlags() {
+        Log.d("VPNProfileList", "refreshFlags() called - updating all profile flags")
+        mArrayadapter?.notifyDataSetChanged()
     }
 }

@@ -53,8 +53,6 @@ class FAQActivity : BaseActivity() {
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager = StaggeredGridLayoutManager(finalColumns, StaggeredGridLayoutManager.VERTICAL)
         
-        Utils.applyInsetListener(findViewById(android.R.id.content))
-        
         // Direct copy from FaqFragment.onViewCreated
         mRecyclerView.post {
             try {
@@ -80,12 +78,7 @@ class FAQActivity : BaseActivity() {
     }
     
     private fun setupWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            val extraPadding = resources.getDimensionPixelSize(R.dimen.stdpadding)
-            view.setPadding(insets.left, insets.top + extraPadding, insets.right, insets.bottom)
-            windowInsets
-        }
+        setUpEdgeEdgeInsetsListener(window.decorView.rootView, R.id.faq_recycler_view)
     }
     
     // Direct copy from FaqFragment.getFAQEntries - use simple approach

@@ -41,8 +41,32 @@ abstract class BaseActivity : AppCompatActivity() {
         if (isAndroidTV) {
             requestWindowFeature(Window.FEATURE_OPTIONS_PANEL)
         }
-        this.enableEdgeToEdge(SystemBarStyle.dark(R.color.primary_dark))
+        this.enableEdgeToEdge(SystemBarStyle.dark(android.graphics.Color.BLACK))
         super.onCreate(savedInstanceState)
+        
+        window.decorView.post {
+            window.apply {
+                clearFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                navigationBarColor = android.graphics.Color.BLACK
+            }
+            
+            // Programmatically draw a black background behind the transparent status bar
+            val decorView = window.decorView as? ViewGroup
+            if (decorView != null) {
+                val statusBarBg = View(this@BaseActivity).apply {
+                    setBackgroundColor(android.graphics.Color.BLACK)
+                }
+                decorView.addView(statusBarBg, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0))
+                
+                ViewCompat.setOnApplyWindowInsetsListener(statusBarBg) { v, windowInsets ->
+                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+                    v.layoutParams.height = insets.top
+                    v.requestLayout()
+                    windowInsets
+                }
+            }
+        }
     }
 
     fun setUpEdgeEdgeInsetsListener(

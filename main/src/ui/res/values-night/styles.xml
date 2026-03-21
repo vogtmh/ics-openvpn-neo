@@ -6,9 +6,9 @@
 <resources>
 
     <style name="blinkt.baseTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">#9718EC</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorPrimary">#000000</item>
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorAccent">#9718EC</item>
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
         <item name="preferenceTheme">@style/blinkt.preferenceTheme</item>
 
@@ -26,9 +26,13 @@
             false
         </item>
         
-        <!-- Force pure black background in dark mode -->
-        <item name="android:colorBackground">@android:color/black</item>
-        <item name="android:windowBackground">@android:color/black</item>
+        <!-- Force #111111 background in dark mode -->
+        <item name="android:colorBackground">#111111</item>
+        <item name="android:windowBackground">#111111</item>
+        
+        <!-- Force #252525 background for popup dialogs/menus -->
+        <item name="colorBackgroundFloating">#252525</item>
+        <item name="android:colorBackgroundFloating">#252525</item>
     </style>
 
     <style name="blinkt.dialog" parent="Theme.AppCompat.DayNight.Dialog">
@@ -36,18 +40,28 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
-        <!-- Force pure black background in dark mode for dialogs -->
-        <item name="android:colorBackground">@android:color/black</item>
-        <item name="android:windowBackground">@android:color/black</item>
+        <!-- Force #252525 background in dark mode for dialogs -->
+        <item name="android:colorBackground">#252525</item>
+        <item name="android:windowBackground">#252525</item>
+        
+        <item name="colorBackgroundFloating">#252525</item>
+        <item name="android:colorBackgroundFloating">#252525</item>
+        
+        <!-- Force black status bar for dialog activities -->
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="blinkt.alertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <!-- Force pure black background in dark mode for alert dialogs -->
-        <item name="android:colorBackground">@android:color/black</item>
-        <item name="android:windowBackground">@android:color/black</item>
+        <!-- Force #333333 background for all dialogs -->
+        <item name="android:colorBackground">#333333</item>
+        <item name="android:windowBackground">#333333</item>
+        
+        <item name="colorBackgroundFloating">#333333</item>
+        <item name="android:colorBackgroundFloating">#333333</item>
     </style>
 
     <!-- Custom preference theme to remove default padding -->

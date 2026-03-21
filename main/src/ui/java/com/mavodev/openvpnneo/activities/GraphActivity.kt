@@ -70,12 +70,7 @@ class GraphActivity : BaseActivity(), VpnStatus.ByteCountListener {
     }
     
     private fun setupWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            val extraPadding = resources.getDimensionPixelSize(R.dimen.stdpadding)
-            view.setPadding(insets.left, insets.top + extraPadding, insets.right, insets.bottom)
-            windowInsets
-        }
+        setUpEdgeEdgeInsetsListener(window.decorView.rootView, R.id.graph_content)
     }
     
     private fun setupGraph() {

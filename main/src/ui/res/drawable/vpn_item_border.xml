@@ -8,7 +8,7 @@
     
     <!-- Rounded border for active VPN profile -->
     <stroke
-        android:width="2dp"
+        android:width="4dp"
         android:color="@color/accent" />
     
     <!-- Corner radius for rounded corners -->

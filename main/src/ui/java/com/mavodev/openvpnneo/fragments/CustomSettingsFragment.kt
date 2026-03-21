@@ -86,7 +86,7 @@ class CustomSettingsFragment : ListFragment() {
             title = "Display VPN country",
             description = "Request and display the country of your current connection via https://api.country.is/",
             type = SettingType.TOGGLE_SLIDER,
-            value = sharedPreferences.getBoolean("display_vpn_country", false)
+            value = sharedPreferences.getBoolean("display_vpn_country", true)
         ))
 
         settings.add(SettingItem(
@@ -171,7 +171,7 @@ class CustomSettingsFragment : ListFragment() {
             title = getString(R.string.confirmations_title),
             description = getString(R.string.confirmations_summary),
             type = SettingType.TOGGLE_SLIDER,
-            value = sharedPreferences.getBoolean("disableconfirmation", false)
+            value = sharedPreferences.getBoolean("disableconfirmation", true)
         ))
 
         settings.add(SettingItem(

@@ -63,7 +63,7 @@ public class DisconnectVPN extends Activity implements DialogInterface.OnClickLi
         Intent intent = new Intent(this, OpenVPNService.class);
         intent.setAction(OpenVPNService.START_SERVICE);
         SharedPreferences prefs = Preferences.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("disableconfirmation", false)) {
+        if (prefs.getBoolean("disableconfirmation", true)) {
             disconnectPending = true;
             Toast.makeText(this, "Disconnecting VPN", Toast.LENGTH_LONG).show();
         } else {

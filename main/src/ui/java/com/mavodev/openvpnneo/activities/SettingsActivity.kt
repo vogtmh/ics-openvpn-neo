@@ -44,12 +44,7 @@ class SettingsActivity : BaseActivity() {
     }
     
     private fun setupWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            val extraPadding = resources.getDimensionPixelSize(R.dimen.stdpadding)
-            view.setPadding(insets.left, insets.top + extraPadding, insets.right, insets.bottom)
-            windowInsets
-        }
+        setUpEdgeEdgeInsetsListener(window.decorView.rootView, R.id.settings_content)
     }
 
     private fun setupSettings() {
@@ -92,7 +87,7 @@ class SettingsActivity : BaseActivity() {
             title = "Display VPN country",
             description = "Request and display the country of your current connection via https://api.country.is/",
             type = SettingType.TOGGLE_SLIDER,
-            value = sharedPreferences.getBoolean("display_vpn_country", false)
+            value = sharedPreferences.getBoolean("display_vpn_country", true)
         ))
 
         settings.add(SettingItem(
@@ -177,7 +172,7 @@ class SettingsActivity : BaseActivity() {
             title = getString(R.string.confirmations_title),
             description = getString(R.string.confirmations_summary),
             type = SettingType.TOGGLE_SLIDER,
-            value = sharedPreferences.getBoolean("disableconfirmation", false)
+            value = sharedPreferences.getBoolean("disableconfirmation", true)
         ))
 
         settings.add(SettingItem(

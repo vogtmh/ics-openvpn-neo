@@ -8,7 +8,7 @@
     
     <!-- Semi-transparent rounded border for pulse effect -->
     <stroke
-        android:width="2dp"
+        android:width="4dp"
         android:color="#809718EC" /> <!-- 50% opacity of accent color (#9718EC) -->
     
     <!-- Corner radius for rounded corners -->

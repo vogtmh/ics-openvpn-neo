@@ -13,61 +13,21 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <!-- Country Display Bar - Moved to top -->
-        <LinearLayout
-            android:id="@+id/country_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:background="#111111"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/country_flag"
-                android:layout_width="24dp"
-                android:layout_height="16dp"
-                android:layout_marginEnd="8dp"
-                android:scaleType="fitCenter"
-                android:contentDescription="Country flag" />
-
-            <TextView
-                android:id="@+id/country_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/country_ip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
         <!-- Mini Traffic Chart Preview - Hidden until VPN connects -->
         <LinearLayout
             android:id="@+id/mini_chart_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#1a1a1a"
-            android:padding="8dp"
+            android:background="@color/mini_chart_background"
+            android:padding="12dp"
             android:visibility="gone"
             android:minHeight="0dp">
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/mini_chart"
                 android:layout_width="match_parent"
-                android:layout_height="120dp" />
+                android:layout_height="160dp" />
 
         </LinearLayout>
 

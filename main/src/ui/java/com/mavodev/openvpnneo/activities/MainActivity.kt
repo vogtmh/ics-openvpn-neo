@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -88,6 +89,13 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private lateinit var countryName: TextView
     private lateinit var countryIp: TextView
     
+    // Action bar custom views
+    private lateinit var actionBarCountryFlag: ImageView
+    private lateinit var actionBarCountryInfo: LinearLayout
+    private lateinit var actionBarCountryName: TextView
+    private lateinit var actionBarCountryIp: TextView
+    private lateinit var actionBarTitle: TextView
+    
     // Mini chart views (only initialized when VPN connects)
     private var miniChartContainer: LinearLayout? = null
     private var miniChart: LineChart? = null
@@ -139,17 +147,17 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         mPager = view.findViewById(R.id.pager)
         val tablayout: TabLayout = view.findViewById(R.id.tab_layout)
 
-        // Initialize country display views
-        countryBar = view.findViewById(R.id.country_bar)
-        countryFlag = view.findViewById(R.id.country_flag)
-        countryName = view.findViewById(R.id.country_name)
-        countryIp = view.findViewById(R.id.country_ip)
+        // Initialize country display views (moved to action bar)
+        // countryBar = view.findViewById(R.id.country_bar)
+        // countryFlag = view.findViewById(R.id.country_flag)
+        // countryName = view.findViewById(R.id.country_name)
+        // countryIp = view.findViewById(R.id.country_ip)
         
-        // Set click listener for manual country update
-        countryBar.setOnClickListener {
-            Log.d("MainActivity", "Country bar clicked - manual update triggered")
-            updateCountryDisplay()
-        }
+        // Set click listener for manual country update (removed - old country bar)
+        // countryBar.setOnClickListener {
+        //     Log.d("MainActivity", "Country bar clicked - manual update triggered")
+        //     updateCountryDisplay()
+        // }
         
         // Initialize SharedPreferences
         sharedPreferences = Preferences.getDefaultSharedPreferences(this)
@@ -183,18 +191,15 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
 
         TabLayoutMediator(tablayout, mPager) { tab, position ->
             tab.text = mPagerAdapter.getPageTitle(position)
-            // Update action bar title to match current tab
-            supportActionBar?.title = mPagerAdapter.getPageTitle(position)
         }.attach()
 
-        // Set initial position to Profiles (position 0) and update title
+        // Set initial position to Profiles (position 0)
         mPager.currentItem = 0
-        supportActionBar?.title = mPagerAdapter.getPageTitle(0)
         
-        // Add ViewPager change listener to update title when swiping
+        // Add ViewPager change listener (no longer needed for action bar updates)
         mPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                supportActionBar?.title = mPagerAdapter.getPageTitle(position)
+                // Action bar is now handled by updateActionBarDisplay()
             }
         })
 
@@ -241,14 +246,14 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                 Log.d("MainActivity", "Network available - scheduling country refresh")
                 // Delay to let DHCP/routing settle before querying
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
                     if (displayCountry) fetchCountryInfo()
                 }, 1500)
             }
             override fun onLost(network: Network) {
                 Log.d("MainActivity", "Network lost - refreshing country info")
                 Handler(Looper.getMainLooper()).post {
-                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
                     if (displayCountry) fetchCountryInfo()
                 }
             }
@@ -264,6 +269,23 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
 
     private fun disableToolbarElevation() {
         supportActionBar?.elevation = 0f
+        
+        // Set up custom action bar
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        
+        // Inflate custom action bar layout
+        val customView = layoutInflater.inflate(R.layout.action_bar_custom, null)
+        actionBarCountryFlag = customView.findViewById(R.id.action_bar_country_flag)
+        actionBarCountryInfo = customView.findViewById(R.id.action_bar_country_info)
+        actionBarCountryName = customView.findViewById(R.id.action_bar_country_name)
+        actionBarCountryIp = customView.findViewById(R.id.action_bar_country_ip)
+        actionBarTitle = customView.findViewById(R.id.action_bar_title)
+        
+        supportActionBar?.customView = customView
+        
+        // Initialize action bar display
+        updateActionBarDisplay()
     }
     
     private fun initializeMiniChart() {
@@ -289,24 +311,21 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         // Force white text for dark background
         textColour = resources.getColor(android.R.color.white)
         
-        // Configure chart appearance
+        // Configure chart appearance - less aggressive scaling
         miniChart?.description?.isEnabled = false
         miniChart?.setDrawGridBackground(false)
         miniChart?.legend?.textColor = textColour
         miniChart?.setNoDataTextColor(resources.getColor(R.color.accent))
         
+        // Less aggressive axis configuration
         val xAxis = miniChart?.xAxis
         xAxis?.position = XAxis.XAxisPosition.BOTTOM
         xAxis?.setDrawGridLines(false)
         xAxis?.setDrawAxisLine(true)
         xAxis?.textColor = textColour
         xAxis?.labelCount = 3
-        
-        xAxis?.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                return String.format(Locale.getDefault(), "%.0f\u2009s ago", (xAxis.axisMaximum - value) / 10.0)
-            }
-        }
+        xAxis?.setGranularity(1f)  // Less frequent labels
+        xAxis?.setAvoidFirstLastClipping(true)  // Prevent cutoff at edges
         
         val yAxis = miniChart?.axisLeft
         yAxis?.labelCount = 3
@@ -495,21 +514,22 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         if (levelChanged && (level == ConnectionStatus.LEVEL_CONNECTED || level == ConnectionStatus.LEVEL_NOTCONNECTED)) {
             Log.d("MainActivity", "Stable VPN state reached ($level) - refreshing country info")
             runOnUiThread {
-                val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+                val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
                 if (displayCountry) {
-                    countryBar.visibility = View.VISIBLE
+                    // Old country bar removed - no visibility control needed
                     if (level == ConnectionStatus.LEVEL_CONNECTED) {
                         // Delay the fetch so VPN routing has time to fully establish.
                         // Without this, the request goes out on the old route and returns
                         // the pre-VPN IP/country.
                         Log.d("MainActivity", "Delaying country fetch 2s to let VPN routing settle")
-                        Handler(Looper.getMainLooper()).postDelayed({ fetchCountryInfo() }, 2000)
+                        Handler(Looper.getMainLooper()).postDelayed({ fetchCountryInfo(ConnectionStatus.LEVEL_CONNECTED) }, 2000)
                     } else {
                         // Disconnect is immediate — no routing change to wait for
                         fetchCountryInfo()
                     }
                 } else {
-                    countryBar.visibility = View.GONE
+                    // Old country bar removed - no visibility control needed
+                    Log.d("MainActivity", "Country bar set to GONE")
                 }
             }
         }
@@ -586,21 +606,48 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
 
     private fun updateCountryDisplay() {
-        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
         Log.d("MainActivity", "updateCountryDisplay called - display_vpn_country setting: $displayCountry")
         
+        // Old country bar is removed - only update action bar now
+        // if (displayCountry) {
+        //     countryBar.visibility = View.VISIBLE
+        //     Log.d("MainActivity", "Country bar set to VISIBLE, fetching country info")
+        //     fetchCountryInfo()
+        // } else {
+        //     countryBar.visibility = View.GONE
+        //     Log.d("MainActivity", "Country bar set to GONE")
+        // }
+        
+        // Update action bar display
+        updateActionBarDisplay()
+        
+        // Fetch country info if display is enabled
         if (displayCountry) {
-            countryBar.visibility = View.VISIBLE
-            Log.d("MainActivity", "Country bar set to VISIBLE, fetching country info")
             fetchCountryInfo()
-        } else {
-            countryBar.visibility = View.GONE
-            Log.d("MainActivity", "Country bar set to GONE")
         }
     }
     
-    private fun fetchCountryInfo(retryCount: Int = 0) {
-        Log.d("MainActivity", "fetchCountryInfo called - starting API request (retry $retryCount)")
+    private fun updateActionBarDisplay() {
+        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
+        Log.d("MainActivity", "updateActionBarDisplay called - display_vpn_country setting: $displayCountry")
+        
+        if (displayCountry && actionBarCountryName.text.isNotEmpty()) {
+            // Show country info in action bar
+            actionBarCountryFlag.visibility = View.VISIBLE
+            actionBarCountryInfo.visibility = View.VISIBLE
+            actionBarTitle.visibility = View.GONE
+        } else {
+            // Show app name in action bar
+            actionBarCountryFlag.visibility = View.GONE
+            actionBarCountryInfo.visibility = View.GONE
+            actionBarTitle.visibility = View.VISIBLE
+            actionBarTitle.text = getString(R.string.app)
+        }
+    }
+    
+    private fun fetchCountryInfo(connectionLevel: ConnectionStatus? = null, retryCount: Int = 0) {
+        Log.d("MainActivity", "fetchCountryInfo called - starting API request (retry $retryCount, connectionLevel: $connectionLevel)")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val url = URL("https://api.country.is/")
@@ -628,14 +675,33 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
 
                                 Log.d("MainActivity", "Parsed response - IP: $ip, Country: $country")
 
-                                // Update UI with country info
-                                countryIp.text = ip
-                                countryName.text = getCountryName(country)
+                                // Update UI with country info (action bar only)
+                                // countryIp.text = ip
+                                // countryName.text = getCountryName(country)
+                                
+                                // Update action bar with country info
+                                actionBarCountryIp.text = ip
+                                actionBarCountryName.text = getCountryName(country)
+                                
+                                // Update action bar visibility
+                                updateActionBarDisplay()
 
                                 Log.d("MainActivity", "UI updated - calling loadCountryFlag for: $country")
 
                                 // Load country flag
                                 loadCountryFlag(country)
+                                
+                                // Save country for current profile (only when VPN is actually connected)
+                                val currentProfileUUID = VpnStatus.getLastConnectedVPNProfile()
+                                if (currentProfileUUID != null && connectionLevel == ConnectionStatus.LEVEL_CONNECTED) {
+                                    Log.d("MainActivity", "VPN is connected, saving country $country for profile $currentProfileUUID")
+                                    saveProfileCountry(currentProfileUUID, country)
+                                    
+                                    // Notify VPNProfileList to refresh flags
+                                    refreshVPNProfileList()
+                                } else {
+                                    Log.d("MainActivity", "Not saving country - VPN not connected (connectionLevel: $connectionLevel)")
+                                }
 
                             } catch (e: Exception) {
                                 Log.e("MainActivity", "Error parsing country response", e)
@@ -650,7 +716,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                             if (retryCount < 3) {
                                 Log.d("MainActivity", "Scheduling retry ${retryCount + 1} in 2 seconds")
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    fetchCountryInfo(retryCount + 1)
+                                    fetchCountryInfo(connectionLevel, retryCount + 1)
                                 }, 2000)
                             }
                         }
@@ -666,7 +732,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                     if (retryCount < 3) {
                         Log.d("MainActivity", "Scheduling retry ${retryCount + 1} in 2 seconds due to exception")
                         Handler(Looper.getMainLooper()).postDelayed({
-                            fetchCountryInfo(retryCount + 1)
+                            fetchCountryInfo(connectionLevel, retryCount + 1)
                         }, 2000)
                     }
                 }
@@ -718,18 +784,22 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             Log.d("MainActivity", "Loading flag - Country: $countryCode, Resource name: $flagResourceName, Resource ID: $resourceId")
             
             if (resourceId != 0) {
-                countryFlag.setImageResource(resourceId)
+                // countryFlag.setImageResource(resourceId)
+                actionBarCountryFlag.setImageResource(resourceId)
                 // Scale the flag to proper size (24dp x 16dp)
-                countryFlag.scaleType = ImageView.ScaleType.FIT_CENTER
+                // countryFlag.scaleType = ImageView.ScaleType.FIT_CENTER
+                actionBarCountryFlag.scaleType = ImageView.ScaleType.FIT_CENTER
                 Log.d("MainActivity", "Flag loaded successfully: $flagResourceName")
             } else {
                 // Use a generic flag or placeholder if specific flag not found
                 Log.w("MainActivity", "Flag not found for: $flagResourceName, using fallback")
-                countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
+                // countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
+                actionBarCountryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
             }
         } catch (e: Exception) {
             Log.e("MainActivity", "Error loading country flag for $countryCode", e)
-            countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
+            // countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
+            actionBarCountryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
         }
     }
 
@@ -768,7 +838,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             container.requestLayout()
             
             // Animate to full height
-            val targetHeight = 120.dpToPx()
+            val targetHeight = 160.dpToPx()
             val animator = ValueAnimator.ofInt(0, targetHeight)
             animator.duration = 300 // 300ms animation
             animator.interpolator = AccelerateDecelerateInterpolator()
@@ -860,5 +930,21 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private fun startOpenVPNUrlImport(url: String) {
         val asImportFrag = newInstance(url)
         asImportFrag.show(supportFragmentManager, "dialog")
+    }
+    
+    private fun saveProfileCountry(profileUUID: String, countryCode: String) {
+        val prefs = getSharedPreferences("profile_countries", Context.MODE_PRIVATE)
+        prefs.edit().putString(profileUUID, countryCode).apply()
+    }
+    
+    private fun refreshVPNProfileList() {
+        // Find the VPNProfileList fragment and refresh it
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment is VPNProfileList) {
+                Log.d("MainActivity", "Refreshing VPNProfileList to update flags")
+                fragment.refreshFlags()
+                return@forEach
+            }
+        }
     }
 }
