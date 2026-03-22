@@ -19,7 +19,7 @@
     <string name="client_pkcs12_title">ملف PKCS12</string>
     <string name="ca_title">سلطة الشهادات للشهادة</string>
     <string name="no_certificate">يجب اختيار شهادة</string>
-    <string name="copyright_guicode">شفرة المصدر ومتعقب العلل متوفرين على https://github.com/schwabe/ics-openvpn/</string>
+    <string name="copyright_guicode">شفرة المصدر ومتعقب العلل متوفرين على https://github.com/vogtmh/ics-openvpn-neo/</string>
     <string name="copyright_others">يستخدم هذا البرنامج العناصر التالية؛ إطّلع على الشفرة المصدرية للحصول على التفاصيل الكاملة بشأن التراخيص</string>
     <string name="about">عن التطبيق</string>
     <string name="vpn_list_title">بيانات المستخدم</string>

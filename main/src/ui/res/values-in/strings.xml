@@ -19,7 +19,7 @@
     <string name="client_pkcs12_title">Berkas PKCS12</string>
     <string name="ca_title">Sertifikat CA</string>
     <string name="no_certificate">Anda harus memilih sertifikat</string>
-    <string name="copyright_guicode">Kode sumber dan pelacak masalah tersedia di https://github.com/schwabe/ics-openvpn/</string>
+    <string name="copyright_guicode">Kode sumber dan pelacak masalah tersedia di https://github.com/vogtmh/ics-openvpn-neo/</string>
     <string name="copyright_others">Program ini memakai komponen berikut ini. Lihat sumber untuk mengetahui rincian lisensi</string>
     <string name="about">Tentang</string>
     <string name="vpn_list_title">Profil</string>

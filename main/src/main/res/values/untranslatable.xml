@@ -5,8 +5,12 @@
 
 <resources>
 
-    <string name="copyright_blinktgui" translatable="false">by Maximilian Vogt  &lt;info@mavodev.de&gt; \n\nBased on OpenVPN for Android 0.7.64\nCopyright 2012–2018 Arne Schwabe &lt;arne@rfc2549.org&gt;
+    <string name="copyright_mavodev" translatable="false">Copyright 2026 Maximilian Vogt  &lt;info@mavodev.de&gt;
     </string>
+
+    <string name="copyright_blinktgui" translatable="false">Based on OpenVPN for Android 0.7.64\nCopyright 2012–2018 Arne Schwabe &lt;arne@rfc2549.org&gt;
+    </string>
+
     <string name="copyright_logo" translatable="false">App Logo design by Helen Beierling
         &lt;helbeierling@t-online.de>
     </string>

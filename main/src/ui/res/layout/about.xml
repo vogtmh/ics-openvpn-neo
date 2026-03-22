@@ -31,6 +31,20 @@
                 tools:ignore="SelectableText"
                 tools:text="OpenVPN for Android 1.2.3" />
 
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8sp"
+                android:autoLink="all"
+
+                android:text="@string/copyright_mavodev" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8sp"
+                android:autoLink="all"
+                android:text="@string/copyright_guicode" />
 
         <TextView
                 android:layout_width="match_parent"
@@ -39,7 +53,6 @@
                 android:autoLink="all"
 
                 android:text="@string/copyright_blinktgui" />
-
 
         <TextView
                 android:id="@+id/version_ovpn2"
@@ -66,15 +79,6 @@
                 android:layout_marginVertical="12sp"
                 android:autoLink="all"
                 android:text="@string/copyright_logo" />
-
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="12sp"
-                android:autoLink="all"
-                android:text="@string/copyright_guicode" />
-
 
         <TextView
                 android:id="@+id/translation"

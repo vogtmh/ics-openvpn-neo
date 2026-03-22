@@ -19,7 +19,7 @@
     <string name="client_pkcs12_title">فایل PKCS12</string>
     <string name="ca_title">گواهینامه های کانادا</string>
     <string name="no_certificate">شما باید یک فایل را انتخاب کنید</string>
-    <string name="copyright_guicode">Source code and issue tracker available at https://github.com/schwabe/ics-openvpn/</string>
+    <string name="copyright_guicode">Source code and issue tracker available at https://github.com/vogtmh/ics-openvpn-neo/</string>
     <string name="copyright_others">این برنامه از اجزای زیر استفاده می نماید. کد منبع را برای دستیابی به جزئبات کامل در مجوز برنامه مشاهده نمایید</string>
     <string name="about">در باره</string>
     <string name="vpn_list_title">پروفایل ها</string>

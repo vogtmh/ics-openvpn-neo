@@ -1,6 +1,6 @@
 OpenVPN for Android
 =============
-![build status](https://github.com/schwabe/ics-openvpn/actions/workflows/build.yaml/badge.svg)
+![build status](https://github.com/vogtmh/ics-openvpn-neo/actions/workflows/build.yaml/badge.svg)
 
 Note to other developers 
 ------------------------
@@ -88,7 +88,7 @@ Full signing certificate (also under misc/code-transparency.pem):
 
 Developing
 ---------------
-If you want to develop on ics-openvpn please read the [doc/README.txt](https://github.com/schwabe/ics-openvpn/blob/master/doc/README.txt) *before* opening issues or emailing me. 
+If you want to develop on ics-openvpn please read the [doc/README.txt](https://github.com/vogtmh/ics-openvpn-neo/blob/master/doc/README.txt) *before* opening issues or emailing me. 
 
 Also please note that before contributing to the project that I would like to retain my ability to relicense the project for different third parties and therefore probably need a contributer's agreement from any contributing party. To get started, [sign the Contributor License Agreement](https://www.clahub.com/agreements/schwabe/ics-openvpn).
 

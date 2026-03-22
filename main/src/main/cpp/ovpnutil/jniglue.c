@@ -19,7 +19,7 @@ void android_openvpn_log(int level,const char* prefix,const char* prefix_sep,con
 }
 
 
-//! Hack to get the current installed ABI of the libraries. See also https://github.com/schwabe/ics-openvpn/issues/391
+//! Hack to get the current installed ABI of the libraries. See also https://github.com/vogtmh/ics-openvpn-neo/issues/391
 jstring Java_com_mavodev_openvpnneo_core_NativeUtils_getJNIAPI(JNIEnv *env, jclass jo)
 {
 

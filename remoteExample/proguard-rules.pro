@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Untested but reported to work (https://github.com/schwabe/ics-openvpn/issues/1755#issuecomment-2325652081)
+# Untested but reported to work (https://github.com/vogtmh/ics-openvpn-neo/issues/1755#issuecomment-2325652081)
 -keep interface de.blinkt.openvpn.api.IOpenVPNAPIService { *; }
 -keep interface de.blinkt.openvpn.api.IOpenVPNStatusCallback { *; }
 -keep class de.blinkt.openvpn.api.APIVpnProfile { *; }

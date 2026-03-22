@@ -36,13 +36,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +85,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
     private TextView mConnectStatus;
     private TextView mStartPendingIntent;
     private boolean mShowOptionsLayout;
-    private CheckBox mClearLogCheckBox;
+    private Switch mClearLogCheckBox;
     private Intent mPendingIntent;
 
     @Override
@@ -592,7 +592,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
             mTimeRadioGroup.check(R.id.radioShort);
         }
 
-        mClearLogCheckBox = (CheckBox) v.findViewById(R.id.clearlogconnect);
+        mClearLogCheckBox = (Switch) v.findViewById(R.id.clearlogconnect);
         mClearLogCheckBox.setChecked(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(LaunchVPN.CLEARLOG, true));
         mClearLogCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

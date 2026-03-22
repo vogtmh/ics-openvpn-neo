@@ -19,7 +19,7 @@
     <string name="client_pkcs12_title">PKCS12 súbor</string>
     <string name="ca_title">Certifikát CA</string>
     <string name="no_certificate">Musíte vybrať certifikát</string>
-    <string name="copyright_guicode">Zdrojový kód a riešenie problémov je k dispozícii na adrese https://github.com/schwabe/ics-openvpn/</string>
+    <string name="copyright_guicode">Zdrojový kód a riešenie problémov je k dispozícii na adrese https://github.com/vogtmh/ics-openvpn-neo/</string>
     <string name="copyright_others">Tento program používa nasledujúce komponenty; pozri zdrojový kód pre podrobnosťi o licenciách</string>
     <string name="about">O</string>
     <string name="vpn_list_title">Profily</string>

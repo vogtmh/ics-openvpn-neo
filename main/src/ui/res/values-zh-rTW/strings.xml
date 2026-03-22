@@ -19,7 +19,7 @@
     <string name="client_pkcs12_title">PKCS12 檔案</string>
     <string name="ca_title">CA 憑證</string>
     <string name="no_certificate">您必須選擇一個憑證</string>
-    <string name="copyright_guicode">程式碼與問題追蹤系統請至 https://github.com/schwabe/ics-openvpn/</string>
+    <string name="copyright_guicode">程式碼與問題追蹤系統請至 https://github.com/vogtmh/ics-openvpn-neo/</string>
     <string name="copyright_others">本程式使用了以下元件；完整細節請見程式碼中的授權條款。</string>
     <string name="about">關於</string>
     <string name="vpn_list_title">設定檔</string>

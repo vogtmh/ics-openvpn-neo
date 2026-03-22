@@ -19,7 +19,7 @@
     <string name="client_pkcs12_title">PKCS12 ගොනුව</string>
     <string name="ca_title">CA සහතිකය</string>
     <string name="no_certificate">ඔබ සහතිකයක් තෝරාගත යුතුය</string>
-    <string name="copyright_guicode">මූලාශ්‍ර කේතය සහ නිකුතු ට්‍රැකරය https://github.com/schwabe/ics-openvpn/ හි ඇත</string>
+    <string name="copyright_guicode">මූලාශ්‍ර කේතය සහ නිකුතු ට්‍රැකරය https://github.com/vogtmh/ics-openvpn-neo/ හි ඇත</string>
     <string name="copyright_others">මෙම වැඩසටහන පහත සඳහන් සංරචක භාවිතා කරයි; බලපත්‍ර පිළිබඳ සම්පූර්ණ විස්තර සඳහා මූලාශ්‍ර කේතය බලන්න</string>
     <string name="about">මේ ගැන</string>
     <string name="vpn_list_title">පැතිකඩයන්</string>
