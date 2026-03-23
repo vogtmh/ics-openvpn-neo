@@ -16,11 +16,13 @@
         <SwitchPreference
                 android:key="remoteServerTLS"
                 android:summary="@string/check_remote_tlscert"
-                android:title="@string/check_remote_tlscert_title" />
+                android:title="@string/check_remote_tlscert_title"
+                app:iconSpaceReserved="false" />
         <SwitchPreference
                 android:key="checkRemoteCN"
                 android:summary="@string/remote_tlscn_check_summary"
-                android:title="@string/remote_tlscn_check_title" />
+                android:title="@string/remote_tlscn_check_title"
+                app:iconSpaceReserved="false" />
 
         <com.mavodev.openvpnneo.views.RemoteCNPreference
                 android:dependency="checkRemoteCN"
@@ -42,7 +44,8 @@
 
                 android:key="useTLSAuth"
                 android:summary="@string/tls_key_auth"
-                android:title="@string/useTLSAuth" />
+                android:title="@string/useTLSAuth" 
+                app:iconSpaceReserved="false" />
 
         <Preference
                 android:dependency="useTLSAuth"

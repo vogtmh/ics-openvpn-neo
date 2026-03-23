@@ -7,7 +7,7 @@
 <resources>
     <!-- Indigo -->
     <!-- OpenVPN colours #203155, #C66D0D -->
-    <color name="primary">#3F51B5</color>      <!--500-->
+    <color name="primary">#222222</color>      <!--500-->
     <color name="primary_dark">#000000</color> <!--700-->
     <color name="accent">#9718EC</color>       <!-- Purple -->
     <color name="gelb">#ffff00</color>

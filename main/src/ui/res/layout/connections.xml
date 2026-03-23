@@ -32,6 +32,7 @@
             android:id="@+id/default_allow_text"
             style="@android:style/TextAppearance.Medium.Inverse"
             android:text="@string/remote_random"
+            android:textColor="@android:color/white"
             android:layout_toStartOf="@id/remote_random"
             android:layout_toLeftOf="@id/remote_random"
             android:layout_width="wrap_content"

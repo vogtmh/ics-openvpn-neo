@@ -11,7 +11,8 @@
             android:key="usePull"
             android:summaryOff="@string/pull_off_summary"
             android:summaryOn="@string/pull_on_summary"
-            android:title="@string/use_pull" />
+            android:title="@string/use_pull"
+            app:iconSpaceReserved="false" />
 
     <PreferenceCategory android:title="IP">
         <EditTextPreference
@@ -31,13 +32,15 @@
                 android:key="nobind"
                 android:persistent="false"
                 android:summary="@string/nobind_summary"
-                android:title="@string/no_bind" />
+                android:title="@string/no_bind"
+                app:iconSpaceReserved="false" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/dns">
         <SwitchPreference
                 android:key="overrideDNS"
                 android:summary="@string/dns_override_summary"
-                android:title="@string/override_dns" />
+                android:title="@string/override_dns"
+                app:iconSpaceReserved="false" />
 
         <EditTextPreference
                 android:key="searchdomain"

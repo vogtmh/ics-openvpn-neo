@@ -4,6 +4,7 @@
   -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/advanced_settings">
     <PreferenceCategory android:title="@string/client_behaviour">
 
@@ -11,30 +12,35 @@
             android:key="usePersistTun"
             android:persistent="false"
             android:summary="@string/persisttun_summary"
-            android:title="@string/persistent_tun_title" />
+            android:title="@string/persistent_tun_title"
+            app:iconSpaceReserved="false" />
 
         <SwitchPreference
             android:key="peerInfo"
             android:summary="@string/pushpeerinfosummary"
-            android:title="@string/pushpeerinfo" />
+            android:title="@string/pushpeerinfo"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <SwitchPreference
         android:key="useRandomHostname"
         android:persistent="false"
         android:summary="@string/random_host_summary"
-        android:title="@string/random_host_prefix" />
+        android:title="@string/random_host_prefix"
+        app:iconSpaceReserved="false" />
     <SwitchPreference
         android:key="useFloat"
         android:persistent="false"
         android:summary="@string/float_summary"
-        android:title="@string/float_title" />
+        android:title="@string/float_title"
+        app:iconSpaceReserved="false" />
 
     <PreferenceCategory android:title="@string/payload_options">
         <SwitchPreference
             android:key="mssFix"
             android:persistent="false"
-            android:title="@string/mssfix_checkbox" />
+            android:title="@string/mssfix_checkbox"
+            app:iconSpaceReserved="false" />
         <EditTextPreference
             android:dependency="mssFix"
             android:dialogMessage="@string/mssfix_value_dialog"
@@ -51,7 +57,8 @@
             android:key="enableCustomOptions"
             android:persistent="false"
             android:summary="@string/custom_config_summary"
-            android:title="@string/custom_config_title" />
+            android:title="@string/custom_config_title"
+            app:iconSpaceReserved="false" />
 
         <EditTextPreference
             android:dependency="enableCustomOptions"

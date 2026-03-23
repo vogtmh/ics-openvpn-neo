@@ -8,14 +8,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:ignore="RtlCompat"
-    android:layout_marginTop="10dp">
+    tools:ignore="RtlCompat">
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
             android:background="@drawable/bg_switchbar"
             android:paddingStart="@dimen/switchbar_pad"
+            android:paddingTop="8dp"
             android:elevation="1dp"
             android:paddingEnd="@dimen/switchbar_pad"
     >
@@ -30,6 +30,7 @@
         <TextView
                 android:id="@+id/default_allow_text"
                 style="@android:style/TextAppearance.Medium.Inverse"
+                android:textColor="@android:color/white"
                 tools:text="@string/vpn_disallow_radio"
                 android:layout_toStartOf="@id/default_allow"
                 android:layout_width="match_parent"
@@ -58,6 +59,7 @@
         <TextView
                 style="@android:style/TextAppearance.Medium.Inverse"
                 android:text="@string/vpn_allow_bypass"
+                android:textColor="@android:color/white"
                 android:layout_toStartOf="@id/allow_bypass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

@@ -72,8 +72,7 @@
         <item name="checkBoxPreferenceStyle">@style/blinkt.checkBoxPreference</item>
         <item name="preferenceInformationStyle">@style/blinkt.preference</item>
         <item name="dialogPreferenceStyle">@style/blinkt.preference</item>
-        <item name="editTextPreferenceStyle">@style/blinkt.preference</item>
-        <item name="preferenceStyle">@style/blinkt.preference</item>
+        <item name="editTextPreferenceStyle">@style/blinkt.editTextPreference</item>
     </style>
 
     <style name="blinkt.preferenceScreen" parent="Preference.PreferenceScreen">
