@@ -62,6 +62,9 @@
         
         <item name="colorBackgroundFloating">#333333</item>
         <item name="android:colorBackgroundFloating">#333333</item>
+
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
     <!-- Custom preference theme to remove default padding -->
@@ -71,7 +74,7 @@
         <item name="preferenceStyle">@style/blinkt.preference</item>
         <item name="checkBoxPreferenceStyle">@style/blinkt.checkBoxPreference</item>
         <item name="preferenceInformationStyle">@style/blinkt.preference</item>
-        <item name="dialogPreferenceStyle">@style/blinkt.preference</item>
+        <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
         <item name="editTextPreferenceStyle">@style/blinkt.editTextPreference</item>
     </style>
 
