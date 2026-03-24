@@ -67,6 +67,15 @@
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
+    <style name="blinkt.BottomSheet" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:colorBackground">#333333</item>
+        <item name="bottomSheetStyle">@style/blinkt.BottomSheetStyle</item>
+    </style>
+
+    <style name="blinkt.BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">#333333</item>
+    </style>
+
     <!-- Custom preference theme to remove default padding -->
     <style name="blinkt.preferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
         <item name="preferenceScreenStyle">@style/blinkt.preferenceScreen</item>

@@ -9,6 +9,8 @@
     <color name="primary">#000000</color>      <!-- Pure black for night mode -->
     <color name="primary_dark">#000000</color> <!-- Pure black -->
     <color name="accent">#9718EC</color>       <!-- Purple accent -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#FFFFFF</color>
     
     <!-- Override any other background colors that might be causing the dark gray -->
     <color name="background_material_dark">@android:color/black</color>

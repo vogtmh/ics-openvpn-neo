@@ -17,6 +17,7 @@ import android.content.pm.ShortcutManager
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Icon
+import androidx.core.graphics.drawable.DrawableCompat
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -56,6 +57,7 @@ import com.mavodev.openvpnneo.activities.AboutActivity
 import com.mavodev.openvpnneo.activities.FAQActivity
 import com.mavodev.openvpnneo.activities.SettingsActivity
 import com.mavodev.openvpnneo.activities.GraphActivity
+import com.mavodev.openvpnneo.activities.OpenSSLSpeed
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.core.OpenVPNService
 import com.mavodev.openvpnneo.core.PasswordDialogFragment.Companion.newInstance
@@ -70,7 +72,7 @@ import java.util.LinkedList
 import java.util.TreeSet
 import kotlin.math.min
 
-class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
+class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddProfileBottomSheet.Listener {
     protected var mEditProfile: VpnProfile? = null
     private var mLastStatusMessage: String? = null
     private var mArrayadapter: ArrayAdapter<VpnProfile>? = null
@@ -293,24 +295,18 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         val v = inflater.inflate(R.layout.vpn_profile_list, container, false)
 
         val newvpntext = v.findViewById<View?>(R.id.add_new_vpn_hint) as TextView
-        val importvpntext = v.findViewById<View?>(R.id.import_vpn_hint) as TextView
         
         // Set up floating add profile button
         val fabAddProfile = v.findViewById<ImageButton>(R.id.fab_add_profile)
         fabAddProfile.setOnClickListener {
-            onAddOrDuplicateProfile(null)
+            val sheet = AddProfileBottomSheet()
+            sheet.listener = this
+            sheet.show(parentFragmentManager, AddProfileBottomSheet.TAG)
         }
 
         newvpntext.setText(
             Html.fromHtml(
                 getString(R.string.add_new_vpn_hint),
-                MiniImageGetter(),
-                null
-            )
-        )
-        importvpntext.setText(
-            Html.fromHtml(
-                getString(R.string.vpn_import_hint),
                 MiniImageGetter(),
                 null
             )
@@ -375,32 +371,25 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             .setTitleCondensed(getString(R.string.sort))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
+        menu.add(0, MENU_SETTINGS, 0, R.string.generalsettings)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
         menu.add(0, MENU_SHOW_LOG, 0, R.string.show_log)
             .setIcon(R.drawable.ic_menu_import_grey)
             .setAlphabeticShortcut('l')
             .setTitleCondensed(getString(R.string.show_log))
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_SETTINGS, 0, R.string.generalsettings)
-            .setIcon(R.drawable.ic_menu_add)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-
         menu.add(0, MENU_GRAPH, 0, R.string.graph)
-            .setIcon(R.drawable.ic_menu_add)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_IMPORT_AS, 0, R.string.import_from_as)
-            .setIcon(R.drawable.ic_menu_import_download)
-            .setAlphabeticShortcut('p')
-            .setTitleCondensed("Import AS")
+        menu.add(0, MENU_OPENSSL_SPEED, 0, R.string.openssl_speed_test)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
         menu.add(0, MENU_FAQ, 0, R.string.faq)
-            .setIcon(R.drawable.ic_menu_add)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
         menu.add(0, MENU_ABOUT, 0, R.string.about)
-            .setIcon(R.drawable.ic_menu_add)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
     }
 
@@ -428,8 +417,10 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             val intent = Intent(getActivity(), GraphActivity::class.java as Class<GraphActivity>)
             startActivity(intent)
             return true
-        } else if (itemId == MENU_IMPORT_AS) {
-            return startASProfileImport()
+        } else if (itemId == MENU_OPENSSL_SPEED) {
+            val intent = Intent(getActivity(), OpenSSLSpeed::class.java)
+            startActivity(intent)
+            return true
         } else {
             return super.onOptionsItemSelected(item)
         }
@@ -439,6 +430,19 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         val asImportFrag = newInstance(null)
         asImportFrag.show(getParentFragmentManager(), "dialog")
         return true
+    }
+
+    // AddProfileBottomSheet.Listener
+    override fun onCreateManually() {
+        onAddOrDuplicateProfile(null)
+    }
+
+    override fun onImportFromFile() {
+        startImportConfigFilePicker()
+    }
+
+    override fun onImportFromRemote() {
+        startASProfileImport()
     }
 
     private fun changeSorting(): Boolean {
@@ -514,9 +518,6 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             dialog.setMessage(R.string.add_profile_name_prompt)
             dialog.setView(entry)
 
-            dialog.setNeutralButton(
-                R.string.menu_import_short
-            ) { dialog1: DialogInterface?, which: Int -> startImportConfigFilePicker() }
             dialog.setPositiveButton(
                 android.R.string.ok
             ) { dialog12: DialogInterface?, which: Int ->
@@ -546,11 +547,16 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
     }
 
     private fun addProfile(profile: VpnProfile) {
+        val isFirstProfile = pM.getProfiles().isEmpty()
         this.pM.addProfile(profile)
         this.pM.saveProfileList(getActivity())
         profile.addChangeLogEntry("empty profile added via main profile list")
         ProfileManager.saveProfile(getActivity(), profile)
         mArrayadapter!!.add(profile)
+        if (isFirstProfile) {
+            Preferences.getDefaultSharedPreferences(requireContext()).edit()
+                .putString("alwaysOnVpn", profile.getUUIDString()).apply()
+        }
     }
 
     private val pM: ProfileManager
@@ -584,7 +590,13 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             startConfigImport(uri)
         } else if (requestCode == IMPORT_PROFILE) {
             val profileUUID = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
-            mArrayadapter!!.add(ProfileManager.get(getActivity(), profileUUID))
+            val importedProfile = ProfileManager.get(getActivity(), profileUUID)
+            val isFirstProfile = mArrayadapter!!.count == 0
+            mArrayadapter!!.add(importedProfile)
+            if (isFirstProfile && importedProfile != null) {
+                Preferences.getDefaultSharedPreferences(requireContext()).edit()
+                    .putString("alwaysOnVpn", importedProfile.getUUIDString()).apply()
+            }
         } else if (requestCode == FILE_PICKER_RESULT_KITKAT) {
             if (data != null) {
                 val uri = data.getData()
@@ -751,6 +763,8 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
 
 
             if (d != null) {
+                val color = requireContext().getColor(R.color.text_primary)
+                DrawableCompat.setTint(d.mutate(), color)
                 d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight())
                 return d
             } else {
@@ -777,6 +791,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         private val MENU_FAQ = Menu.FIRST + 6
         private val MENU_SETTINGS = Menu.FIRST + 7
         private val MENU_GRAPH = Menu.FIRST + 8
+        private val MENU_OPENSSL_SPEED = Menu.FIRST + 9
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"
     }

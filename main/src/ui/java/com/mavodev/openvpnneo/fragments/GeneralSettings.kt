@@ -75,7 +75,6 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
         mExtapp = ExternalAppDatabase(activity)
         val clearapi = findPreference<Preference>("clearapi") as Preference
         clearapi.onPreferenceClickListener = this
-        findPreference<Preference>("osslspeed")!!.onPreferenceClickListener = this
         if (devHacks.preferenceCount == 0) preferenceScreen.removePreference(devHacks)
         if (!BuildConfig.openvpn3) {
             val appBehaviour = findPreference<Preference>("app_behaviour") as PreferenceCategory
@@ -211,8 +210,6 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setMessage(getString(R.string.clearappsdialog, getExtAppList("\n")))
             builder.show()
-        } else if (preference.key == "osslspeed") {
-            startActivity(Intent(activity, OpenSSLSpeed::class.java))
         }
         return true
     }

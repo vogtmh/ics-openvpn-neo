@@ -46,6 +46,12 @@
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
+    <style name="blinkt.BottomSheet" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/blinkt.BottomSheetStyle</item>
+    </style>
+
+    <style name="blinkt.BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal" />
+
 
     <style name="blinkt" parent="blinkt.baseTheme" />
 

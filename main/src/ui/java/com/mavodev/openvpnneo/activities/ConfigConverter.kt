@@ -813,10 +813,12 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
                 mTLSProfile.visibility = View.VISIBLE
                 mTLSProfileLabel.visibility = View.VISIBLE
                 mMakeDefaultProfile.visibility = View.VISIBLE
+                val noProfilesYet = ProfileManager.getAlwaysOnVPN(this@ConfigConverter) == null
                 if (initialImportMode) {
                     mMakeDefaultProfile.isChecked = true
                     mMakeDefaultProfile.isEnabled = false
                 } else {
+                    mMakeDefaultProfile.isChecked = noProfilesYet
                     mMakeDefaultProfile.isEnabled = true
                 }
                 mTLSProfile.setSelection(translateTLSProfileToSelection(result.mTlSCertProfile))

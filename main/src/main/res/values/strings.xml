@@ -438,6 +438,7 @@
     <string name="title_activity_open_sslspeed">OpenSSL Speed Test</string>
     <string name="openssl_cipher_name">OpenSSL cipher names</string>
     <string name="osslspeedtest">OpenSSL Crypto Speed test</string>
+    <string name="openssl_speed_test">OpenSSL Speed Test</string>
     <string name="openssl_error">OpenSSL returned an error</string>
     <string name="running_test">Running test…</string>
     <string name="test_algoirhtms">Test selected algorithms</string>
@@ -509,6 +510,10 @@
     <string name="minimal_ui_not_available">Functionality not available when minimal UI is enabled</string>
     <string name="missing_keychain_access">Access to Android keychain certificate is missing. Tap this notification to select/import a certificate</string>
     <string name="country_api_dialog_title">Display VPN Country</string>
+    <string name="add_profile_create_manually">Create new profile</string>
+    <string name="add_profile_create_manually_desc">Configure a VPN connection from scratch</string>
+    <string name="add_profile_import_file_desc">Load an .ovpn configuration file</string>
+    <string name="add_profile_import_remote_desc">Import from an Access Server or URL</string>
     <string name="country_api_dialog_message">OpenVPN Neo can show the country and IP address of your VPN server in the title bar.\n\nTo do this, it sends a small request to api.country.is — a public, privacy-respecting lookup service. This request reveals your VPN server\'s IP address to that service, but not your identity or the contents of your traffic.\n\nYou can turn this on or off anytime in Settings.</string>
     <string name="country_api_dialog_enable">Enable</string>
     <string name="country_api_dialog_decline">No thanks</string>

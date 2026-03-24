@@ -189,18 +189,6 @@ class SettingsActivity : BaseActivity() {
             value = sharedPreferences.getBoolean("disableconfirmation", true)
         ))
 
-        settings.add(SettingItem(
-            key = "osslspeed",
-            title = getString(R.string.osslspeedtest),
-            description = "",
-            type = SettingType.ACTION,
-            action = {
-                val intent = Intent(this, OpenSSLSpeed::class.java)
-                intent.putExtra("from_settings", true)
-                startActivity(intent)
-            }
-        ))
-
         // Device Specific Hacks Category - Add conditionally
         val deviceHacks = mutableListOf<SettingItem>()
         

@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/action_bar_country_flag"
         android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_height="32dp"
         android:layout_marginEnd="8dp"
         android:scaleType="fitCenter"
         android:visibility="gone"

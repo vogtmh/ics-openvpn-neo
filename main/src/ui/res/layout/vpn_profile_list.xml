@@ -22,6 +22,8 @@
                 android:padding="@dimen/stdpadding"
                 android:drawableStart="@drawable/notifications"
                 android:drawablePadding="@dimen/stdpadding"
+                android:textColor="@color/text_primary"
+                android:drawableTint="@color/text_primary"
                 tools:visibility="visible"
                 android:visibility="gone"
                 android:text="@string/missing_notification_permission" />
@@ -43,6 +45,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/no_vpn_profiles_defined"
+                    android:textColor="@color/text_primary"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <Space
@@ -54,6 +57,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
+                    android:textColor="@color/text_primary"
                     android:text="@string/openvpn_is_no_free_vpn" />
 
             <Space
@@ -65,12 +69,7 @@
                     android:id="@+id/add_new_vpn_hint"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    tools:ignore="SelectableText" />
-
-            <TextView
-                    android:id="@+id/import_vpn_hint"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
                     tools:ignore="SelectableText" />
 
             <Space
@@ -80,6 +79,7 @@
             <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
                     android:text="@string/faq_hint" />
         </LinearLayout>
 

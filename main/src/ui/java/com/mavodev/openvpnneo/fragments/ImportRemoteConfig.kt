@@ -218,6 +218,8 @@ class ImportRemoteConfig : DialogFragment() {
      * @throws IllegalArgumentException If this is not a well-formed HTTP or HTTPS URL.
      */
     private fun getAsUrl(url: String, autologin: Boolean): HttpUrl{
+        if (url.isBlank())
+            throw IllegalArgumentException("Server name is required")
         var asurl = url
         if (!asurl.startsWith("http"))
             asurl = "https://" + asurl

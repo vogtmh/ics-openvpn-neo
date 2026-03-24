@@ -98,13 +98,6 @@
                 android:singleLineTitle="false"
                 android:summary="@string/confirmations_summary"
                 android:title="@string/confirmations_title" />\
-
-        <Preference
-                android:dependency=""
-                android:key="osslspeed"
-                android:persistent="false"
-                android:title="@string/osslspeedtest" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
