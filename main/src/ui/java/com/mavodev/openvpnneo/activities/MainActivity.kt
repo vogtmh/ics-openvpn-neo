@@ -39,9 +39,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.fragments.VPNProfileList
 import com.mavodev.openvpnneo.core.VpnStatus
@@ -53,7 +50,6 @@ import com.mavodev.openvpnneo.core.Preferences
 import com.mavodev.openvpnneo.core.GlobalPreferences
 import com.mavodev.openvpnneo.fragments.*
 import com.mavodev.openvpnneo.fragments.ImportRemoteConfig.Companion.newInstance
-import com.mavodev.openvpnneo.views.ScreenSlidePagerAdapter
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -79,8 +75,6 @@ fun Int.dpToPx(): Int {
 }
 
 class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCountListener, SharedPreferences.OnSharedPreferenceChangeListener {
-    private lateinit var mPager: ViewPager2
-    private lateinit var mPagerAdapter: ScreenSlidePagerAdapter
     private lateinit var sharedPreferences: SharedPreferences
     
     // Country display views - only action bar variables used
@@ -139,65 +133,18 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             window.navigationBarColor = android.graphics.Color.BLACK
         }
 
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = view.findViewById(R.id.pager)
-        val tablayout: TabLayout = view.findViewById(R.id.tab_layout)
-
-        // Initialize country display views (moved to action bar)
-        // countryBar = view.findViewById(R.id.country_bar)
-        // countryFlag = view.findViewById(R.id.country_flag)
-        // countryName = view.findViewById(R.id.country_name)
-        // countryIp = view.findViewById(R.id.country_ip)
-        
-        // Set click listener for manual country update (removed - old country bar)
-        // countryBar.setOnClickListener {
-        //     Log.d("MainActivity", "Country bar clicked - manual update triggered")
-        //     updateCountryDisplay()
-        // }
-        
         // Initialize SharedPreferences
         sharedPreferences = Preferences.getDefaultSharedPreferences(this)
-
-        mPagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager, lifecycle, this)
 
         /* Toolbar and slider should have the same elevation */
         disableToolbarElevation()
 
-        val minimalUi = GlobalPreferences.getMinimalUi();
-        if (isAndroidTV || minimalUi) {
-            mPagerAdapter.addTab(R.string.minimal_ui, MinimalUI::class.java)
+        // Place VPNProfileList directly into the fragment container (no pager/tabs needed).
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, VPNProfileList())
+                .commit()
         }
-        if (!minimalUi) {
-
-            mPagerAdapter.addTab(R.string.vpn_list_title, VPNProfileList::class.java)
-            if (SendDumpFragment.getLastestDump(this) != null) {
-                mPagerAdapter.addTab(R.string.crashdump, SendDumpFragment::class.java)
-            }
-
-        }
-        if (isAndroidTV || minimalUi)
-            mPagerAdapter.addTab(R.string.openvpn_log, LogFragment::class.java)
-
-        mPager.setAdapter(mPagerAdapter)
-
-        // Debug: Log actual tab positions and titles
-        for (i in 0 until mPagerAdapter.itemCount) {
-            Log.d("MainActivity", "Tab $i: ${mPagerAdapter.getPageTitle(i)}")
-        }
-
-        TabLayoutMediator(tablayout, mPager) { tab, position ->
-            tab.text = mPagerAdapter.getPageTitle(position)
-        }.attach()
-
-        // Set initial position to Profiles (position 0)
-        mPager.currentItem = 0
-        
-        // Add ViewPager change listener (no longer needed for action bar updates)
-        mPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                // Action bar is now handled by updateActionBarDisplay()
-            }
-        })
 
         setUpEdgeEdgeInsetsListener(view, R.id.root_linear_layout)
         setContentView(view)
@@ -808,10 +755,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             if (Intent.ACTION_VIEW == action) {
                 val uri = intent.data
                 uri?.let { checkUriForProfileImport(it) }
-            }
-            val page = intent.getStringExtra("PAGE")
-            if ("graph" == page) {
-                mPager.currentItem = 1
             }
             setIntent(null)
         }

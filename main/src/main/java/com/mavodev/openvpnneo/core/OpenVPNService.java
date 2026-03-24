@@ -540,15 +540,19 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         }
 
 
-        // Always show notification here to avoid problem with startForeground timeout
+        // Always call startForeground() here, unconditionally.
+        // On Android 12+ (API 31+), startForegroundService() requires startForeground() to be
+        // called within 5 seconds of onStartCommand() returning, even if the service was
+        // previously in the foreground.  When the service is restarted after a crash (START_STICKY)
+        // a stale notification from the previous run can still be active, causing
+        // foregroundNotificationVisible() to return true and the old conditional code to skip the
+        // startForeground() call, resulting in a ForegroundServiceDidNotStartInTimeException
+        // crash loop.  Removing the condition and always calling showNotification() is safe
+        // because startForeground() is idempotent.
         VpnStatus.logInfo(R.string.building_configration);
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M  || (!foregroundNotificationVisible())) {
-
-            VpnStatus.updateStateString("VPN_GENERATE_CONFIG", "", R.string.building_configration, ConnectionStatus.LEVEL_START);
-            showNotification(VpnStatus.getLastCleanLogMessage(this),
-                    VpnStatus.getLastCleanLogMessage(this), NOTIFICATION_CHANNEL_NEWSTATUS_ID, 0, ConnectionStatus.LEVEL_START, null);
-        }
+        VpnStatus.updateStateString("VPN_GENERATE_CONFIG", "", R.string.building_configration, ConnectionStatus.LEVEL_START);
+        showNotification(VpnStatus.getLastCleanLogMessage(this),
+                VpnStatus.getLastCleanLogMessage(this), NOTIFICATION_CHANNEL_NEWSTATUS_ID, 0, ConnectionStatus.LEVEL_START, null);
 
         /* start the OpenVPN process itself in a background thread */
         mCommandHandler.post(() -> startOpenVPN(intent, startId));

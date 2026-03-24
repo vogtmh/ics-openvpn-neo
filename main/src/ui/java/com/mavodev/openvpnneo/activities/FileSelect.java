@@ -58,7 +58,11 @@ public class FileSelect extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.file_dialog);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+		// READ_EXTERNAL_STORAGE was deprecated in API 33 (Tiramisu); on API 33+ the
+		// permission is never granted, which caused the file-explorer tab to be silently
+		// removed or the activity to be cancelled, breaking config import for all modern
+		// Android users.  SAF (ACTION_OPEN_DOCUMENT) works without this permission.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
             checkPermission();
 
         mData = getIntent().getStringExtra(START_DATA);

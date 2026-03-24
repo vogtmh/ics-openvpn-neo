@@ -110,7 +110,7 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
 
-        val rootview = layoutInflater.inflate(R.layout.main_activity, null)
+        val rootview = layoutInflater.inflate(R.layout.vpn_preferences, null)
         setUpEdgeEdgeInsetsListener(rootview, R.id.root_linear_layout)
 
         disableToolbarElevation()
@@ -143,10 +143,8 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
 
         mPager.setAdapter(mPagerAdapter)
 
-        // Show tabs in VPN preferences (unlike main activity where they're hidden)
+        // Show tabs in VPN preferences
         val tabLayout: com.google.android.material.tabs.TabLayout = rootview.findViewById(R.id.tab_layout)
-        tabLayout.visibility = View.VISIBLE
-        
         com.google.android.material.tabs.TabLayoutMediator(tabLayout, mPager) { tab, position ->
             tab.text = mPagerAdapter.getPageTitle(position)
         }.attach()

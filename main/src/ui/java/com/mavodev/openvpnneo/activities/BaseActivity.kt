@@ -83,7 +83,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
             val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
 
-            statusbarbg.layoutParams.height = statusBarInsets.top
+            statusbarbg?.layoutParams?.height = statusBarInsets.top
 
 
             v.updateLayoutParams<ViewGroup.MarginLayoutParams> {

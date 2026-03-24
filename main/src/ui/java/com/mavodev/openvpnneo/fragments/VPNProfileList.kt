@@ -799,16 +799,16 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
                     flagImageView.setImageResource(resourceId)
                     Log.d("VPNProfileList", "Loaded flag for $countryCode")
                 } else {
-                    flagImageView.setImageResource(R.drawable.ic_placeholder_flag)
+                    flagImageView.setImageResource(R.drawable.flag_unknown)
                     Log.d("VPNProfileList", "Flag not found for $countryCode, using placeholder")
                 }
             } catch (e: Exception) {
                 Log.e("VPNProfileList", "Error loading flag for $countryCode", e)
-                flagImageView.setImageResource(R.drawable.ic_placeholder_flag)
+                flagImageView.setImageResource(R.drawable.flag_unknown)
             }
         } else {
             // Show placeholder flag
-            flagImageView.setImageResource(R.drawable.ic_placeholder_flag)
+            flagImageView.setImageResource(R.drawable.flag_unknown)
             Log.d("VPNProfileList", "No country stored for profile ${profile.getUUIDString()}, using placeholder")
         }
     }

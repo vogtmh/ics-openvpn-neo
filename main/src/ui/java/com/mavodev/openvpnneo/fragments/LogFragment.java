@@ -443,15 +443,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
         } else if (item.getItemId() == R.id.toggle_time) {
             showHideOptionsPanel();
         } else if (item.getItemId() == android.R.id.home) {
-            // This is called when the Home (Up) button is pressed
-            // in the Action Bar.
-            Intent parentActivityIntent = new Intent(getActivity(), MainActivity.class);
-            parentActivityIntent.addFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(parentActivityIntent);
-            getActivity().finish();
-            return true;
+            return super.onOptionsItemSelected(item);
 
         }
         return super.onOptionsItemSelected(item);

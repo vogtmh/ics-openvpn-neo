@@ -3,7 +3,6 @@
   ~ Distributed under the GNU GPL v2 with additional terms. For full terms see the file doc/LICENSE.txt
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -31,21 +30,11 @@
 
         </LinearLayout>
 
-        <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tab_layout"
-                style="@style/blinkt.tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:visibility="gone"
-                app:tabMaxWidth="0dp"
-                app:tabMode="scrollable" />
-
-        <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pager"
+        <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3" />
+                android:layout_weight="1" />
 
     </LinearLayout>
 

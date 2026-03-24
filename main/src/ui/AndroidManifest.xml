@@ -7,7 +7,9 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Storage permissions for Android TV file access -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- READ_EXTERNAL_STORAGE was deprecated in API 33; restrict to API 32 and below -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+                     android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
                      android:maxSdkVersion="28" />
     <!-- Remove MANAGE_EXTERNAL_STORAGE - using SAF instead -->
@@ -49,9 +51,13 @@
 
         <activity
                 android:name=".activities.LogWindow"
-                android:allowTaskReparenting="true"
                 android:label="@string/openvpn_log"
-                android:launchMode="singleTask" />
+                android:exported="false"
+                android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.mavodev.openvpnneo.activities.MainActivity" />
+        </activity>
 
         <activity
                 android:name=".activities.VPNPreferences"
