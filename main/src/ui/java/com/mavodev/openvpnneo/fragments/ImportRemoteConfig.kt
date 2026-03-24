@@ -33,7 +33,7 @@ import okhttp3.*
 import okhttp3.Handshake.Companion.handshake
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import okhttp3.internal.tls.OkHostnameVerifier
+import javax.net.ssl.HttpsURLConnection
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.cert.CertPathValidatorException
@@ -110,7 +110,7 @@ class ImportRemoteConfig : DialogFragment() {
             mapping[ph] = prefs.getString("pin-${ph}", "")
         }
 
-        val defaultVerifier = OkHostnameVerifier;
+        val defaultVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
         val pinHostVerifier = object : HostnameVerifier {
             override fun verify(hostname: String, session: SSLSession): Boolean {
                 val unverifiedHandshake = session.handshake()

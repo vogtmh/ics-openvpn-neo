@@ -36,6 +36,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.app.AlertDialog
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -181,6 +182,34 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         
         // Fetch country info once on launch
         updateCountryDisplay()
+
+        // On first launch, ask whether to enable the country API
+        showCountryApiConsentDialogIfNeeded()
+    }
+
+    private fun showCountryApiConsentDialogIfNeeded() {
+        // Skip if already asked, or if the user has explicitly configured the setting before
+        if (sharedPreferences.getBoolean("country_api_asked", false) ||
+            sharedPreferences.contains("display_vpn_country")) {
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.country_api_dialog_title))
+            .setMessage(getString(R.string.country_api_dialog_message))
+            .setPositiveButton(getString(R.string.country_api_dialog_enable)) { _, _ ->
+                sharedPreferences.edit()
+                    .putBoolean("display_vpn_country", true)
+                    .putBoolean("country_api_asked", true)
+                    .apply()
+                updateCountryDisplay()
+            }
+            .setNegativeButton(getString(R.string.country_api_dialog_decline)) { _, _ ->
+                sharedPreferences.edit()
+                    .putBoolean("country_api_asked", true)
+                    .apply()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun registerNetworkCallback() {
@@ -189,14 +218,14 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                 Log.d("MainActivity", "Network available - scheduling country refresh")
                 // Delay to let DHCP/routing settle before querying
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
+                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
                     if (displayCountry) fetchCountryInfo()
                 }, 1500)
             }
             override fun onLost(network: Network) {
                 Log.d("MainActivity", "Network lost - refreshing country info")
                 Handler(Looper.getMainLooper()).post {
-                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
+                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
                     if (displayCountry) fetchCountryInfo()
                 }
             }
@@ -457,7 +486,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         if (levelChanged && (level == ConnectionStatus.LEVEL_CONNECTED || level == ConnectionStatus.LEVEL_NOTCONNECTED)) {
             Log.d("MainActivity", "Stable VPN state reached ($level) - refreshing country info")
             runOnUiThread {
-                val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
+                val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
                 if (displayCountry) {
                     // Old country bar removed - no visibility control needed
                     if (level == ConnectionStatus.LEVEL_CONNECTED) {
@@ -549,7 +578,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
 
     private fun updateCountryDisplay() {
-        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
+        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
         Log.d("MainActivity", "updateCountryDisplay called - display_vpn_country setting: $displayCountry")
         
         // Old country bar is removed - only update action bar now
@@ -572,7 +601,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
     
     private fun updateActionBarDisplay() {
-        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", true)
+        val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
         Log.d("MainActivity", "updateActionBarDisplay called - display_vpn_country setting: $displayCountry")
         
         if (displayCountry && actionBarCountryName.text.isNotEmpty()) {

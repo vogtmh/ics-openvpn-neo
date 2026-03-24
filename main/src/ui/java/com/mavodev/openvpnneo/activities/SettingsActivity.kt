@@ -77,7 +77,7 @@ class SettingsActivity : BaseActivity() {
             title = "Display VPN country",
             description = "Request and display the country of your current connection via https://api.country.is/",
             type = SettingType.TOGGLE_SLIDER,
-            value = sharedPreferences.getBoolean("display_vpn_country", true)
+            value = sharedPreferences.getBoolean("display_vpn_country", false)
         ))
 
         settings.add(SettingItem(

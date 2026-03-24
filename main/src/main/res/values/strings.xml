@@ -508,5 +508,9 @@
     <string name="cannot_start_vpn_not_configured">Cannot start VPN. No default VPN has been configured.</string>
     <string name="minimal_ui_not_available">Functionality not available when minimal UI is enabled</string>
     <string name="missing_keychain_access">Access to Android keychain certificate is missing. Tap this notification to select/import a certificate</string>
+    <string name="country_api_dialog_title">Display VPN Country</string>
+    <string name="country_api_dialog_message">OpenVPN Neo can show the country and IP address of your VPN server in the title bar.\n\nTo do this, it sends a small request to api.country.is — a public, privacy-respecting lookup service. This request reveals your VPN server\'s IP address to that service, but not your identity or the contents of your traffic.\n\nYou can turn this on or off anytime in Settings.</string>
+    <string name="country_api_dialog_enable">Enable</string>
+    <string name="country_api_dialog_decline">No thanks</string>
 
 </resources>
