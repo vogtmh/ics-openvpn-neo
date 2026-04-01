@@ -59,8 +59,6 @@ Footnotes
 -----------
 Please note that OpenVPN used by this project is under GPLv2. 
 
-If you want to donate you can donate to [arne-paypal@rfc2549.org via paypal](https://www.paypal.com/cgi-bin/webscr?hosted_button_id=R2M6ZP9AF25LS&cmd=_s-xclick), or alternatively if you believe in fancy Internet money you can use Bitcoin: 1EVWVqpVQFhoFE6gKaqSkfvSNdmLAjcQ9z 
-
 The Git repository is at GitHub under https://github.com/vogtmh/ics-openvpn-neo
 
 Please read the doc/README before asking questions or starting development.
