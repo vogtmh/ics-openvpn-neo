@@ -1,4 +1,4 @@
-OpenVPN Neo
+CentVPN
 =============
 ![build status](https://github.com/vogtmh/ics-openvpn-neo/actions/workflows/build.yaml/badge.svg)
 

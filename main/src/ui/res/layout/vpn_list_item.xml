@@ -55,7 +55,7 @@
             android:layout_height="16dp"
             android:layout_marginEnd="12dp"
             android:scaleType="fitCenter"
-            android:contentDescription="Country flag"
+            android:contentDescription="@string/country_flag"
             android:src="@drawable/flag_unknown" />
 
         <LinearLayout
@@ -86,18 +86,7 @@
                 android:src="@drawable/star"
                 app:tint="@color/accent"
                 android:visibility="gone"
-                android:contentDescription="Default profile" />
-
-            <TextView
-                android:id="@+id/vpn_item_subtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/text_primary"
-                tools:text="Not conn." />
+                android:contentDescription="@string/default_profile" />
         </LinearLayout>
 
     </LinearLayout>

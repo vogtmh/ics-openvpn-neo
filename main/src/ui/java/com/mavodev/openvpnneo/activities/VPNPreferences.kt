@@ -62,7 +62,7 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
             finish()
         }
         if (mProfile!!.mTemporaryProfile) {
-            Toast.makeText(this, "Temporary profiles cannot be edited", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.tmp_profile_not_editable, Toast.LENGTH_LONG).show()
             finish()
         }
     }
@@ -97,7 +97,7 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
 
         mProfile = ProfileManager.get(this, mProfileUUID)
         if (mProfile == null) {
-            Toast.makeText(this, "Profile to edit cannot be found.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.profile_not_found, Toast.LENGTH_LONG).show()
             finish()
             return
         }

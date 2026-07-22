@@ -41,8 +41,8 @@ public class ICSOpenVPNApplication extends Application {
         LocaleHelper.setDesiredLocale(this);
         super.onCreate();
 
-        SharedPreferences prefs = Preferences.getDefaultSharedPreferences(this);
-        String theme = prefs.getString("theme", "system");
+        SharedPreferences themePrefs = Preferences.getDefaultSharedPreferences(this);
+        String theme = themePrefs.getString("theme", "system");
         switch (theme) {
             case "light":
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

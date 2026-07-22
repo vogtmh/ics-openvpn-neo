@@ -25,7 +25,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Html
-import android.text.SpannableString
+import androidx.core.text.HtmlCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -67,14 +67,12 @@ import com.mavodev.openvpnneo.core.VpnStatus
 import com.mavodev.openvpnneo.core.VpnStatus.StateListener
 import com.mavodev.openvpnneo.fragments.ImportRemoteConfig.Companion.newInstance
 import com.mavodev.openvpnneo.fragments.Utils.alwaysUseOldFileChooser
-import com.mavodev.openvpnneo.fragments.Utils.getWarningText
 import java.util.LinkedList
 import java.util.TreeSet
 import kotlin.math.min
 
 class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddProfileBottomSheet.Listener {
     protected var mEditProfile: VpnProfile? = null
-    private var mLastStatusMessage: String? = null
     private var mArrayadapter: ArrayAdapter<VpnProfile>? = null
     private var mLastIntent: Intent? = null
     private var defaultVPN: VpnProfile? = null
@@ -121,7 +119,6 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         }
         
         requireActivity().runOnUiThread(Runnable {
-            mLastStatusMessage = VpnStatus.getLastCleanLogMessage(getActivity())
             mLastIntent = intent
             mArrayadapter!!.notifyDataSetChanged()
             showUserRequestDialogIfNeeded(level, intent)
@@ -184,8 +181,8 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
 
 
         val disconnectShortcut = ShortcutInfo.Builder(getContext(), "disconnectVPN")
-            .setShortLabel("Disconnect")
-            .setLongLabel("Disconnect VPN")
+            .setShortLabel(getString(R.string.cancel_connection))
+            .setLongLabel(getString(R.string.cancel_connection_long))
             .setIntent(
                 Intent(
                     getContext(),
@@ -305,8 +302,9 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         }
 
         newvpntext.setText(
-            Html.fromHtml(
+            HtmlCompat.fromHtml(
                 getString(R.string.add_new_vpn_hint),
+                HtmlCompat.FROM_HTML_MODE_LEGACY,
                 MiniImageGetter(),
                 null
             )
@@ -698,56 +696,28 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
             val settingsview = v.findViewById<View>(R.id.quickedit_settings)
             settingsview.setOnClickListener(View.OnClickListener { view: View? -> editVPN(profile) })
 
-            val subtitle = v.findViewById<TextView>(R.id.vpn_item_subtitle)
             val countryFlag = v.findViewById<ImageView>(R.id.vpn_item_country_flag)
             val defaultStar = v.findViewById<ImageView>(R.id.vpn_item_default_star)
-            val warningText = getWarningText(requireContext(), profile)
-            
+
             // Load country flag for this profile
             loadProfileCountryFlag(profile, countryFlag)
-            
+
             // Show/hide default profile star
-            Log.d("VPNProfileList", "Profile: ${profile.name}, defaultVPN: ${defaultVPN?.name}")
-            if (profile === defaultVPN) {
-                defaultStar.visibility = View.VISIBLE
-                Log.d("VPNProfileList", "Showing star for default profile: ${profile.name}")
-            } else {
-                defaultStar.visibility = View.GONE
-                Log.d("VPNProfileList", "Hiding star for profile: ${profile.name}")
-            }
+            defaultStar.visibility = if (profile === defaultVPN) View.VISIBLE else View.GONE
 
-            if (profile === defaultVPN) {
-                if (warningText.length > 0) warningText.append(" ")
-                warningText.append(SpannableString("Default VPN"))
-            }
-
-            // Very simple logic: Show animation only for connecting profile
+            val container = v.findViewById<View>(R.id.vpn_item_container)
             if (profile.getUUIDString() == connectingProfileUUID) {
                 // User clicked to connect this profile - show pulsing animation
-                subtitle.setText("Connecting...")
-                subtitle.setVisibility(View.GONE)  // Hide log output
-                val container = v.findViewById<View>(R.id.vpn_item_container)
                 container.setBackgroundResource(R.drawable.vpn_item_border_pulse)
                 val animationDrawable = container.background as AnimationDrawable
                 animationDrawable.start()
-                Log.d("VPNProfileList", "Show pulsing border for connecting profile: ${profile.name}")
             } else if (profile.getUUIDString() == VpnStatus.getLastConnectedVPNProfile() && currentConnectionLevel == ConnectionStatus.LEVEL_CONNECTED) {
                 // VPN is connected - show solid border
-                subtitle.setText(mLastStatusMessage)
-                subtitle.setVisibility(View.GONE)  // Hide log output
-                val container = v.findViewById<View>(R.id.vpn_item_container)
                 container.setBackgroundResource(R.drawable.vpn_item_border)
-                Log.d("VPNProfileList", "Show solid border for connected profile: ${profile.name}")
             } else {
                 // Not connecting and not connected - no border
-                subtitle.setText(warningText)
-                if (warningText.length > 0) subtitle.setVisibility(View.GONE)  // Hide log output
-                else subtitle.setVisibility(View.GONE)
-                val container = v.findViewById<View>(R.id.vpn_item_container)
                 container.background = null
-                Log.d("VPNProfileList", "No border for profile: ${profile.name}")
             }
-
 
             return v
         }

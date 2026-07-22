@@ -301,7 +301,7 @@ class MinimalUI: Fragment(), VpnStatus.StateListener {
                 mFileImportReceiver.launch(intent)
             } catch (e: Exception) {
                 Log.e("MinimalUI", "Error opening file picker: ${e.message}", e)
-                Toast.makeText(requireContext(), "Unable to open file picker", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), R.string.error_open_file_picker, Toast.LENGTH_LONG).show()
             }
         }
         

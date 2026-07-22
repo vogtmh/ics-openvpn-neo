@@ -296,7 +296,7 @@ class ImportRemoteConfig : DialogFragment() {
                         doAsImport(asUsername.text.toString(), asPassword.text.toString())
                     }
                 } catch (e: IllegalArgumentException) {
-                    Toast.makeText(context, "URL is invalid: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, getString(R.string.url_invalid, e.localizedMessage), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -321,11 +321,11 @@ class ImportRemoteConfig : DialogFragment() {
             withContext(Dispatchers.Main)
             {
                 val ab = AlertDialog.Builder(requireContext())
-                ab.setTitle("Downloading profile")
-                ab.setMessage("Please wait")
+                ab.setTitle(R.string.downloading_profile)
+                ab.setMessage(R.string.please_wait)
                 pleaseWait = ab.show()
 
-                Toast.makeText(context, "Downloading profile", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, R.string.downloading_profile, Toast.LENGTH_LONG).show()
             }
 
             val asProfileUri:HttpUrl = getImportUrl()
@@ -340,7 +340,7 @@ class ImportRemoteConfig : DialogFragment() {
                 }
 
                 val profile = response.body?.string()
-                if (response.code == 401 && crvMessage.matcher(profile).matches()) {
+                if (response.code == 401 && crvMessage.matcher(profile ?: "").matches()) {
                     withContext(Dispatchers.Main) {
                         pleaseWait?.dismiss()
                         showCRDialog(profile!!)

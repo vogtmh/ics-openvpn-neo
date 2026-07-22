@@ -3,7 +3,8 @@
   ~ Distributed under the GNU GPL v2 with additional terms. For full terms see the file doc/LICENSE.txt
   -->
 <resources>
-    <string name="app">OpenVPN Neo</string>
+    <string name="app">CentVPN for OpenVPN</string>
+    <string name="app_launcher">CentVPN</string>
     <string name="theme">Theme</string>
     <string name="theme_summary">Select the application theme</string>
     <string name="address">Server Address:</string>
@@ -23,7 +24,7 @@
     <string name="copyright_guicode">Source code and issue tracker available at https://github.com/vogtmh/ics-openvpn-neo/</string>
     <string name="copyright_others">This program uses the following components; see the source code for full details on the licenses</string>
     <string name="about">About</string>
-    <string name="vpn_list_title">OpenVPN Neo</string>
+    <string name="vpn_list_title">CentVPN</string>
     <string name="minimal_ui">Minimal UI</string>
     <string name="vpn_type">Type</string>
     <string name="pkcs12pwquery">PKCS12 Password</string>
@@ -514,8 +515,18 @@
     <string name="add_profile_create_manually_desc">Configure a VPN connection from scratch</string>
     <string name="add_profile_import_file_desc">Load an .ovpn configuration file</string>
     <string name="add_profile_import_remote_desc">Import from an Access Server or URL</string>
-    <string name="country_api_dialog_message">OpenVPN Neo can show the country and IP address of your VPN server in the title bar.\n\nTo do this, it sends a small request to api.country.is — a public, privacy-respecting lookup service. This request reveals your VPN server\'s IP address to that service, but not your identity or the contents of your traffic.\n\nYou can turn this on or off anytime in Settings.</string>
+    <string name="country_api_dialog_message">CentVPN can show the country and IP address of your VPN server in the title bar.\n\nTo do this, it sends a small request to api.country.is — a public, privacy-respecting lookup service. This request reveals your VPN server\'s IP address to that service, but not your identity or the contents of your traffic.\n\nYou can turn this on or off anytime in Settings.</string>
     <string name="country_api_dialog_enable">Enable</string>
     <string name="country_api_dialog_decline">No thanks</string>
+
+    <string name="country_flag">Country flag</string>
+    <string name="default_profile">Default profile</string>
+    <string name="tmp_profile_not_editable">Temporary profiles cannot be edited</string>
+    <string name="profile_not_found">Profile to edit cannot be found.</string>
+    <string name="url_invalid">URL is invalid: %s</string>
+    <string name="downloading_profile">Downloading profile</string>
+    <string name="please_wait">Please wait</string>
+    <string name="generating_config">Generating config…</string>
+    <string name="error_open_file_picker">Unable to open file picker</string>
 
 </resources>

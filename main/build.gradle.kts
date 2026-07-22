@@ -1,7 +1,11 @@
-import com.android.build.gradle.api.ApplicationVariant
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.process.ExecOperations
+import javax.inject.Inject
 
 /*
- * Copyright (c) 2012-2016 Arne Schwabe
+ * Copyright (c) 2026 Maximilian Vogt
  * Distributed under the GNU GPL v2 with additional terms. For full terms see the file doc/LICENSE.txt
  */
 
@@ -17,7 +21,6 @@ android {
     }
     namespace = "com.mavodev.openvpnneo"
     compileSdk = 36
-    //compileSdkPreview = "UpsideDownCake"
 
     // Also update runcoverity.sh
     ndkVersion = "29.0.14206865"
@@ -26,9 +29,8 @@ android {
         applicationId = "com.mavodev.openvpnneo"
         minSdk = 21
         targetSdk = 36
-        //targetSdkPreview = "UpsideDownCake"
-        versionCode = 7
-        versionName = "1.3.764"
+        versionCode = 11
+        versionName = "1.4.764"
         externalNativeBuild {
             cmake {
                 //arguments+= "-DCMAKE_VERBOSE_MAKEFILE=1"
@@ -47,14 +49,12 @@ android {
 
     sourceSets {
         getByName("main") {
-            assets.srcDirs("src/main/assets", "build/ovpnassets")
+            // src/main/assets is included by convention; add the CMake-generated assets
+            assets.directories.add("build/ovpnassets")
 
         }
 
         create("ui") {
-        }
-
-        create("skeleton") {
         }
 
         getByName("debug") {
@@ -79,20 +79,6 @@ android {
             enableV2Signing = true
         }
 
-        create("releaseOvpn2") {
-            // ~/.gradle/gradle.properties
-            val keystoreO2File: String? by project
-            storeFile = keystoreO2File?.let { file(it) }
-            val keystoreO2Password: String? by project
-            storePassword = keystoreO2Password
-            val keystoreO2AliasPassword: String? by project
-            keyPassword = keystoreO2AliasPassword
-            val keystoreO2Alias: String? by project
-            keyAlias = keystoreO2Alias
-            enableV1Signing = true
-            enableV2Signing = true
-        }
-
     }
 
     lint {
@@ -109,32 +95,31 @@ android {
             dimension = "implementation"
         }
 
-        create("skeleton") {
-            dimension = "implementation"
-        }
-
         create("ovpn23")
         {
             dimension = "ovpnimpl"
             buildConfigField("boolean", "openvpn3", "true")
         }
-
-        create("ovpn2")
-        {
-            dimension = "ovpnimpl"
-            versionNameSuffix = "-o2"
-            buildConfigField("boolean", "openvpn3", "false")
-        }
     }
 
     buildTypes {
         getByName("release") {
+            isDefault = true
+            val hasReleaseKeystore = project.findProperty("keystoreFile")
+                .let { it is String && it.isNotEmpty() }
+            // Set by Android Studio's "Generate Signed Bundle / APK" wizard for a single build.
+            val hasInjectedSigning = project.hasProperty("android.injected.signing.store.file")
             if (project.hasProperty("icsopenvpnDebugSign")) {
                 logger.warn("property icsopenvpnDebugSign set, using debug signing for release")
                 signingConfig = android.signingConfigs.getByName("debug")
+            } else if (hasInjectedSigning) {
+                // Leave signingConfig unset so AGP applies the key injected by the IDE wizard.
+                logger.lifecycle("Using signing config injected by Android Studio")
+            } else if (!hasReleaseKeystore) {
+                logger.warn("keystoreFile not set (~/.gradle/gradle.properties), falling back to debug signing for release")
+                signingConfig = android.signingConfigs.getByName("debug")
             } else {
                 productFlavors["ovpn23"].signingConfig = signingConfigs.getByName("release")
-                productFlavors["ovpn2"].signingConfig = signingConfigs.getByName("releaseOvpn2")
             }
         }
     }
@@ -158,31 +143,6 @@ android {
             useLegacyPackaging = true
         }
     }
-
-    bundle {
-        codeTransparency {
-            signing {
-                val keystoreTPFile: String? by project
-                storeFile = keystoreTPFile?.let { file(it) }
-                val keystoreTPPassword: String? by project
-                storePassword = keystoreTPPassword
-                val keystoreTPAliasPassword: String? by project
-                keyPassword = keystoreTPAliasPassword
-                val keystoreTPAlias: String? by project
-                keyAlias = keystoreTPAlias
-
-                if (keystoreTPFile?.isEmpty() ?: true)
-                    println("keystoreTPFile not set, disabling transparency signing")
-                if (keystoreTPPassword?.isEmpty() ?: true)
-                    println("keystoreTPPassword not set, disabling transparency signing")
-                if (keystoreTPAliasPassword?.isEmpty() ?: true)
-                    println("keystoreTPAliasPassword not set, disabling transparency signing")
-                if (keystoreTPAlias?.isEmpty() ?: true)
-                    println("keyAlias not set, disabling transparency signing")
-
-            }
-        }
-    }
 }
 
 var swigcmd = "swig"
@@ -194,36 +154,60 @@ else if (file("/usr/local/bin/swig").exists())
     swigcmd = "/usr/local/bin/swig"
 
 
-fun registerGenTask(variantName: String, variantDirName: String): File {
-    val baseDir = File(buildDir, "generated/source/ovpn3swig/${variantDirName}")
-    val genDir = File(baseDir, "net/openvpn/ovpn3")
+/**
+ * Runs SWIG to generate the net.openvpn.ovpn3 Java wrapper classes consumed by the
+ * Kotlin/Java sources. The C++ wrapper SWIG also emits here is unused by the native
+ * build (CMake runs SWIG separately for that); only the generated Java matters.
+ */
+abstract class GenerateOvpn3SwigTask : DefaultTask() {
+    @get:Input
+    abstract val swigCmd: Property<String>
 
-    tasks.register<Exec>("generateOpenVPN3Swig${variantName}")
-    {
+    @get:Internal
+    abstract val projectRoot: DirectoryProperty
 
-        doFirst {
-            mkdir(genDir)
-        }
-        commandLine(listOf(swigcmd, "-outdir", genDir, "-outcurrentdir", "-c++", "-java", "-package", "net.openvpn.ovpn3",
-                "-Isrc/main/cpp/openvpn3/client", "-Isrc/main/cpp/openvpn3/",
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val interfaceFile: RegularFileProperty
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @get:Inject
+    abstract val execOperations: ExecOperations
+
+    @TaskAction
+    fun generate() {
+        val root = projectRoot.get().asFile
+        val genDir = outputDir.get().dir("net/openvpn/ovpn3").asFile
+        genDir.mkdirs()
+        execOperations.exec {
+            commandLine(
+                swigCmd.get(), "-outdir", genDir.absolutePath, "-outcurrentdir", "-c++", "-java",
+                "-package", "net.openvpn.ovpn3",
+                "-I${root}/src/main/cpp/openvpn3/client", "-I${root}/src/main/cpp/openvpn3/",
                 "-DOPENVPN_PLATFORM_ANDROID",
+                // 503: C++ operator== in vendored openvpn3 headers cannot be wrapped for Java
+                // (harmless; the operator is only used by the native C++ build).
+                "-w503",
                 "-o", "${genDir}/ovpncli_wrap.cxx", "-oh", "${genDir}/ovpncli_wrap.h",
-                "src/main/cpp/openvpn3/client/ovpncli.i"))
-        inputs.files( "src/main/cpp/openvpn3/client/ovpncli.i")
-        outputs.dir( genDir)
-
+                "${root}/src/main/cpp/openvpn3/client/ovpncli.i"
+            )
+        }
     }
-    return baseDir
 }
 
-android.applicationVariants.all(object : Action<ApplicationVariant> {
-    override fun execute(variant: ApplicationVariant) {
-        val sourceDir = registerGenTask(variant.name, variant.baseName.replace("-", "/"))
-        val task = tasks.named("generateOpenVPN3Swig${variant.name}").get()
-
-        variant.registerJavaGeneratingTask(task, sourceDir)
+androidComponents {
+    onVariants { variant ->
+        val capName = variant.name.replaceFirstChar { it.uppercase() }
+        val swigTask = tasks.register<GenerateOvpn3SwigTask>("generateOpenVPN3Swig${capName}") {
+            swigCmd.set(swigcmd)
+            projectRoot.set(layout.projectDirectory)
+            interfaceFile.set(layout.projectDirectory.file("src/main/cpp/openvpn3/client/ovpncli.i"))
+        }
+        variant.sources.java?.addGeneratedSourceDirectory(swigTask, GenerateOvpn3SwigTask::outputDir)
     }
-})
+}
 
 
 dependencies {

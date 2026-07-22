@@ -117,7 +117,7 @@ public class ShowConfigFragment extends Fragment {
         else {
             // Run in own Thread since Keystore does not like to be queried from the main thread
 
-            mConfigView.setText("Generating config...");
+            mConfigView.setText(R.string.generating_config);
             startGenConfig(vp, mConfigView);
         }
 	}

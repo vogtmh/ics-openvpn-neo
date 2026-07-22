@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          target: [UiOvpn23, SkeletonOvpn2, UiOvpn2]
+          target: [UiOvpn23]
     name: "Release ${{ matrix.target }}"
     runs-on: ubuntu-latest
     steps:

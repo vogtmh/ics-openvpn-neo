@@ -51,6 +51,6 @@
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        tools:text="OpenVPN Neo" />
+        tools:text="CentVPN" />
 
 </LinearLayout>

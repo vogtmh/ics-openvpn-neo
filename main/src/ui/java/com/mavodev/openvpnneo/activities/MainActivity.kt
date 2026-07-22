@@ -623,7 +623,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             actionBarCountryFlag.visibility = View.GONE
             actionBarCountryInfo.visibility = View.GONE
             actionBarTitle.visibility = View.VISIBLE
-            actionBarTitle.text = getString(R.string.app)
+            actionBarTitle.text = getString(R.string.app_launcher)
         }
     }
     
