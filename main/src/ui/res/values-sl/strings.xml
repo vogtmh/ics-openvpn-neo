@@ -278,7 +278,6 @@
     <string name="allow_vpn_changes">Dovoli spremembe profilov VPN</string>
     <string name="hwkeychain">Strojna shramba ključev:</string>
     <string name="permission_icon_app">Ikona programa poizkuša uporabiti OpenVPN za Android</string>
-    <string name="donatePlayStore">Lahko pa mi darujete s trgovino Play:</string>
     <string name="thanks_for_donation">Hvala, da ste darovali %s!</string>
     <string name="logCleared">Dnevnik počiščen.</string>
     <string name="show_password">Prikaži geslo</string>

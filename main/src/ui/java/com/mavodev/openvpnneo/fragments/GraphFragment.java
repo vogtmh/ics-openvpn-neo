@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -88,17 +89,17 @@ public class GraphFragment extends Fragment implements VpnStatus.ByteCountListen
         mChartAdapter = new ChartDataAdapter(getActivity(), charts);
         mListView.setAdapter(mChartAdapter);
 
-        mColourIn = getActivity().getResources().getColor(R.color.dataIn);
-        mColourOut = getActivity().getResources().getColor(R.color.dataOut);
-        mColourPoint = getActivity().getResources().getColor(android.R.color.black);
+        mColourIn = ContextCompat.getColor(requireContext(), R.color.dataIn);
+        mColourOut = ContextCompat.getColor(requireContext(), R.color.dataOut);
+        mColourPoint = ContextCompat.getColor(requireContext(), android.R.color.black);
 
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (currentNightMode) {
             case Configuration.UI_MODE_NIGHT_NO:
-                mTextColour = getActivity().getResources().getColor(android.R.color.primary_text_light);
+                mTextColour = ContextCompat.getColor(requireContext(), android.R.color.primary_text_light);
                 break;
             case Configuration.UI_MODE_NIGHT_YES:
-                mTextColour = getActivity().getResources().getColor(android.R.color.primary_text_dark);
+                mTextColour = ContextCompat.getColor(requireContext(), android.R.color.primary_text_dark);
                 break;
         }
 
@@ -201,7 +202,7 @@ public class GraphFragment extends Fragment implements VpnStatus.ByteCountListen
             holder.chart.getLegend().setTextColor(mTextColour);
 
             // Set no data text color to match our purple theme
-            holder.chart.setNoDataTextColor(getResources().getColor(R.color.accent));
+            holder.chart.setNoDataTextColor(ContextCompat.getColor(getContext(), R.color.accent));
 
             XAxis xAxis = holder.chart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

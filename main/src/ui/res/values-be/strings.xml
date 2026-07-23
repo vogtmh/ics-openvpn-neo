@@ -280,7 +280,6 @@
     <string name="allow_vpn_changes">Дазваляць змяненні профіляў VPN</string>
     <string name="hwkeychain">Апаратнае сховішча ключоў:</string>
     <string name="permission_icon_app">Значок праграмы спрабуе выкарыстоўваць </string>
-    <string name="donatePlayStore">У якасці падзякі, вы таксама можаце зрабіць ахвяраванне на Play Store:</string>
     <string name="thanks_for_donation">Дзякуй за ахвяраванне, %s!</string>
     <string name="logCleared">Журнал ачышчаны.</string>
     <string name="show_password">Паказаць пароль</string>

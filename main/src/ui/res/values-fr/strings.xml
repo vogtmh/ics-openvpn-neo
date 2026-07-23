@@ -283,7 +283,6 @@
     <string name="allow_vpn_changes">Autoriser les modifications des profils VPN</string>
     <string name="hwkeychain">Magasin de clés matérielles :</string>
     <string name="permission_icon_app">Icône de l\'appli essayant d\'utiliser OpenVPN for Android</string>
-    <string name="donatePlayStore">Sinon vous pouvez m\'envoyer un don via le Play Store :</string>
     <string name="thanks_for_donation">Merci pour le don %s !</string>
     <string name="logCleared">Journal effacé.</string>
     <string name="show_password">Afficher le mot de passe</string>

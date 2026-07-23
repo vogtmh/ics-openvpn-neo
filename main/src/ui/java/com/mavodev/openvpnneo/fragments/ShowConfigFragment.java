@@ -6,7 +6,6 @@
 package com.mavodev.openvpnneo.fragments;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -75,8 +74,6 @@ public class ShowConfigFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-		    inflater.inflate(R.menu.configmenu, menu);
 	}
 
 	private void shareConfig() {

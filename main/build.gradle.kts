@@ -27,10 +27,10 @@ android {
 
     defaultConfig {
         applicationId = "com.mavodev.openvpnneo"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 36
-        versionCode = 12
-        versionName = "1.5.764"
+        versionCode = 13
+        versionName = "1.6.764"
         externalNativeBuild {
             cmake {
                 //arguments+= "-DCMAKE_VERBOSE_MAKEFILE=1"
@@ -75,7 +75,7 @@ android {
             keyPassword = keystoreAliasPassword
             val keystoreAlias: String? by project
             keyAlias = keystoreAlias
-            enableV1Signing = true
+            enableV1Signing = false
             enableV2Signing = true
         }
 
@@ -214,6 +214,7 @@ dependencies {
     // https://maven.google.com/web/index.html
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.org.bouncycastle.bcprov.jdk18on)
 
     uiImplementation(libs.android.view.material)
     uiImplementation(libs.androidx.activity)

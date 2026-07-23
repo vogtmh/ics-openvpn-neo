@@ -285,7 +285,6 @@
     <string name="allow_vpn_changes">允许更改 VPN 配置</string>
     <string name="hwkeychain">硬件密钥库：</string>
     <string name="permission_icon_app">试图使用安卓 OpenVPN 的应用的图标</string>
-    <string name="donatePlayStore">或者你可以通过Play Store向我发送捐款：</string>
     <string name="thanks_for_donation">感谢捐赠 %s！</string>
     <string name="logCleared">日志已清除。</string>
     <string name="show_password">显示密码</string>

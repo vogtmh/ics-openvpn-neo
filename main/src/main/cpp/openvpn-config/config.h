@@ -3,6 +3,12 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 
+/* minSdk is 26 (Android 8.0). The NDK's <string.h> declares basename() for
+ * API >= 23, which conflicts with the compat declaration in src/compat/compat.h
+ * and the fallback in compat/compat-basename.c. Declaring it available makes the
+ * build use the platform basename() and skip the conflicting compat versions. */
+#define HAVE_BASENAME 1
+
 /* DISABLE PERSISTEN TUN */
 #undef TUNSETPERSIST
 

@@ -62,7 +62,7 @@ public class FileSelect extends BaseActivity {
 		// permission is never granted, which caused the file-explorer tab to be silently
 		// removed or the activity to be cancelled, breaking config import for all modern
 		// Android users.  SAF (ACTION_OPEN_DOCUMENT) works without this permission.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
             checkPermission();
 
         mData = getIntent().getStringExtra(START_DATA);
@@ -101,7 +101,6 @@ public class FileSelect extends BaseActivity {
 	}
 
 
-	@TargetApi(Build.VERSION_CODES.M)
 	private void checkPermission() {
 		if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);

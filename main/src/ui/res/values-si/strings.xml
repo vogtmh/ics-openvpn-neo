@@ -280,7 +280,6 @@
     <string name="allow_vpn_changes">VPN පැතිකඩ වෙත වෙනස්කම් වලට ඉඩ දෙන්න</string>
     <string name="hwkeychain">දෘඪාංග යතුරුගඩාව:</string>
     <string name="permission_icon_app">Android සඳහා OpenVPN භාවිතා කිරීමට උත්සාහ කරන යෙදුමේ නිරූපකය</string>
-    <string name="donatePlayStore">විකල්පයක් ලෙස ඔබට Play Store සමඟින් මට පරිත්‍යාගයක් එවිය හැක:</string>
     <string name="thanks_for_donation">%s පරිත්‍යාග කිරීම ගැන ස්තුතියි!</string>
     <string name="logCleared">ලොගය හිස් කරන ලදී.</string>
     <string name="show_password">මුරපදය පෙන්වන්න</string>

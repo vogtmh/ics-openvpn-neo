@@ -4,7 +4,6 @@
  */
 package com.mavodev.openvpnneo.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Checkable
@@ -30,8 +29,6 @@ class Settings_Connections : Settings_Fragment(), View.OnClickListener {
 
     private val connectionsMenuProvider = object : MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-                menuInflater.inflate(R.menu.connections, menu)
         }
 
         override fun onMenuItemSelected(item: MenuItem): Boolean {

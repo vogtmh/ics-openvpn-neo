@@ -5,67 +5,30 @@
 
 package com.mavodev.openvpnneo.fragments;
 
-import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.core.graphics.Insets;
+import androidx.core.text.HtmlCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
-import com.android.vending.billing.IInAppBillingService;
-
 import com.mavodev.openvpnneo.BuildConfig;
 import com.mavodev.openvpnneo.core.NativeUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Locale;
-import java.util.Vector;
 
 import com.mavodev.openvpnneo.R;
-import com.mavodev.openvpnneo.core.VpnStatus;
 import kotlin.text.Charsets;
 
-public class AboutFragment extends Fragment implements View.OnClickListener {
-
-    private static final String RESPONSE_CODE = "RESPONSE_CODE";
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
+public class AboutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,7 +73,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             translation.setText(R.string.translationby);
 
         TextView wv = (TextView) v.findViewById(R.id.full_licenses);
-        wv.setText(Html.fromHtml(readHtmlFromAssets()));
+        wv.setText(HtmlCompat.fromHtml(readHtmlFromAssets(), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
 
 
@@ -141,17 +104,5 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         } catch (IOException errabi) {
             return "full_licenses.html not found";
         }
-    }
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-
     }
 }

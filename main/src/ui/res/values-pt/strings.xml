@@ -252,7 +252,6 @@
     <string name="appbehaviour">Comportamento da aplicação</string>
     <string name="vpnbehaviour">Comportamento VPN</string>
     <string name="allow_vpn_changes">Permitir alterações aos perfis de VPN</string>
-    <string name="donatePlayStore">Como alternativa, pode enviar uma doação pela Play Store:</string>
     <string name="thanks_for_donation">Obrigado por doar %s!</string>
     <string name="logCleared">Log limpo.</string>
     <string name="show_password">Mostrar a senha</string>

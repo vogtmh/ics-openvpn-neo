@@ -5,7 +5,6 @@
 
 package com.mavodev.openvpnneo.core;
 
-import android.annotation.TargetApi;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -55,8 +54,7 @@ public class ICSOpenVPNApplication extends Application {
                 break;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            createNotificationChannels();
+        createNotificationChannels();
         mStatus = new StatusListener();
         mStatus.init(getApplicationContext());
 
@@ -118,7 +116,6 @@ public class ICSOpenVPNApplication extends Application {
         VpnStatus.logException(VpnStatus.LogLevel.DEBUG, null, v);
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
     private void createNotificationChannels() {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

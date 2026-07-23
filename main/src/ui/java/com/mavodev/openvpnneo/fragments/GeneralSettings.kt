@@ -57,13 +57,8 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
             devHacks.removePreference(loadtun)
         }
         val cm9hack = findPreference<Preference>("useCM9Fix") as SwitchPreference
-        if (!cm9hack.isChecked && Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (!cm9hack.isChecked) {
             devHacks.removePreference(cm9hack)
-        }
-        val useInternalFS =
-            findPreference<Preference>("useInternalFileSelector") as SwitchPreference
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            devHacks.removePreference(useInternalFS)
         }
 
         /* Android P does not allow access to the file storage anymore */

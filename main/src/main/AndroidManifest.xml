@@ -91,7 +91,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".core.keepVPNAlive"
+        <service android:name=".core.KeepVpnAliveJobService"
                 android:process=":openvpn"
                 android:exported="true"
                 android:permission="android.permission.BIND_JOB_SERVICE"/>

@@ -283,7 +283,6 @@
     <string name="allow_vpn_changes">Cho phép thay đổi Hồ sơ VPN</string>
     <string name="hwkeychain">Khóa lưu trữ phần cứng:</string>
     <string name="permission_icon_app">Biểu tượng của ứng dụng đang cố gắng sử dụng OpenVPN cho Android</string>
-    <string name="donatePlayStore">Ngoài ra, bạn có thể gửi tài trợ cho tôi bằng CH Play:</string>
     <string name="thanks_for_donation">Cảm ơn bạn đã tài trợ %s!</string>
     <string name="logCleared">Xóa Bản ghi.</string>
     <string name="show_password">Hiển thị mật khẩu</string>

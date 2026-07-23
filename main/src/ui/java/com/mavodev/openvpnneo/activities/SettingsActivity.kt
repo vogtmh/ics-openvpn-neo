@@ -192,9 +192,9 @@ class SettingsActivity : BaseActivity() {
         // Device Specific Hacks Category - Add conditionally
         val deviceHacks = mutableListOf<SettingItem>()
         
-        // CM9 Fix - Only show on older Android versions or if already enabled
+        // CM9 Fix - Only show if already enabled
         val cm9FixEnabled = sharedPreferences.getBoolean("useCM9Fix", false)
-        if (cm9FixEnabled || android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (cm9FixEnabled) {
             deviceHacks.add(SettingItem(
                 key = "useCM9Fix",
                 title = getString(R.string.owner_fix),

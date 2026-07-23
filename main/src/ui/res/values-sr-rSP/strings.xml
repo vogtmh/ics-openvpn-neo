@@ -281,7 +281,6 @@
     <string name="allow_vpn_changes">Допусти промене ВПН профила</string>
     <string name="hwkeychain">Хардваре Кеисторе:</string>
     <string name="permission_icon_app">Икона апликације која покушава да користи ОпенВПН за Андроид</string>
-    <string name="donatePlayStore">Можете ми послати и донацију са Play Store:</string>
     <string name="thanks_for_donation">Хвала на донацији %s!</string>
     <string name="logCleared">Дневник је обрисан.</string>
     <string name="show_password">Покажи лозинку</string>

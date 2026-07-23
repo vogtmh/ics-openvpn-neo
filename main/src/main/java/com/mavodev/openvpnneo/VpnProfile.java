@@ -28,8 +28,8 @@ import android.util.Pair;
 
 import com.mavodev.openvpnneo.core.*;
 
-import org.spongycastle.util.io.pem.PemObject;
-import org.spongycastle.util.io.pem.PemWriter;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemWriter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -327,7 +327,7 @@ public class VpnProfile implements Serializable, Cloneable {
             case 0:
             case 1:
                 /* default to the behaviour the OS used */
-                mAllowLocalLAN = Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT;
+                mAllowLocalLAN = false;
             case 2:
             case 3:
                 moveOptionsToConnection();
@@ -549,9 +549,6 @@ public class VpnProfile implements Serializable, Cloneable {
                         cfg.append("management-external-key nopadding pkcs1 pss digest\n");
                     } else {
                         cfg.append(context.getString(R.string.keychain_access)).append("\n");
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN)
-                            if (!mAlias.matches("^[a-zA-Z0-9]$"))
-                                cfg.append(context.getString(R.string.jelly_keystore_alphanumeric_bug)).append("\n");
                     }
                 }
                 break;

@@ -8,7 +8,6 @@ package com.mavodev.openvpnneo.core;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 
 import java.util.Locale;
 
@@ -48,13 +47,8 @@ public class LocaleHelper {
 
         Resources res = context.getResources();
         Configuration config = new Configuration(res.getConfiguration());
-        if (Build.VERSION.SDK_INT >= 17) {
-            config.setLocale(desiredLocale);
-            context = context.createConfigurationContext(config);
-        } else {
-            config.locale = desiredLocale;
-            res.updateConfiguration(config, res.getDisplayMetrics());
-        }
+        config.setLocale(desiredLocale);
+        context = context.createConfigurationContext(config);
         return context;
     }
 
@@ -63,10 +57,7 @@ public class LocaleHelper {
         Resources res = context.getResources();
 
         Locale current;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            current = res.getConfiguration().getLocales().get(0);
-        else
-            current = res.getConfiguration().locale;
+        current = res.getConfiguration().getLocales().get(0);
 
 
         if (current == desiredLocale)

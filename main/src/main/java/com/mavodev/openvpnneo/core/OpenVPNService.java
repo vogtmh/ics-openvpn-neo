@@ -265,7 +265,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     private void endVpnService() {
         if (!isVpnAlwaysOnEnabled() && !isAlwaysActiveEnabled()) {
             /* if we should be an always on VPN, keep the timer running */
-            keepVPNAlive.unscheduleKeepVPNAliveJobService(this);
+            KeepVpnAliveJobService.unscheduleKeepVPNAliveJobService(this);
         }
         synchronized (mProcessLock) {
             mProcessThread = null;
@@ -326,14 +326,9 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         addVpnActionsToNotification(nbuilder);
         lpNotificationExtras(nbuilder, Notification.CATEGORY_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //noinspection NewApi
-            nbuilder.setChannelId(channel);
-            if (mProfile != null)
-                //noinspection NewApi
-                nbuilder.setShortcutId(mProfile.getUUIDString());
-
-        }
+        nbuilder.setChannelId(channel);
+        if (mProfile != null)
+            nbuilder.setShortcutId(mProfile.getUUIDString());
 
         if (tickerText != null && !tickerText.equals(""))
             nbuilder.setTicker(tickerText);
@@ -588,7 +583,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         return START_STICKY;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private boolean foregroundNotificationVisible() {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         StatusBarNotification[] notifications = mNotificationManager.getActiveNotifications();
@@ -596,7 +590,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         return notifications.length > 0;
     }
 
-    @RequiresApi(Build.VERSION_CODES.N_MR1)
     private void updateShortCutUsage(VpnProfile profile) {
         if (profile == null)
             return;
@@ -620,9 +613,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 startReason = "(unknown)";
             // Try for 10s to get current version of the profile
             vpnProfile = ProfileManager.get(this, profileUUID, profileVersion, 100);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                updateShortCutUsage(vpnProfile);
-            }
+            updateShortCutUsage(vpnProfile);
 
         } else {
             /* The intent is null when we are set as always-on or the service has been restarted. */
@@ -707,7 +698,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         mProfile = vp;
         ProfileManager.setConnectedVpnProfile(this, vp);
         VpnStatus.setConnectedVPNProfile(vp.getUUIDString());
-        keepVPNAlive.scheduleKeepVPNAliveJobService(this, vp);
+        KeepVpnAliveJobService.scheduleKeepVPNAliveJobService(this, vp);
 
         String nativeLibraryDirectory = getApplicationInfo().nativeLibraryDir;
         String tmpDir;
@@ -1033,10 +1024,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         //VpnStatus.logInfo(String.format("Always active %s", isAlwaysOn() ? "on" : "off"));
 
         setAllowedVpnPackages(builder);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            // VPN always uses the default network
-            builder.setUnderlyingNetworks(null);
-        }
+        // VPN always uses the default network
+        builder.setUnderlyingNetworks(null);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // Setting this false, will cause the VPN to inherit the underlying network metered
@@ -1539,10 +1528,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         lpNotificationExtras(nbuilder, Notification.CATEGORY_STATUS);
 
         String channel = NOTIFICATION_CHANNEL_USERREQ_ID;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //noinspection NewApi
-            nbuilder.setChannelId(channel);
-        }
+        nbuilder.setChannelId(channel);
 
         @SuppressWarnings("deprecation")
         Notification notification = nbuilder.getNotification();

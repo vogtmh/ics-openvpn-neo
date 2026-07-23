@@ -283,7 +283,6 @@
     <string name="allow_vpn_changes">VPN Profilok megváltoztatásának engedélyezése</string>
     <string name="hwkeychain">Hardver Kulcstár:</string>
     <string name="permission_icon_app">Az alkalmazás ikonja megpróbálja használni az OpenVPN for Android-ot</string>
-    <string name="donatePlayStore">Esetlegesen, küldhet nekem adományt a Play Store-ral:</string>
     <string name="thanks_for_donation">Köszönöm az adományt %s!</string>
     <string name="logCleared">Napló törölve.</string>
     <string name="show_password">Jelszó mutatása</string>

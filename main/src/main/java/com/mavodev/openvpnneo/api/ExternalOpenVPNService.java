@@ -5,7 +5,6 @@
 
 package com.mavodev.openvpnneo.api;
 
-import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -16,7 +15,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.VpnService;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -44,7 +42,6 @@ import com.mavodev.openvpnneo.core.VPNLaunchHelper;
 import com.mavodev.openvpnneo.core.VpnStatus;
 import com.mavodev.openvpnneo.core.VpnStatus.StateListener;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
 public class ExternalOpenVPNService extends Service implements StateListener {
 
     private static final int SEND_TOALL = 0;

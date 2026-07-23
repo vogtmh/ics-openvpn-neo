@@ -283,7 +283,6 @@
     <string name="allow_vpn_changes">Zezwól na zmiany profili VPN</string>
     <string name="hwkeychain">Sprzętowy magazyn kluczy:</string>
     <string name="permission_icon_app">Ikona aplikacji próbującej użyć OpenVPN</string>
-    <string name="donatePlayStore">Alternatywnie, dotację możesz przesłać za pomocą Google Play:</string>
     <string name="thanks_for_donation">Dziękujemy za wsparcie %s!</string>
     <string name="logCleared">Dziennik wyczyszczony.</string>
     <string name="show_password">Pokaż hasło</string>

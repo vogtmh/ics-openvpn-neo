@@ -14,7 +14,6 @@
 package com.mavodev.openvpnneo.core
 
 import android.content.Context
-import android.os.Build
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
 import java.io.File
@@ -34,8 +33,6 @@ internal class ProfileEncryption {
         private var mMasterKey: MasterKey? = null
         @JvmStatic
         fun initMasterCryptAlias(context:Context) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                return
             try {
                 mMasterKey = MasterKey.Builder(context)
                       .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)

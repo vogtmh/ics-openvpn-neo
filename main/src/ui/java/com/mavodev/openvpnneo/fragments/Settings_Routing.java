@@ -4,7 +4,6 @@
  */
 
 package com.mavodev.openvpnneo.fragments;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.lifecycle.Lifecycle;
@@ -50,9 +49,6 @@ public class Settings_Routing extends OpenVpnPreferencesFragment implements Pref
         mExcludedRoutes.setOnPreferenceChangeListener(this);
         mExcludedRoutesv6.setOnPreferenceChangeListener(this);
 		mBlockUnusedAF.setOnPreferenceChangeListener(this);
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-			getPreferenceScreen().removePreference(mBlockUnusedAF);
 
 		loadSettings();
 

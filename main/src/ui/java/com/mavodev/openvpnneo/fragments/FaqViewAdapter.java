@@ -6,10 +6,11 @@
 package com.mavodev.openvpnneo.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.cardview.widget.CardView;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -19,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mavodev.openvpnneo.R;
+
+import java.util.concurrent.Executors;
 
 public class FaqViewAdapter extends RecyclerView.Adapter<FaqViewAdapter.FaqViewHolder> {
     private final FaqFragment.FAQEntry[] mFaqItems;
@@ -34,23 +37,14 @@ public class FaqViewAdapter extends RecyclerView.Adapter<FaqViewAdapter.FaqViewH
         mHtmlEntries = new Spanned[faqItems.length];
         mHtmlEntriesTitle = new Spanned[faqItems.length];
 
-        new FetchStrings().execute(faqItems);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            fetchStrings(faqItems);
+            new Handler(Looper.getMainLooper()).post(() -> {
+                loaded = true;
+                notifyDataSetChanged();
+            });
+        });
 
-    }
-
-    private class FetchStrings extends AsyncTask<FaqFragment.FAQEntry,Void,Void> {
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            loaded=true;
-            notifyDataSetChanged();
-        }
-
-        @Override
-        protected Void doInBackground(FaqFragment.FAQEntry... params) {
-            fetchStrings(params);
-            return null;
-        }
     }
 
     private void fetchStrings(FaqFragment.FAQEntry[] faqItems) {
@@ -70,14 +64,14 @@ public class FaqViewAdapter extends RecyclerView.Adapter<FaqViewAdapter.FaqViewH
 
             if (versionText != null) {
 
-                mHtmlEntriesTitle[i] = (Spanned) TextUtils.concat(Html.fromHtml(textColor + title),
-                        Html.fromHtml(textColor + "<br><small>" + versionText + "</small>"));
+                mHtmlEntriesTitle[i] = (Spanned) TextUtils.concat(HtmlCompat.fromHtml(textColor + title, HtmlCompat.FROM_HTML_MODE_LEGACY),
+                        HtmlCompat.fromHtml(textColor + "<br><small>" + versionText + "</small>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             } else {
-                mHtmlEntriesTitle[i] = Html.fromHtml(title);
+                mHtmlEntriesTitle[i] = HtmlCompat.fromHtml(title, HtmlCompat.FROM_HTML_MODE_LEGACY);
             }
 
             String content = mContext.getString(faqItems[i].description);
-            mHtmlEntries[i] = Html.fromHtml(textColor + content);
+            mHtmlEntries[i] = HtmlCompat.fromHtml(textColor + content, HtmlCompat.FROM_HTML_MODE_LEGACY);
         }
     }
 

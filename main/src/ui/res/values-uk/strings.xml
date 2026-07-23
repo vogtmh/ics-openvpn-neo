@@ -283,7 +283,6 @@
     <string name="allow_vpn_changes">Дозволити зміни в профілі VPN</string>
     <string name="hwkeychain">Апаратне сховище ключів:</string>
     <string name="permission_icon_app">Іконка програми, яка намагається використовувати \"OpenVPN for Android\"</string>
-    <string name="donatePlayStore">Крім того, ви можете надіслати мені пожертвування через Play Store:</string>
     <string name="thanks_for_donation">Дякуємо за пожертвування %s!</string>
     <string name="logCleared">Журнал очищено.</string>
     <string name="show_password">Показати пароль</string>

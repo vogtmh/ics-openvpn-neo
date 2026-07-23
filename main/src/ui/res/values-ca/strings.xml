@@ -174,7 +174,6 @@
     <string name="vpnbehaviour">Comportament del la VPN</string>
     <string name="allow_vpn_changes">Permet canvis als perfils de VPN</string>
     <string name="permission_icon_app">Icona de la aplicació intentant fer servir OpenVPN per a Android</string>
-    <string name="donatePlayStore">Alternativament, em podeu enviar una donació a través de la Play Store:</string>
     <string name="thanks_for_donation">Gràcies per donar %s!</string>
     <string name="show_password">Mostra contrassenya</string>
     <string name="timestamp_short">Curt</string>

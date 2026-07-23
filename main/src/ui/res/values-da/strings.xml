@@ -283,7 +283,6 @@
     <string name="allow_vpn_changes">Tillad ændringer til VPN-profiler</string>
     <string name="hwkeychain">Hardware keystore:</string>
     <string name="permission_icon_app">En app prøver at bruge OpenVPN til Androids ikon</string>
-    <string name="donatePlayStore">Alternativt kan du sende mig en donation med Play Butik:</string>
     <string name="thanks_for_donation">Tak for donationen %s!</string>
     <string name="logCleared">Log ryddet.</string>
     <string name="show_password">Vis adgangskode</string>

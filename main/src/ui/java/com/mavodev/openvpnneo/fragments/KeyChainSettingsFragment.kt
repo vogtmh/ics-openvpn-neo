@@ -5,7 +5,6 @@
 
 package com.mavodev.openvpnneo.fragments
 
-import android.annotation.TargetApi
 import android.app.Activity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -55,26 +54,20 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
         }
 
     private val isInHardwareKeystore: Boolean
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Throws(KeyChainException::class, InterruptedException::class)
         get() {
             val key: PrivateKey = KeyChain.getPrivateKey(requireActivity().applicationContext, mProfile.mAlias) ?: return false
 
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                val keyFactory = KeyFactory.getInstance(key.getAlgorithm(), "AndroidKeyStore")
-                val keyInfo = keyFactory.getKeySpec(key, KeyInfo::class.java)
-                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    val securityLevel = keyInfo.securityLevel
-                    securityLevel == KeyProperties.SECURITY_LEVEL_TRUSTED_ENVIRONMENT ||
-                        securityLevel == KeyProperties.SECURITY_LEVEL_STRONGBOX ||
-                        securityLevel == KeyProperties.SECURITY_LEVEL_UNKNOWN_SECURE
-                } else {
-                    @Suppress("DEPRECATION")
-                    keyInfo.isInsideSecureHardware
-                }
+            val keyFactory = KeyFactory.getInstance(key.getAlgorithm(), "AndroidKeyStore")
+            val keyInfo = keyFactory.getKeySpec(key, KeyInfo::class.java)
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val securityLevel = keyInfo.securityLevel
+                securityLevel == KeyProperties.SECURITY_LEVEL_TRUSTED_ENVIRONMENT ||
+                    securityLevel == KeyProperties.SECURITY_LEVEL_STRONGBOX ||
+                    securityLevel == KeyProperties.SECURITY_LEVEL_UNKNOWN_SECURE
             } else {
                 @Suppress("DEPRECATION")
-                return KeyChain.isBoundKeyAlgorithm(key.algorithm)
+                keyInfo.isInsideSecureHardware
             }
         }
 
@@ -137,11 +130,9 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
                         val certChain = KeyChain.getCertificateChain(requireActivity().applicationContext, mProfile.mAlias)
                         if (certChain != null) {
                             cert = certChain[0]
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                                run {
-                                    if (isInHardwareKeystore)
-                                        certstr += getString(R.string.hwkeychain)
-                                }
+                            run {
+                                if (isInHardwareKeystore)
+                                    certstr += getString(R.string.hwkeychain)
                             }
                         }
                     }

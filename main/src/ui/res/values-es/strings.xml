@@ -284,7 +284,6 @@ hacia/de Móvil)</string>
     <string name="allow_vpn_changes">Permitir cambios a los perfiles VPN</string>
     <string name="hwkeychain">Tecla Física:</string>
     <string name="permission_icon_app">Ícono de la aplicación intentando usar OpenVPN for Android</string>
-    <string name="donatePlayStore">Alternativamente usted puede enviar una donación con el Play Store:</string>
     <string name="thanks_for_donation">Gracias por su donación %s!</string>
     <string name="logCleared">Registro borrado.</string>
     <string name="show_password">Mostrar contraseña</string>

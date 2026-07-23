@@ -280,7 +280,6 @@
     <string name="allow_vpn_changes">Επέτρεξε αλλαγές στα προφίλ VPN</string>
     <string name="hwkeychain">Κλειδοθήκη υλικού:</string>
     <string name="permission_icon_app">Το εικονίδιο της εφαρμογής που προσπαθεί να χρησιμοποιήσει το OpenVPN για Android</string>
-    <string name="donatePlayStore">Εναλλακτικά, μπορείτε να κάνετε δωρεά μέσω του Play Store:</string>
     <string name="thanks_for_donation">Ευχαριστούμε για την δωρεά %s!</string>
     <string name="logCleared">Έγινε εκκαθάριση της καταγραφής.</string>
     <string name="show_password">Εμφάνιση κωδικού πρόσβασης</string>

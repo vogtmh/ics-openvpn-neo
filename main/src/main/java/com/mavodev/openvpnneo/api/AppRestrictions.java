@@ -5,9 +5,7 @@
 
 package com.mavodev.openvpnneo.api;
 
-import android.annotation.TargetApi;
 import android.content.*;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -28,7 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class AppRestrictions {
     public static final String PROFILE_CREATOR = "com.mavodev.openvpnneo.api.AppRestrictions";
     final static int CONFIG_VERSION = 1;

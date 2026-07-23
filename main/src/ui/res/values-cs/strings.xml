@@ -280,7 +280,6 @@
     <string name="allow_vpn_changes">Povolit změny VPN profilů</string>
     <string name="hwkeychain">Hardwarové úložiště:</string>
     <string name="permission_icon_app">Ikona aplikace snažící se použít OpenVPN pro Android</string>
-    <string name="donatePlayStore">Případně mě můžete sponzorovat přes Play Store:</string>
     <string name="thanks_for_donation">Díky za sponzorováni %s!</string>
     <string name="logCleared">Log vyčištěn.</string>
     <string name="show_password">Ukázat heslo</string>

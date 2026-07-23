@@ -281,7 +281,6 @@
     <string name="allow_vpn_changes">允許更改 VPN 設定檔</string>
     <string name="hwkeychain">硬體金鑰庫︰</string>
     <string name="permission_icon_app">嘗試使用 OpenVPN for Android 的應用程式的圖示</string>
-    <string name="donatePlayStore">或是您可以透過 Play 商店捐款給我：</string>
     <string name="thanks_for_donation">感謝捐款給 %s！</string>
     <string name="logCleared">紀錄已清除。</string>
     <string name="show_password">顯示密碼</string>

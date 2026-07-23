@@ -101,6 +101,18 @@
         android:background="@drawable/fab_style"
         android:contentDescription="@string/menu_add_profile" />
 
+    <!-- Floating Main Menu Button -->
+    <ImageButton
+        android:id="@+id/fab_main_menu"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:elevation="8dp"
+        android:src="@drawable/ic_menu_hamburger"
+        android:background="@drawable/fab_style"
+        android:contentDescription="@string/menu_title" />
+
     <!-- <include layout="@layout/profile_list_fabs" /> -->
 
 </FrameLayout>

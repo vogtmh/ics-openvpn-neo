@@ -41,6 +41,7 @@
     <string name="static_keys_info">For the static configuration the TLS Auth Keys will be used as static keys</string>
     <string name="configure_the_vpn">Configure the VPN</string>
     <string name="menu_add_profile">Add Profile</string>
+    <string name="menu_title">Menu</string>
     <string name="add_profile_name_prompt">Enter a name identifying the new Profile</string>
     <string name="duplicate_profile_name">Please enter a unique Profile Name</string>
     <string name="profilename">Profile Name</string>
@@ -298,7 +299,6 @@
     <string name="allow_vpn_changes">Allow changes to VPN Profiles</string>
     <string name="hwkeychain">Hardware Keystore:</string>
     <string name="permission_icon_app">Icon of app trying to use OpenVPN for Android</string>
-    <string name="donatePlayStore">Alternatively you can send me a donation with the Play Store:</string>
     <string name="thanks_for_donation">Thanks for donating %s!</string>
     <string name="logCleared">Log cleared.</string>
     <string name="show_password">Show password</string>
@@ -535,5 +535,6 @@
     <string name="downloading_profile">Downloading profile</string>
     <string name="please_wait">Please wait</string>
     <string name="generating_config">Generating config…</string>
+    <string name="error_open_file_picker">Unable to open file picker</string>
 
 </resources>

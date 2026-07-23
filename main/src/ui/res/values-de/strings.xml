@@ -291,7 +291,6 @@
     <string name="allow_vpn_changes">Änderungen an VPN-Profilen zulassen</string>
     <string name="hwkeychain">Im Hardware-Zertifikatsspeicher gespeichert:</string>
     <string name="permission_icon_app">Symbol der App, die versucht, OpenVPN für Android zu steuern</string>
-    <string name="donatePlayStore">Alternativ können Sie mir per Play Store Geld zukommen lassen:</string>
     <string name="thanks_for_donation">Vielen Dank für die %s Spende!</string>
     <string name="logCleared">Protokoll gelöscht.</string>
     <string name="show_password">Passwort anzeigen</string>

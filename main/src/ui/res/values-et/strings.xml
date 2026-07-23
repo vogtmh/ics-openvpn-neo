@@ -281,7 +281,6 @@
     <string name="allow_vpn_changes">Luba muudatused VPN profiilides</string>
     <string name="hwkeychain">Riistvaraline võtmehoidla:</string>
     <string name="permission_icon_app">\'OpenVPN Androidile\' üritatakse kasutada programmi ikooni poolt</string>
-    <string name="donatePlayStore">Võite saata mulle annetusena raha ka Play Store kaudu:</string>
     <string name="thanks_for_donation">Aitäh annetatud %s eest!</string>
     <string name="logCleared">Logi tühjendatud.</string>
     <string name="show_password">Näita salasõna</string>

@@ -284,7 +284,6 @@ Usa il tasto hardware Menù se non è visibile nella GUI.</string>
     <string name="allow_vpn_changes">Abilita modifiche ai profili VPN</string>
     <string name="hwkeychain">Raccoglitore chiavi hardware:</string>
     <string name="permission_icon_app">Un\'icona di applicazione sta tentando di usare OpenVPN per Android</string>
-    <string name="donatePlayStore">In alternativa, potete inviarmi una donazione con il Play Store:</string>
     <string name="thanks_for_donation">Grazie per la donazione di %s!</string>
     <string name="logCleared">Registrazioni log cancellate.</string>
     <string name="show_password">Mostra password</string>

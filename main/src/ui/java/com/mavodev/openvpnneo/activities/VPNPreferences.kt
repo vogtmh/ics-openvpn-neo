@@ -4,17 +4,15 @@
  */
 package com.mavodev.openvpnneo.activities
 
-import android.annotation.TargetApi
 import androidx.appcompat.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.viewpager2.widget.ViewPager2
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
@@ -38,7 +36,6 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
     private lateinit var mPager: ViewPager2
     private lateinit var mPagerAdapter: ScreenSlidePagerAdapter
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     protected fun isValidFragment(fragmentName: String): Boolean {
         for (c in validFragments) if (c.name == fragmentName) return true
         return false
@@ -67,24 +64,6 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         }
     }
 
-    private val profile: Unit
-        get() {
-            val intent = intent
-
-            if (intent != null) {
-                var profileUUID = intent.getStringExtra("$packageName.profileUUID")
-                if (profileUUID == null) {
-                    val initialArguments =
-                        getIntent().getBundleExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_ARGUMENTS)
-                    profileUUID = initialArguments!!.getString("$packageName.profileUUID")
-                }
-                if (profileUUID != null) {
-                    mProfileUUID = profileUUID
-                    mProfile = ProfileManager.get(this, mProfileUUID)
-                }
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         mProfileUUID = intent.getStringExtra("$packageName.profileUUID")
         if (savedInstanceState != null) {
@@ -100,6 +79,13 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
             return
         }
         VpnStatus.addProfileStateListener(this);
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+        })
 
         title = getString(R.string.edit_profile_title, mProfile!!.name)
 
@@ -133,9 +119,7 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         } else {
             mPagerAdapter.addTab(R.string.basic, Settings_UserEditable::class.java)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mPagerAdapter.addTab(R.string.vpn_allowed_apps, Settings_Allowed_Apps::class.java)
-        }
+        mPagerAdapter.addTab(R.string.vpn_allowed_apps, Settings_Allowed_Apps::class.java)
         mPagerAdapter.addTab(R.string.generated_config, ShowConfigFragment::class.java)
 
 
@@ -151,16 +135,11 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
     }
 
 
-    override fun onBackPressed() {
-        setResult(RESULT_OK, intent)
-        super.onBackPressed()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 // Handle back button click
-                onBackPressed()
+                onBackPressedDispatcher.onBackPressed()
                 return true
             }
             R.id.remove_vpn -> askProfileRemoval()

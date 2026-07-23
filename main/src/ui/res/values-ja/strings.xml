@@ -316,7 +316,6 @@ Android 4.4以上はポリシールーティングを使用します。route/ifc
     <string name="allow_vpn_changes">VPNプロファイルの変更を許可する</string>
     <string name="hwkeychain">ハードウェアのキーストア：</string>
     <string name="permission_icon_app">OpenVPN for Androidを使用しようと試みるアプリのアイコン</string>
-    <string name="donatePlayStore">ほかの手段として、Play Storeで私に寄付できます。</string>
     <string name="thanks_for_donation">%s の寄付をお寄せいただきありがとうございます！</string>
     <string name="logCleared">ログがクリアされました。</string>
     <string name="show_password">パスワードを表示する</string>

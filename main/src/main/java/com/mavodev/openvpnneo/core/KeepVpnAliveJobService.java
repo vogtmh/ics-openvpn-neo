@@ -23,7 +23,7 @@ import com.mavodev.openvpnneo.VpnProfile;
  * This is a task that is run periodically to restart the VPN if tit has died for
  * some reason in the background
  */
-public class keepVPNAlive extends JobService implements VpnStatus.StateListener {
+public class KeepVpnAliveJobService extends JobService implements VpnStatus.StateListener {
     private ConnectionStatus mLevel = ConnectionStatus.UNKNOWN_LEVEL;
     private static final int JOBID_KEEPVPNALIVE = 6231;
 
@@ -76,7 +76,7 @@ public class keepVPNAlive extends JobService implements VpnStatus.StateListener 
     }
 
     public static void scheduleKeepVPNAliveJobService(Context c, VpnProfile vp) {
-        ComponentName keepVPNAliveComponent = new ComponentName(c, keepVPNAlive.class);
+        ComponentName keepVPNAliveComponent = new ComponentName(c, KeepVpnAliveJobService.class);
         JobInfo.Builder jib = new JobInfo.Builder(JOBID_KEEPVPNALIVE, keepVPNAliveComponent);
 
         /* set the VPN that should be restarted if we get killed */
@@ -90,14 +90,8 @@ public class keepVPNAlive extends JobService implements VpnStatus.StateListener 
          * strange Android build that allows lower lmits.
          */
         long initervalMillis = Math.max(getMinPeriodMillis(), 5 * 60 * 1000L);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            long flexMillis = Math.max(JobInfo.getMinFlexMillis(), 2 * 60 * 1000L);
-            jib.setPeriodic(initervalMillis, flexMillis);
-        }
-        else
-        {
-            jib.setPeriodic(initervalMillis);
-        }
+        long flexMillis = Math.max(JobInfo.getMinFlexMillis(), 2 * 60 * 1000L);
+        jib.setPeriodic(initervalMillis, flexMillis);
         jib.setPersisted(true);
 
         JobScheduler jobScheduler = null;
@@ -108,22 +102,11 @@ public class keepVPNAlive extends JobService implements VpnStatus.StateListener 
     }
 
     private static JobScheduler getJobScheduler(Context c) {
-        JobScheduler jobScheduler;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            jobScheduler = c.getSystemService(JobScheduler.class);
-
-        } else {
-            jobScheduler = (JobScheduler) c.getSystemService(JOB_SCHEDULER_SERVICE);
-        }
-        return jobScheduler;
+        return c.getSystemService(JobScheduler.class);
     }
 
     private static long getMinPeriodMillis() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return JobInfo.getMinPeriodMillis();
-        } else {
-            return 15 * 60 * 1000L;   // 15 minutes
-        }
+        return JobInfo.getMinPeriodMillis();
     }
 
     public static void unscheduleKeepVPNAliveJobService(Context c) {

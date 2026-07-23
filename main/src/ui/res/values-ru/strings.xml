@@ -288,7 +288,6 @@ API VPNService не позволяет указывать сети, которы
     <string name="allow_vpn_changes">Разрешить изменение конфигураций VPN</string>
     <string name="hwkeychain">Аппаратное хранилище ключей:</string>
     <string name="permission_icon_app">Значок приложения, пытающегося использовать «OpenVPN для Android»</string>
-    <string name="donatePlayStore">В качестве альтернативы вы можете сделать пожертвование в Play Store:</string>
     <string name="thanks_for_donation">Спасибо за донат %s!</string>
     <string name="logCleared">Журнал очищен.</string>
     <string name="show_password">Показать пароль</string>

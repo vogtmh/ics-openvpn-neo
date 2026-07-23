@@ -280,7 +280,6 @@
     <string name="allow_vpn_changes">Verandering aan VPN-profielen toestaan</string>
     <string name="hwkeychain">Hardware Keystore:</string>
     <string name="permission_icon_app">Miniatuur van app die OpenVPN voor Android wilt gebruiken</string>
-    <string name="donatePlayStore">U kunt ook een donatie sturen in de Play Store:</string>
     <string name="thanks_for_donation">Bedankt voor het doneren van %s!</string>
     <string name="logCleared">Logboek gewist.</string>
     <string name="show_password">Toon wachtwoord</string>

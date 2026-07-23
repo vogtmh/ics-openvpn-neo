@@ -6,7 +6,6 @@
 package com.mavodev.openvpnneo.activities
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.Activity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -16,7 +15,6 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import androidx.core.os.BundleCompat
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.OpenableColumns
@@ -78,11 +76,8 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     override fun onClick(v: View) {
         if (v.id == R.id.fab_save)
             userActionSaveProfile()
-        if (v.id == R.id.permssion_hint && Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
-            doRequestSDCardPermission(PERMISSION_REQUEST_EMBED_FILES)
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private fun doRequestSDCardPermission(requestCode: Int) {
         requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), requestCode)
     }
@@ -445,21 +440,11 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
 
         (findViewById<View>(R.id.config_convert_root) as LinearLayout).addView(fl, 2)
         findViewById<View>(R.id.files_missing_hint).visibility = View.VISIBLE
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
-            checkPermission()
 
         fl.setData(fileDialogInfo.second, this)
         val i = getFileLayoutOffset(type)
         fl.setCaller(this, i, type)
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private fun checkPermission() {
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            findViewById<View>(R.id.permssion_hint).visibility = View.VISIBLE
-            findViewById<View>(R.id.permssion_hint).setOnClickListener(this)
-        }
     }
 
     private fun getFileLayoutOffset(type: Utils.FileType): Int {
@@ -784,13 +769,11 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
                     errorCode = -3
             } catch (se: IOException) {
                 log(R.string.import_content_resolve_error.toString() + ":" + se.localizedMessage)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    checkMarschmallowFileImportError(data)
+                checkMarschmallowFileImportError(data)
                 errorCode = -2
             } catch (se: SecurityException) {
                 log(R.string.import_content_resolve_error.toString() + ":" + se.localizedMessage)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    checkMarschmallowFileImportError(data)
+                checkMarschmallowFileImportError(data)
                 errorCode = -2
             }
         }
@@ -826,7 +809,6 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     }
 
 
-    @TargetApi(Build.VERSION_CODES.M)
     private fun checkMarschmallowFileImportError(data: Uri?) {
         // Permission already granted, not the source of the error
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)

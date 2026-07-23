@@ -6,9 +6,7 @@
 package com.mavodev.openvpnneo.activities
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.webkit.JavascriptInterface
@@ -16,7 +14,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
@@ -39,8 +36,7 @@ class InternalWebView : BaseActivity() {
         urlTextView = findViewById(R.id.url_textview)
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            attachMessageHandler()
+        attachMessageHandler()
 
         val startData = "Trying to open page at ${intent.data.toString()}"
         webView.loadData(startData,"text/plain","UTF-8");
@@ -50,7 +46,6 @@ class InternalWebView : BaseActivity() {
         webView.settings.userAgentString = VpnProfile.getVersionEnvString(this)
 
         webView.webViewClient = object: WebViewClient() {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 urlTextView.text = request?.url?.toString();
                 return super.shouldOverrideUrlLoading(view, request)
@@ -86,7 +81,6 @@ class InternalWebView : BaseActivity() {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun attachMessageHandler() {
         webView.addJavascriptInterface(this, "appEvent")
     }

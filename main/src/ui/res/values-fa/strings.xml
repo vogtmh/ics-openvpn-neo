@@ -285,7 +285,6 @@
     <string name="allow_vpn_changes">اجازه تغییرات در پروفایل VPN</string>
     <string name="hwkeychain">سخت افزار Keystore:</string>
     <string name="permission_icon_app">نماد برنامه تلاش برای استفاده از OpenVPN برای آندروید</string>
-    <string name="donatePlayStore">به طور خلاصه شما می توانید با فروشگاه Play Donation را به من بدهید:</string>
     <string name="thanks_for_donation">متشکرم برای اهدای %s!</string>
     <string name="logCleared">لاگ پاک شد.</string>
     <string name="show_password">نمایش گذرواژه</string>

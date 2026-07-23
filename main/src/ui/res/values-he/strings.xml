@@ -284,7 +284,6 @@
     <string name="allow_vpn_changes">אפשר שינויים בפרופילי VPN</string>
     <string name="hwkeychain">מאגר מפתחות חומרה:</string>
     <string name="permission_icon_app">סמל של אפליקציה שמנסה להשתמש ב-OpenVPN עבור אנדרואיד</string>
-    <string name="donatePlayStore">לחלופין, תוכל לשלוח לי תרומה באמצעות חנות Play:</string>
     <string name="thanks_for_donation">תודה שתרמת %s!</string>
     <string name="logCleared">יומן נוקה.</string>
     <string name="show_password">הצגת סיסמה</string>

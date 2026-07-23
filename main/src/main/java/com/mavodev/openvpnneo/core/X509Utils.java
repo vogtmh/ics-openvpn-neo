@@ -12,8 +12,8 @@ import android.text.TextUtils;
 
 import com.mavodev.openvpnneo.R;
 import com.mavodev.openvpnneo.VpnProfile;
-import org.spongycastle.util.io.pem.PemObject;
-import org.spongycastle.util.io.pem.PemReader;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
 
 
 import javax.security.auth.x500.X500Principal;

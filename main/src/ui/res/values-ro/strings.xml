@@ -282,7 +282,6 @@
     <string name="allow_vpn_changes">Permite modificări la Profilurile VPN</string>
     <string name="hwkeychain">Hardware Keystore:</string>
     <string name="permission_icon_app">Iconița aplicației care încearcă să utilizeze OpenVPN pentru Android</string>
-    <string name="donatePlayStore">Alternativ puteţi dona prin Play Store:</string>
     <string name="thanks_for_donation">Vă mulțumim că ați donat %s!</string>
     <string name="logCleared">Jurnal șters.</string>
     <string name="show_password">Arată parola</string>

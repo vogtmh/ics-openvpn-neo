@@ -284,7 +284,6 @@
     <string name="allow_vpn_changes">VPN Profillerinin değiştirilmesine izin ver</string>
     <string name="hwkeychain">Donanım Anahtar Deposu:</string>
     <string name="permission_icon_app">Uygulama simgesi Android için OpenVPN kullanmaya çalışıyor</string>
-    <string name="donatePlayStore">Alternatif olarak Play Store\'dan bağış yapabilirsiniz:</string>
     <string name="thanks_for_donation">%s bağış için teşekkürler!</string>
     <string name="logCleared">Günlük temizlendi.</string>
     <string name="show_password">Parolayı göster</string>

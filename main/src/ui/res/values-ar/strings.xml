@@ -283,7 +283,6 @@
     <string name="allow_vpn_changes">السماح بالتغييرات على ملفات تعريف الشبكة الإفتراضية الخاصة</string>
     <string name="hwkeychain">Hardware Keystore:</string>
     <string name="permission_icon_app">أيقونة التطبيق الذي يحاول إستخدام أوبن في بي آن لأندرويد</string>
-    <string name="donatePlayStore">يمكنكم أيضا أن ترسلوا لنا تبرعاتكم على متجر بلاي:</string>
     <string name="thanks_for_donation">شكرا للتبرع ب %s!</string>
     <string name="logCleared">مُسِح السجل.</string>
     <string name="show_password">إظهار كلمة السر</string>
