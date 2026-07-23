@@ -321,9 +321,11 @@ class OpenSSLSpeed : BaseActivity() {
             
             Log.d("OpenSSLSpeed", "=== Speed test completed ===")
             
-            // Update button state back to START
+            // Update button state back to START (view operations must run on the main thread)
             mTestRunning = false
-            updateButtonState()
+            withContext(Dispatchers.Main) {
+                updateButtonState()
+            }
         }
     }
 

@@ -110,10 +110,11 @@ public class FileSelectionFragment extends ListFragment {
 
             @Override
             public void onClick(View v) {
-                ((FileSelect) getActivity()).clearData();
+                if (getActivity() instanceof FileSelect)
+                    ((FileSelect) getActivity()).clearData();
             }
         });
-        if (!((FileSelect) getActivity()).showClear()) {
+        if (!(getActivity() instanceof FileSelect) || !((FileSelect) getActivity()).showClear()) {
             mClearButton.setVisibility(View.GONE);
             mClearButton.setEnabled(false);
         }

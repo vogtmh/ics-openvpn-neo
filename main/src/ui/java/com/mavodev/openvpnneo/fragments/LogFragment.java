@@ -430,15 +430,25 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
         } else if (item.getItemId() == R.id.send) {
             ladapter.shareLog();
         } else if (item.getItemId() == R.id.edit_vpn) {
-            VpnProfile lastConnectedprofile = ProfileManager.get(getActivity(), VpnStatus.getLastConnectedVPNProfile());
-
-            if (lastConnectedprofile != null) {
-                Intent vprefintent = new Intent(getActivity(), VPNPreferences.class)
-                        .putExtra(VpnProfile.EXTRA_PROFILEUUID, lastConnectedprofile.getUUIDString());
-                startActivityForResult(vprefintent, START_VPN_CONFIG);
-            } else {
-                Toast.makeText(getActivity(), R.string.log_no_last_vpn, Toast.LENGTH_LONG).show();
-            }
+            final Activity activity = getActivity();
+            if (activity == null)
+                return true;
+            // Loading a profile deserializes it from disk (and may decrypt via the Android
+            // Keystore), which can block for seconds, so do it off the main thread.
+            new Thread(() -> {
+                final VpnProfile lastConnectedprofile = ProfileManager.get(activity, VpnStatus.getLastConnectedVPNProfile());
+                activity.runOnUiThread(() -> {
+                    if (!isAdded())
+                        return;
+                    if (lastConnectedprofile != null) {
+                        Intent vprefintent = new Intent(activity, VPNPreferences.class)
+                                .putExtra(VpnProfile.EXTRA_PROFILEUUID, lastConnectedprofile.getUUIDString());
+                        startActivityForResult(vprefintent, START_VPN_CONFIG);
+                    } else {
+                        Toast.makeText(activity, R.string.log_no_last_vpn, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }).start();
         } else if (item.getItemId() == R.id.toggle_time) {
             showHideOptionsPanel();
         } else if (item.getItemId() == android.R.id.home) {
