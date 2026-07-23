@@ -31,3 +31,10 @@ idir
 
 test.local.conf
 .kotlin
+
+# Build outputs (APKs, baseline profiles, metadata)
+main/uiOvpn23/release/
+*.apk
+
+# Log files
+*.log

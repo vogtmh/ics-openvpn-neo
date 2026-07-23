@@ -53,6 +53,7 @@
                 android:name=".activities.LogWindow"
                 android:label="@string/openvpn_log"
                 android:exported="false"
+                android:enableOnBackInvokedCallback="false"
                 android:parentActivityName=".activities.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -166,6 +167,7 @@
                 android:exported="false"
                 android:name=".activities.OpenSSLSpeed"
                 android:label="@string/title_activity_open_sslspeed"
+                android:enableOnBackInvokedCallback="false"
                 android:parentActivityName=".activities.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -176,6 +178,7 @@
                 android:exported="false"
                 android:name=".activities.AboutActivity"
                 android:label="@string/about"
+                android:enableOnBackInvokedCallback="false"
                 android:parentActivityName=".activities.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -186,6 +189,7 @@
                 android:exported="false"
                 android:name=".activities.FAQActivity"
                 android:label="@string/faq"
+                android:enableOnBackInvokedCallback="false"
                 android:parentActivityName=".activities.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -196,6 +200,7 @@
                 android:exported="false"
                 android:name=".activities.SettingsActivity"
                 android:label="@string/generalsettings"
+                android:enableOnBackInvokedCallback="false"
                 android:parentActivityName=".activities.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -206,6 +211,7 @@
                 android:exported="false"
                 android:name=".activities.GraphActivity"
                 android:label="@string/graph"
+                android:enableOnBackInvokedCallback="false"
                 android:parentActivityName=".activities.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"

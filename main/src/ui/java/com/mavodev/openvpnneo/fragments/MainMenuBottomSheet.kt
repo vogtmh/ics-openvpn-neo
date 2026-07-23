@@ -4,6 +4,7 @@
  */
 package com.mavodev.openvpnneo.fragments
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,15 @@ class MainMenuBottomSheet : BottomSheetDialogFragment() {
 
     var listener: Listener? = null
 
+    /**
+     * Action to run once the sheet has dismissed. The sheet is dismissed without its
+     * exit animation (see [dismissWithAction]) so its window is gone instantly; the
+     * action then runs from [onDismiss]. Otherwise the fading sheet window lingers
+     * behind the next screen and is pre-rendered by the predictive back gesture,
+     * visibly fading out when the user returns.
+     */
+    private var pendingAction: (() -> Unit)? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,39 +52,47 @@ class MainMenuBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<LinearLayout>(R.id.menu_change_sorting).setOnClickListener {
-            dismiss()
-            listener?.onMenuChangeSorting()
+            dismissWithAction { listener?.onMenuChangeSorting() }
         }
 
         view.findViewById<LinearLayout>(R.id.menu_settings).setOnClickListener {
-            dismiss()
-            listener?.onMenuSettings()
+            dismissWithAction { listener?.onMenuSettings() }
         }
 
         view.findViewById<LinearLayout>(R.id.menu_show_log).setOnClickListener {
-            dismiss()
-            listener?.onMenuShowLog()
+            dismissWithAction { listener?.onMenuShowLog() }
         }
 
         view.findViewById<LinearLayout>(R.id.menu_graph).setOnClickListener {
-            dismiss()
-            listener?.onMenuGraph()
+            dismissWithAction { listener?.onMenuGraph() }
         }
 
         view.findViewById<LinearLayout>(R.id.menu_openssl_speed).setOnClickListener {
-            dismiss()
-            listener?.onMenuOpenSSLSpeed()
+            dismissWithAction { listener?.onMenuOpenSSLSpeed() }
         }
 
         view.findViewById<LinearLayout>(R.id.menu_faq).setOnClickListener {
-            dismiss()
-            listener?.onMenuFAQ()
+            dismissWithAction { listener?.onMenuFAQ() }
         }
 
         view.findViewById<LinearLayout>(R.id.menu_about).setOnClickListener {
-            dismiss()
-            listener?.onMenuAbout()
+            dismissWithAction { listener?.onMenuAbout() }
         }
+    }
+
+    private fun dismissWithAction(action: () -> Unit) {
+        pendingAction = action
+        // Disable the window exit animation so the sheet disappears instantly instead
+        // of fading; a fading window would linger behind the next screen.
+        dialog?.window?.setWindowAnimations(0)
+        dismiss()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        val action = pendingAction
+        pendingAction = null
+        action?.invoke()
     }
 
     companion object {
