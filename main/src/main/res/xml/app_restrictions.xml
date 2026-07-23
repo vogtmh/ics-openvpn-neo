@@ -93,25 +93,10 @@
 
     <restriction
             android:defaultValue="false"
-            android:description="@string/apprest_minimal_ui"
-            android:key="minimal_ui"
-            android:restrictionType="bool"
-            android:title="@string/apprest_minimal_ui_title" />
-
-    <restriction
-            android:defaultValue="false"
             android:description="@string/apprest_always_connected"
             android:key="always_connected"
             android:restrictionType="bool"
             android:title="@string/apprest_always_connected_title" />
-
-
-    <restriction
-            android:defaultValue="false"
-            android:description="@string/apprest_initial_import"
-            android:key="minimal_ui_import"
-            android:restrictionType="bool"
-            android:title="@string/apprest_initial_import_title" />
 
 
     <restriction

@@ -42,13 +42,11 @@ class ScreenSlidePagerAdapter(fm: FragmentManager, lc: Lifecycle, c: Context) :
 
     override fun createFragment(position: Int): Fragment {
         try {
-            val fragment = mTabs[position].fragmentClass.newInstance()
+            val fragment = mTabs[position].fragmentClass.getDeclaredConstructor().newInstance()
             if (mFragmentArguments != null) fragment.arguments = mFragmentArguments
 
             return fragment
-        } catch (e: InstantiationException) {
-            e.printStackTrace()
-        } catch (e: IllegalAccessException) {
+        } catch (e: ReflectiveOperationException) {
             e.printStackTrace()
         }
         throw IndexOutOfBoundsException("index wrong")

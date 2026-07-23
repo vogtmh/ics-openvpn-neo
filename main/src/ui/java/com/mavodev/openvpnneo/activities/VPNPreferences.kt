@@ -86,8 +86,6 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        checkMinimalUIDisabled()
-
         mProfileUUID = intent.getStringExtra("$packageName.profileUUID")
         if (savedInstanceState != null) {
             val savedUUID = savedInstanceState.getString("$packageName.profileUUID")
@@ -190,9 +188,9 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         dialog.setMessage(getString(R.string.remove_vpn_query, mProfile!!.mName))
 
         dialog.setPositiveButton(
-            android.R.string.yes
+            android.R.string.ok
         ) { dialog1: DialogInterface?, which: Int -> removeProfile(mProfile) }
-        dialog.setNegativeButton(android.R.string.no, null)
+        dialog.setNegativeButton(android.R.string.cancel, null)
         dialog.create().show()
     }
 

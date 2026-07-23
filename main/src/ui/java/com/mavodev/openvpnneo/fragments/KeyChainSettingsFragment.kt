@@ -19,6 +19,7 @@ import android.os.Message
 import android.security.KeyChain
 import android.security.KeyChainException
 import android.security.keystore.KeyInfo
+import android.security.keystore.KeyProperties
 import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
@@ -62,11 +63,18 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 val keyFactory = KeyFactory.getInstance(key.getAlgorithm(), "AndroidKeyStore")
                 val keyInfo = keyFactory.getKeySpec(key, KeyInfo::class.java)
-                return keyInfo.isInsideSecureHardware()
-
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val securityLevel = keyInfo.securityLevel
+                    securityLevel == KeyProperties.SECURITY_LEVEL_TRUSTED_ENVIRONMENT ||
+                        securityLevel == KeyProperties.SECURITY_LEVEL_STRONGBOX ||
+                        securityLevel == KeyProperties.SECURITY_LEVEL_UNKNOWN_SECURE
+                } else {
+                    @Suppress("DEPRECATION")
+                    keyInfo.isInsideSecureHardware
+                }
             } else {
-                val algorithm = key.algorithm
-                return KeyChain.isBoundKeyAlgorithm(algorithm)
+                @Suppress("DEPRECATION")
+                return KeyChain.isBoundKeyAlgorithm(key.algorithm)
             }
         }
 

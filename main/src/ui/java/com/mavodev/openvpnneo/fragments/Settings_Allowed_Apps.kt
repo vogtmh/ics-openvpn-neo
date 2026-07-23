@@ -11,7 +11,9 @@ import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mavodev.openvpnneo.R
@@ -47,34 +49,31 @@ class Settings_Allowed_Apps : Fragment(), AdapterView.OnItemClickListener, View.
         val profileUuid = requireArguments().getString(requireActivity().packageName + ".profileUUID")
         mProfile = ProfileManager.get(activity, profileUuid)
         requireActivity().title = getString(R.string.edit_profile_title, mProfile.name)
-        setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.allowed_apps, menu)
+    private val allowedAppsMenuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+            inflater.inflate(R.menu.allowed_apps, menu)
 
-        val searchView = menu.findItem(R.id.app_search_widget).actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                packageAdapter.filter.filter(query)
-                return true
+            val searchView = menu.findItem(R.id.app_search_widget).actionView as SearchView
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    packageAdapter.filter.filter(query)
+                    return true
+                }
+
+                override fun onQueryTextChange(query: String): Boolean {
+                    packageAdapter.filter.filter(query)
+                    return true
+                }
+            })
+            searchView.setOnCloseListener {
+                packageAdapter.filter.filter("")
+                false
             }
-
-            override fun onQueryTextChange(query: String): Boolean {
-                packageAdapter.filter.filter(query)
-                //mListView.setFilterText(newText)
-                //mListView.isTextFilterEnabled = !TextUtils.isEmpty(newText)
-
-                return true
-            }
-        })
-        searchView.setOnCloseListener {
-            //mListView.clearTextFilter()
-            packageAdapter.filter.filter("")
-            false
         }
 
-        super.onCreateOptionsMenu(menu, inflater)
+        override fun onMenuItemSelected(item: MenuItem): Boolean = false
     }
 
 
@@ -95,6 +94,8 @@ class Settings_Allowed_Apps : Fragment(), AdapterView.OnItemClickListener, View.
                 (v.findViewById<View>(R.id.app_recycler_view)).visibility = View.VISIBLE
             })
         }).start()
+
+        requireActivity().addMenuProvider(allowedAppsMenuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         return v
     }

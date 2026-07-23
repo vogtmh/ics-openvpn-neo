@@ -2,6 +2,15 @@
  * Copyright (c) 2012-2022 Arne Schwabe
  * Distributed under the GNU GPL v2 with additional terms. For full terms see the file doc/LICENSE.txt
  */
+
+/*
+ * Uses the deprecated androidx.security.crypto (Jetpack Security) library. It has no drop-in
+ * replacement (Google recommends Tink directly), still works, and — importantly — owns the
+ * on-disk format of existing encrypted profiles (.cp files). Migrating away requires a
+ * dedicated, backward-compatible effort, so the deprecation is suppressed intentionally here.
+ */
+@file:Suppress("DEPRECATION")
+
 package com.mavodev.openvpnneo.core
 
 import android.content.Context

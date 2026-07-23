@@ -10,6 +10,8 @@ import android.view.*
 import android.widget.Checkable
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import com.mavodev.openvpnneo.fragments.Settings_Fragment
 import com.mavodev.openvpnneo.fragments.ConnectionsAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +26,21 @@ class Settings_Connections : Settings_Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            inflater.inflate(R.menu.connections, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+    private val connectionsMenuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                menuInflater.inflate(R.menu.connections, menu)
+        }
+
+        override fun onMenuItemSelected(item: MenuItem): Boolean {
+            if (item.itemId == R.id.add_new_remote) {
+                mConnectionsAdapter.addRemote()
+                return true
+            }
+            return false
+        }
     }
 
     override fun onCreateView(
@@ -51,6 +61,7 @@ class Settings_Connections : Settings_Fragment(), View.OnClickListener {
         mUseRandomRemote = v.findViewById<View>(R.id.remote_random) as Checkable
         mUseRandomRemote.isChecked = mProfile.mRemoteRandom
         mConnectionsAdapter.displayWarningIfNoneEnabled()
+        requireActivity().addMenuProvider(connectionsMenuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
         return v
     }
 
@@ -58,11 +69,6 @@ class Settings_Connections : Settings_Fragment(), View.OnClickListener {
         if (v.id == R.id.add_new_remote) {
             mConnectionsAdapter.addRemote()
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.add_new_remote) mConnectionsAdapter.addRemote()
-        return super.onOptionsItemSelected(item)
     }
 
     override fun savePreferences() {

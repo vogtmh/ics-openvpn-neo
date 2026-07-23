@@ -308,7 +308,7 @@ class GraphActivity : BaseActivity(), VpnStatus.ByteCountListener {
             
             // Initialize first timestamp from the first item
             if (workingList.isNotEmpty()) {
-                val firstItem = workingList.first
+                val firstItem = workingList[0]
                 firstTimestamp = firstItem.timestamp
                 lastBytecountIn = firstItem.`in`
                 lastBytecountOut = firstItem.`out`

@@ -64,7 +64,7 @@ class InternalWebView : BaseActivity() {
     }
 
     @JavascriptInterface
-    fun postMessage(json: String?, transferList: String?): Boolean {
+    fun postMessage(json: String, transferList: String?): Boolean {
         val jObejct = JSONObject(json)
 
         val action = jObejct.getString("type")

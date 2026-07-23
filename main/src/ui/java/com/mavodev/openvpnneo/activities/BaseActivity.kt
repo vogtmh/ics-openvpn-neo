@@ -4,14 +4,11 @@
  */
 package com.mavodev.openvpnneo.activities
 
-import android.app.UiModeManager
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,27 +17,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import com.mavodev.openvpnneo.R
-import com.mavodev.openvpnneo.core.GlobalPreferences
 import com.mavodev.openvpnneo.core.LocaleHelper
 
 abstract class BaseActivity : AppCompatActivity() {
-    val isAndroidTV: Boolean
-        get() {
-            val uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
-            return uiModeManager.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
-        }
-
-    protected fun checkMinimalUIDisabled() {
-        if (GlobalPreferences.getMinimalUi()) {
-            Toast.makeText(this, R.string.minimal_ui_not_available, Toast.LENGTH_LONG).show()
-            finish()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (isAndroidTV) {
-            requestWindowFeature(Window.FEATURE_OPTIONS_PANEL)
-        }
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK),
             navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK)

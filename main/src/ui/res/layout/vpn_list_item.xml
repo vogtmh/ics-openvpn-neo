@@ -127,6 +127,7 @@
         android:layout_marginBottom="2dp"
         android:visibility="gone"
         app:indicatorColor="@color/accent"
+        app:indicatorTrackGapSize="0dp"
         app:trackColor="#339718EC"
         app:trackCornerRadius="2dp"
         app:trackStopIndicatorSize="0dp"

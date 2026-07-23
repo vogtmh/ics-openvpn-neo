@@ -373,10 +373,10 @@ class SettingsActivity : BaseActivity() {
         val dialog = AlertDialog.Builder(this)
             .setTitle(getString(R.string.clear_external_apps))
             .setMessage(getString(R.string.clearappsdialog, appsList))
-            .setPositiveButton(android.R.string.yes) { _, _ ->
+            .setPositiveButton(android.R.string.ok) { _, _ ->
                 sharedPreferences.edit().remove("allowed_apps").apply()
             }
-            .setNegativeButton(android.R.string.no, null)
+            .setNegativeButton(android.R.string.cancel, null)
             .create()
             
         // Set background color only in dark mode

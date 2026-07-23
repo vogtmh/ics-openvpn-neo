@@ -163,17 +163,8 @@ public class AppRestrictions {
         applyBooleanDefaultPrefsRestriction(restrictions,"preferencryption", defaultPrefs, "preferencryption" );
         applyBooleanDefaultPrefsRestriction(restrictions, "netchangereconnect", defaultPrefs, "netchangereconnect");
 
-        boolean minimalUi = restrictions.getBoolean("minimal_ui", false);
-        if (minimalUi) {
-            /* always disable showing log window in minimal UI mode */
-            SharedPreferences.Editor editor = defaultPrefs.edit();
-            editor.putBoolean("showlogwindow", false);
-            editor.apply();
-        }
-
         boolean forceConnected = restrictions.getBoolean("always_connected", false);
-        boolean allowInitialImport = restrictions.getBoolean("minimal_ui_import", true);
-        GlobalPreferences.setInstance(minimalUi, forceConnected, allowInitialImport);
+        GlobalPreferences.setInstance(forceConnected);
     }
 
     private static void applyBooleanDefaultPrefsRestriction(Bundle restrictions, String restriction_name, SharedPreferences defaultPrefs, String prefs_name) {
@@ -415,7 +406,7 @@ public class AppRestrictions {
         addChangesListener(c);
         boolean applied = applyRestrictions(c);
         if (!applied)
-            GlobalPreferences.setInstance(false, false, true);
+            GlobalPreferences.setInstance(false);
     }
 
     public void pauseCheckRestrictions(Context c) {

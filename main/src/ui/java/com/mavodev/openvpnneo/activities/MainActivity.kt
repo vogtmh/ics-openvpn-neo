@@ -110,9 +110,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (isAndroidTV) {
-            requestWindowFeature(android.view.Window.FEATURE_OPTIONS_PANEL)
-        }
         super.onCreate(savedInstanceState)
 
         val view = layoutInflater.inflate(R.layout.main_activity, null)

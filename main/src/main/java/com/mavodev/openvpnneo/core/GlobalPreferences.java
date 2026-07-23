@@ -7,36 +7,25 @@ package com.mavodev.openvpnneo.core;
 
 /* This class is a data holder for the global preferences that are set when reading the app restrictions */
 public class GlobalPreferences {
-    boolean minimalUi = false;
     boolean forceConnected = false;
-    boolean initialImport = true;
 
     /* will be set by AppRestrictions */
     static GlobalPreferences instance = null;
 
-    GlobalPreferences(boolean minimalUi, boolean forceConnected, boolean initialImport)
+    GlobalPreferences(boolean forceConnected)
     {
-        this.minimalUi = minimalUi;
         this.forceConnected = forceConnected;
-        this.initialImport = initialImport;
     }
 
-    public static void setInstance(boolean minimalUi, boolean forceConnected, boolean initialImport)
+    public static void setInstance(boolean forceConnected)
     {
-        instance = new GlobalPreferences(minimalUi, forceConnected, initialImport);
-    }
-
-    static public boolean getMinimalUi()
-    {
-        return getInstance().minimalUi;
+        instance = new GlobalPreferences(forceConnected);
     }
 
     static public boolean getForceConnected()
     {
         return getInstance().forceConnected;
     }
-
-    static public boolean getAllowInitialImport() { return getInstance().initialImport; }
 
     static GlobalPreferences getInstance()
     {

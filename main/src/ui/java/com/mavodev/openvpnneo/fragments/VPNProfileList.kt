@@ -43,7 +43,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -172,7 +174,6 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         mAdapter = ProfileAdapter()
 
         registerPermissionReceiver()
@@ -409,11 +410,13 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         if (fab_import != null) fab_import.setOnClickListener(this)
 
         // TV builds show the minimal UI that already have the notification
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !((activity as BaseActivity).isAndroidTV))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             checkForNotificationPermission(v)
 
         defaultVPN = ProfileManager.getAlwaysOnVPN(requireContext())
         populateVpnList()
+
+        requireActivity().addMenuProvider(mainMenuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         return v
     }
@@ -466,65 +469,60 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.add(0, MENU_CHANGE_SORTING, 0, R.string.change_sorting)
-            .setIcon(R.drawable.ic_sort)
-            .setAlphabeticShortcut('s')
-            .setTitleCondensed(getString(R.string.sort))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+    private val mainMenuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+            menu.add(0, MENU_CHANGE_SORTING, 0, R.string.change_sorting)
+                .setIcon(R.drawable.ic_sort)
+                .setAlphabeticShortcut('s')
+                .setTitleCondensed(getString(R.string.sort))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_SETTINGS, 0, R.string.generalsettings)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(0, MENU_SETTINGS, 0, R.string.generalsettings)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_SHOW_LOG, 0, R.string.show_log)
-            .setIcon(R.drawable.ic_menu_import_grey)
-            .setAlphabeticShortcut('l')
-            .setTitleCondensed(getString(R.string.show_log))
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(0, MENU_SHOW_LOG, 0, R.string.show_log)
+                .setIcon(R.drawable.ic_menu_import_grey)
+                .setAlphabeticShortcut('l')
+                .setTitleCondensed(getString(R.string.show_log))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_GRAPH, 0, R.string.graph)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(0, MENU_GRAPH, 0, R.string.graph)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_OPENSSL_SPEED, 0, R.string.openssl_speed_test)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(0, MENU_OPENSSL_SPEED, 0, R.string.openssl_speed_test)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_FAQ, 0, R.string.faq)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(0, MENU_FAQ, 0, R.string.faq)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
 
-        menu.add(0, MENU_ABOUT, 0, R.string.about)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-    }
+            menu.add(0, MENU_ABOUT, 0, R.string.about)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val itemId = item.getItemId()
-        if (itemId == MENU_CHANGE_SORTING) {
-            return changeSorting()
-        } else if (itemId == MENU_SHOW_LOG) {
-            val intent = Intent(getActivity(), LogWindow::class.java as Class<LogWindow>)
-            startActivity(intent)
-            return true
-        } else if (itemId == MENU_ABOUT) {
-            val intent = Intent(getActivity(), AboutActivity::class.java as Class<AboutActivity>)
-            startActivity(intent)
-            return true
-        } else if (itemId == MENU_FAQ) {
-            val intent = Intent(getActivity(), FAQActivity::class.java as Class<FAQActivity>)
-            startActivity(intent)
-            return true
-        } else if (itemId == MENU_SETTINGS) {
-            val intent = Intent(getActivity(), SettingsActivity::class.java as Class<SettingsActivity>)
-            startActivity(intent)
-            return true
-        } else if (itemId == MENU_GRAPH) {
-            val intent = Intent(getActivity(), GraphActivity::class.java as Class<GraphActivity>)
-            startActivity(intent)
-            return true
-        } else if (itemId == MENU_OPENSSL_SPEED) {
-            val intent = Intent(getActivity(), OpenSSLSpeed::class.java)
-            startActivity(intent)
-            return true
-        } else {
-            return super.onOptionsItemSelected(item)
+        override fun onMenuItemSelected(item: MenuItem): Boolean {
+            val itemId = item.getItemId()
+            if (itemId == MENU_CHANGE_SORTING) {
+                return changeSorting()
+            } else if (itemId == MENU_SHOW_LOG) {
+                startActivity(Intent(getActivity(), LogWindow::class.java as Class<LogWindow>))
+                return true
+            } else if (itemId == MENU_ABOUT) {
+                startActivity(Intent(getActivity(), AboutActivity::class.java as Class<AboutActivity>))
+                return true
+            } else if (itemId == MENU_FAQ) {
+                startActivity(Intent(getActivity(), FAQActivity::class.java as Class<FAQActivity>))
+                return true
+            } else if (itemId == MENU_SETTINGS) {
+                startActivity(Intent(getActivity(), SettingsActivity::class.java as Class<SettingsActivity>))
+                return true
+            } else if (itemId == MENU_GRAPH) {
+                startActivity(Intent(getActivity(), GraphActivity::class.java as Class<GraphActivity>))
+                return true
+            } else if (itemId == MENU_OPENSSL_SPEED) {
+                startActivity(Intent(getActivity(), OpenSSLSpeed::class.java))
+                return true
+            }
+            return false
         }
     }
 

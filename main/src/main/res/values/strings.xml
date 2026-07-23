@@ -25,7 +25,6 @@
     <string name="copyright_others">This program uses the following components; see the source code for full details on the licenses</string>
     <string name="about">About</string>
     <string name="vpn_list_title">CentVPN</string>
-    <string name="minimal_ui">Minimal UI</string>
     <string name="vpn_type">Type</string>
     <string name="pkcs12pwquery">PKCS12 Password</string>
     <string name="file_select">Select…</string>
@@ -518,7 +517,6 @@
     <string name="confirmations_title">Disable VPN connection confirmations</string>
     <string name="confirmations_summary">Disable prompt when disconnecting VPN.</string>
     <string name="cannot_start_vpn_not_configured">Cannot start VPN. No default VPN has been configured.</string>
-    <string name="minimal_ui_not_available">Functionality not available when minimal UI is enabled</string>
     <string name="missing_keychain_access">Access to Android keychain certificate is missing. Tap this notification to select/import a certificate</string>
     <string name="country_api_dialog_title">Display VPN Country</string>
     <string name="add_profile_create_manually">Create new profile</string>
@@ -537,6 +535,5 @@
     <string name="downloading_profile">Downloading profile</string>
     <string name="please_wait">Please wait</string>
     <string name="generating_config">Generating config…</string>
-    <string name="error_open_file_picker">Unable to open file picker</string>
 
 </resources>

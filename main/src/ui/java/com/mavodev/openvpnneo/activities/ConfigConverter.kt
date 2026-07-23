@@ -8,6 +8,7 @@ package com.mavodev.openvpnneo.activities
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -33,7 +34,6 @@ import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
 import com.mavodev.openvpnneo.core.ConfigParser
 import com.mavodev.openvpnneo.core.ConfigParser.ConfigParseError
-import com.mavodev.openvpnneo.core.GlobalPreferences
 import com.mavodev.openvpnneo.core.Preferences
 import com.mavodev.openvpnneo.core.ProfileManager
 import com.mavodev.openvpnneo.fragments.Utils
@@ -48,7 +48,6 @@ import java.util.*
 
 class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener {
 
-    private var initialImportMode: Boolean = false
     private var mResult: VpnProfile? = null
 
     @Transient
@@ -69,6 +68,12 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     private lateinit var mLogLayout: LinearLayout
     private lateinit var mProfilenameLabel: TextView
     private lateinit var mMakeDefaultProfile: CompoundButton
+
+    private val mInstallPKCS12Launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK)
+                showCertDialog()
+        }
 
     override fun onClick(v: View) {
         if (v.id == R.id.fab_save)
@@ -153,11 +158,11 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         val intent = installPKCS12()
 
         if (intent != null)
-            startActivityForResult(intent, RESULT_INSTALLPKCS12)
+            mInstallPKCS12Launcher.launch(intent)
         else
             saveProfile()
 
-        if(mMakeDefaultProfile.isChecked || initialImportMode)
+        if(mMakeDefaultProfile.isChecked)
         {
             val defaultPrefs = Preferences.getDefaultSharedPreferences(this)
             val editor = defaultPrefs.edit()
@@ -192,10 +197,6 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, result: Intent?) {
-        if (requestCode == RESULT_INSTALLPKCS12 && resultCode == Activity.RESULT_OK) {
-            showCertDialog()
-        }
-
         if (resultCode == Activity.RESULT_OK && requestCode >= CHOOSE_FILE_OFFSET) {
             val type = Utils.FileType.getFileTypeByValue(requestCode - CHOOSE_FILE_OFFSET)
 
@@ -815,13 +816,8 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
                 mTLSProfileLabel.visibility = View.VISIBLE
                 mMakeDefaultProfile.visibility = View.VISIBLE
                 val noProfilesYet = ProfileManager.getAlwaysOnVPN(this@ConfigConverter) == null
-                if (initialImportMode) {
-                    mMakeDefaultProfile.isChecked = true
-                    mMakeDefaultProfile.isEnabled = false
-                } else {
-                    mMakeDefaultProfile.isChecked = noProfilesYet
-                    mMakeDefaultProfile.isEnabled = true
-                }
+                mMakeDefaultProfile.isChecked = noProfilesYet
+                mMakeDefaultProfile.isEnabled = true
                 mTLSProfile.setSelection(translateTLSProfileToSelection(result.mTlSCertProfile))
 
                 log(R.string.import_done)
@@ -844,31 +840,6 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         }
     }
 
-
-    /**
-     * Checks whether we are in the special mode where we allow an initial profile to be imported but nothing after that
-      */
-    private fun checkInitialImportMode(): Boolean {
-        if (!GlobalPreferences.getMinimalUi())
-            return false
-
-        if (!GlobalPreferences.getAllowInitialImport())
-            return false
-
-        /* We might potentially allow the initial import but only if no profiles exist */
-
-        val defaultProfile = ProfileManager.getAlwaysOnVPN(this)
-
-        return defaultProfile == null
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        initialImportMode = checkInitialImportMode()
-        if (!initialImportMode)
-            checkMinimalUIDisabled()
-    }
 
     private fun log(logmessage: String?) {
         runOnUiThread {
@@ -935,7 +906,6 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         @kotlin.jvm.JvmField
         val IMPORT_PROFILE = "com.mavodev.openvpnneo.IMPORT_PROFILE"
         val IMPORT_PROFILE_DATA = "com.mavodev.openvpnneo.IMPORT_PROFILE_DATA"
-        private val RESULT_INSTALLPKCS12 = 7
         private val CHOOSE_FILE_OFFSET = 1000
         val VPNPROFILE = "vpnProfile"
         private val PERMISSION_REQUEST_EMBED_FILES = 37231
