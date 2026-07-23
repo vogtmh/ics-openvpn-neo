@@ -9,14 +9,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -46,6 +41,7 @@ import com.mavodev.openvpnneo.core.OpenVPNManagement
 import com.mavodev.openvpnneo.core.TrafficHistory
 import com.mavodev.openvpnneo.core.Preferences
 import com.mavodev.openvpnneo.core.GlobalPreferences
+import com.mavodev.openvpnneo.country.CountryInfoRepository
 import com.mavodev.openvpnneo.fragments.*
 import com.mavodev.openvpnneo.fragments.ImportRemoteConfig.Companion.newInstance
 import com.github.mikephil.charting.charts.LineChart
@@ -58,12 +54,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import java.util.*
 import kotlin.math.max
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.URL
+import androidx.lifecycle.lifecycleScope
 import java.util.Timer
 import java.util.TimerTask
 
@@ -74,6 +66,7 @@ fun Int.dpToPx(): Int {
 
 class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCountListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var countryInfoRepository: CountryInfoRepository
     
     // Country display views - only action bar variables used
     
@@ -92,6 +85,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private var firstTs = 0L
     private var trafficHistory: TrafficHistory? = null
     private var chartInitialized = false
+    private var byteCountListenerRegistered = false
     private var colourIn = 0
     private var colourOut = 0
     private var colourPoint = 0
@@ -103,10 +97,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     // Track last VPN level to detect real state transitions
     private var lastKnownLevel: ConnectionStatus? = null
     
-    // Network connectivity callback for WiFi connect/disconnect
-    private lateinit var networkCallback: ConnectivityManager.NetworkCallback
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -114,6 +104,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
 
         // Initialize SharedPreferences
         sharedPreferences = Preferences.getDefaultSharedPreferences(this)
+        countryInfoRepository = CountryInfoRepository(this)
 
         /* Toolbar and slider should have the same elevation */
         disableToolbarElevation()
@@ -129,7 +120,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         setContentView(view)
 
         // Register network connectivity listener
-        registerNetworkCallback()
+        registerNetworkMonitoring()
         
         // Start periodic country refresh (every 5 minutes)
         startPeriodicUpdates()
@@ -172,28 +163,11 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             .show()
     }
 
-    private fun registerNetworkCallback() {
-        networkCallback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                // Delay to let DHCP/routing settle before querying
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
-                    if (displayCountry) fetchCountryInfo()
-                }, 1500)
-            }
-            override fun onLost(network: Network) {
-                Handler(Looper.getMainLooper()).post {
-                    val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
-                    if (displayCountry) fetchCountryInfo()
-                }
-            }
+    private fun registerNetworkMonitoring() {
+        countryInfoRepository.startNetworkMonitoring {
+            val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
+            if (displayCountry) fetchCountryInfo()
         }
-        val request = NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-        val cm = getSystemService(ConnectivityManager::class.java)
-        cm.registerNetworkCallback(request, networkCallback)
     }
 
 
@@ -299,6 +273,35 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         // timestamps, causing a massively skewed X-axis.
         VpnStatus.setTrafficHistory(TrafficHistory())
         firstTs = 0L
+    }
+
+    /**
+     * Resets the traffic baseline for a new session while keeping the (visible) chart and
+     * its byte-count listener in place. Used when a new connection starts (e.g. the user
+     * switches profiles while still connected) so the new session is plotted from zero
+     * instead of against the previous session's baseline, which would otherwise leave the
+     * still-visible chart empty.
+     */
+    private fun resetMiniChartSession() {
+        VpnStatus.setTrafficHistory(TrafficHistory())
+        firstTs = 0L
+        miniChart?.data = LineData()
+        miniChart?.setNoDataText(getString(R.string.initializing))
+        miniChart?.invalidate()
+    }
+
+    private fun registerByteCountListener() {
+        if (!byteCountListenerRegistered) {
+            VpnStatus.addByteCountListener(this)
+            byteCountListenerRegistered = true
+        }
+    }
+
+    private fun unregisterByteCountListener() {
+        if (byteCountListenerRegistered) {
+            VpnStatus.removeByteCountListener(this)
+            byteCountListenerRegistered = false
+        }
     }
 
     override fun onSharedPreferenceChanged(
@@ -463,20 +466,31 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                                 initializeMiniChart()
                                 chartInitialized = true
                                 animateMiniChartShow()
-                                VpnStatus.addByteCountListener(this)
+                                registerByteCountListener()
                                 // Don't call updateMiniChart() here - let it be called when data arrives
                             }
                         }, 2000)
                     } else {
                         animateMiniChartShow()
-                        VpnStatus.addByteCountListener(this)
+                        registerByteCountListener()
                         // Don't call updateMiniChart() here either - let it be called when data arrives
                     }
                 }
                 ConnectionStatus.LEVEL_NOTCONNECTED -> {
                     animateMiniChartHide()
-                    VpnStatus.removeByteCountListener(this)
+                    unregisterByteCountListener()
                     cleanupMiniChart()
+                }
+                ConnectionStatus.LEVEL_START -> {
+                    // A new connection is starting (e.g. the user switched profiles while
+                    // still connected). Reset the traffic baseline so the new session is
+                    // plotted from zero; otherwise the still-visible chart is drawn against
+                    // the previous session's baseline and appears empty. A mid-session
+                    // network reconnect emits CONNECTING/RECONNECTING (not START), so this
+                    // does not wipe the graph during transient drops.
+                    if (chartInitialized) {
+                        resetMiniChartSession()
+                    }
                 }
                 ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET,
                 ConnectionStatus.LEVEL_CONNECTING_SERVER_REPLIED,
@@ -489,7 +503,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                     }
                 }
                 ConnectionStatus.LEVEL_VPNPAUSED,
-                ConnectionStatus.LEVEL_START,
                 ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT,
                 ConnectionStatus.UNKNOWN_LEVEL -> {
                     // For other states, don't do anything with the mini chart
@@ -547,84 +560,27 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         }
     }
     
-    private fun fetchCountryInfo(connectionLevel: ConnectionStatus? = null, retryCount: Int = 0) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val url = URL("https://api.country.is/")
-                val connection = url.openConnection() as java.net.HttpURLConnection
-                connection.setRequestProperty("User-Agent", "OpenVPN-Neo/1.0")
-                connection.connectTimeout = 5000 // 5 seconds timeout
-                connection.readTimeout = 5000 // 5 seconds timeout
-                
-                // Tag the socket for traffic stats to avoid StrictMode warning
-                try {
-                    android.net.TrafficStats.setThreadStatsTag(0x12345678)
-                    val responseCode = connection.responseCode
-                    
-                    if (responseCode == 200) {
-                        val response = connection.getInputStream()
-                        val jsonResponse = response.bufferedReader().use { it.readText() }
+    private fun fetchCountryInfo(connectionLevel: ConnectionStatus? = null) {
+        lifecycleScope.launch {
+            val info = countryInfoRepository.fetchCountryInfo()
+            if (info == null) {
+                showFallbackInfo()
+                return@launch
+            }
 
-                        withContext(Dispatchers.Main) {
-                            try {
-                                val json = JSONObject(jsonResponse)
-                                val ip = json.getString("ip")
-                                val country = json.getString("country")
+            actionBarCountryIp.text = info.ip
+            actionBarCountryName.text = countryInfoRepository.countryName(info.countryCode)
+            updateActionBarDisplay()
+            loadCountryFlag(info.countryCode)
 
-                                // Update UI with country info (action bar only)
-                                // countryIp.text = ip
-                                // countryName.text = getCountryName(country)
-                                
-                                // Update action bar with country info
-                                actionBarCountryIp.text = ip
-                                actionBarCountryName.text = getCountryName(country)
-                                
-                                // Update action bar visibility
-                                updateActionBarDisplay()
-
-                                // Load country flag
-                                loadCountryFlag(country)
-                                
-                                // Save country for current profile (only when VPN is actually connected).
-                                // connectionLevel can be stale (captured when the fetch/retry was scheduled),
-                                // so also verify the VPN is STILL connected right now.
-                                val currentProfileUUID = VpnStatus.getLastConnectedVPNProfile()
-                                if (currentProfileUUID != null && connectionLevel == ConnectionStatus.LEVEL_CONNECTED &&
-                                        lastKnownLevel == ConnectionStatus.LEVEL_CONNECTED) {
-                                    saveProfileCountry(currentProfileUUID, country)
-                                    
-                                    // Notify VPNProfileList to refresh flags
-                                    refreshVPNProfileList()
-                                }
-
-                            } catch (e: Exception) {
-                                showFallbackInfo()
-                            }
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            showFallbackInfo()
-                            // Retry after 2 seconds if this was triggered by VPN connection and we haven't retried too many times
-                            if (retryCount < 3) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    fetchCountryInfo(connectionLevel, retryCount + 1)
-                                }, 2000)
-                            }
-                        }
-                    }
-                } finally {
-                    android.net.TrafficStats.clearThreadStatsTag()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    showFallbackInfo()
-                    // Retry after 2 seconds if this was triggered by VPN connection and we haven't retried too many times
-                    if (retryCount < 3) {
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            fetchCountryInfo(connectionLevel, retryCount + 1)
-                        }, 2000)
-                    }
-                }
+            // Save country for current profile (only when VPN is actually connected).
+            // connectionLevel can be stale (captured when the fetch/retry was scheduled),
+            // so also verify the VPN is STILL connected right now.
+            val currentProfileUUID = VpnStatus.getLastConnectedVPNProfile()
+            if (currentProfileUUID != null && connectionLevel == ConnectionStatus.LEVEL_CONNECTED &&
+                    lastKnownLevel == ConnectionStatus.LEVEL_CONNECTED) {
+                countryInfoRepository.saveProfileCountry(currentProfileUUID, info.countryCode)
+                refreshVPNProfileList()
             }
         }
     }
@@ -900,9 +856,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     
     private fun loadCountryFlag(countryCode: String) {
         try {
-            // Load flag from resources or use a placeholder
-            val flagResourceName = "flag_${countryCode.lowercase()}"
-            val resourceId = resources.getIdentifier(flagResourceName, "drawable", packageName)
+            val resourceId = countryInfoRepository.flagResourceId(countryCode)
             
             if (resourceId != 0) {
                 // countryFlag.setImageResource(resourceId)
@@ -935,6 +889,11 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         
         // Restart periodic updates
         startPeriodicUpdates()
+
+        // Re-create/show the mini chart if we returned to the screen while already
+        // connected (the LEVEL_CONNECTED transition that normally builds it may have
+        // happened while this screen was in the background).
+        reconcileMiniChart()
     }
 
     override fun onPause() {
@@ -944,8 +903,40 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
 
     // Animation methods for smooth mini chart transitions
+    /**
+     * Ensures the mini chart matches the current connection state. The chart is
+     * normally created on the LEVEL_CONNECTED transition; if that transition was
+     * missed because this screen was not in the foreground (e.g. the user connected
+     * and immediately opened the log screen), this re-creates and shows it from the
+     * traffic history that is already being collected. Safe to call repeatedly.
+     */
+    private fun reconcileMiniChart() {
+        if (lastKnownLevel != ConnectionStatus.LEVEL_CONNECTED) return
+
+        if (!chartInitialized) {
+            initializeMiniChart()
+            chartInitialized = true
+            registerByteCountListener()
+        }
+        showMiniChartImmediate()
+        updateMiniChart()
+    }
+
+    /** Shows the mini chart container at full height without animating (used when reconciling). */
+    private fun showMiniChartImmediate() {
+        miniChartContainer?.let { container ->
+            container.visibility = View.VISIBLE
+            container.layoutParams?.height = 160.dpToPx()
+            container.requestLayout()
+        }
+    }
+
     private fun animateMiniChartShow() {
         miniChartContainer?.let { container ->
+            // Already shown (or animating in) — don't collapse and replay the animation.
+            if (container.visibility == View.VISIBLE && (container.layoutParams?.height ?: 0) > 0) {
+                return@let
+            }
             // Set initial state
             container.visibility = View.VISIBLE
             container.layoutParams?.height = 0
@@ -1014,8 +1005,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         stopPeriodicUpdates()
         VpnStatus.removeStateListener(this)
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-        val cm = getSystemService(ConnectivityManager::class.java)
-        cm.unregisterNetworkCallback(networkCallback)
+        countryInfoRepository.stopNetworkMonitoring()
     }
 
     private fun checkUriForProfileImport(uri: Uri) {
@@ -1037,11 +1027,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private fun startOpenVPNUrlImport(url: String) {
         val asImportFrag = newInstance(url)
         asImportFrag.show(supportFragmentManager, "dialog")
-    }
-    
-    private fun saveProfileCountry(profileUUID: String, countryCode: String) {
-        val prefs = getSharedPreferences("profile_countries", Context.MODE_PRIVATE)
-        prefs.edit().putString(profileUUID, countryCode).apply()
     }
     
     private fun refreshVPNProfileList() {

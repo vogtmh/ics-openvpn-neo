@@ -47,7 +47,7 @@ class Settings_Connections : Settings_Fragment(), View.OnClickListener {
         val v = inflater.inflate(R.layout.connections, container, false)
         mWarning = v.findViewById<View>(R.id.noserver_active_warning) as TextView
         mRecyclerView = v.findViewById<View>(R.id.connection_recycler_view) as RecyclerView
-        mConnectionsAdapter = ConnectionsAdapter(activity, this, mProfile)
+        mConnectionsAdapter = ConnectionsAdapter(requireActivity(), this, mProfile)
 
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager =

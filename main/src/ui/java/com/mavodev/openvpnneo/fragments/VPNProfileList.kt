@@ -64,6 +64,7 @@ import com.mavodev.openvpnneo.core.Preferences
 import com.mavodev.openvpnneo.core.ProfileManager
 import com.mavodev.openvpnneo.core.VpnStatus
 import com.mavodev.openvpnneo.core.VpnStatus.StateListener
+import com.mavodev.openvpnneo.country.CountryInfoRepository
 import com.mavodev.openvpnneo.fragments.ImportRemoteConfig.Companion.newInstance
 import com.mavodev.openvpnneo.fragments.Utils.alwaysUseOldFileChooser
 import java.util.LinkedList
@@ -88,6 +89,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     private var connectingProfileUUID: String? = null // Track profile being connected
     private var connectingState: String? = null // Latest OpenVPN state string while connecting
     private var highlightedUuids: Set<String> = emptySet()
+    private lateinit var countryInfoRepository: CountryInfoRepository
 
     override fun updateState(
         state: String?,
@@ -168,6 +170,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAdapter = ProfileAdapter()
+        countryInfoRepository = CountryInfoRepository(requireContext())
 
         registerPermissionReceiver()
         registerActivityResultLaunchers()
@@ -818,18 +821,16 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     }
     
     private fun loadProfileCountryFlag(profile: VpnProfile, flagImageView: ImageView) {
-        val prefs = requireContext().getSharedPreferences("profile_countries", Context.MODE_PRIVATE)
-        val countryCode = prefs.getString(profile.getUUIDString(), null)
+        val countryCode = countryInfoRepository.getProfileCountry(profile.getUUIDString())
         
         Log.d("VPNProfileList", "Loading flag for profile ${profile.getUUIDString()}, country: $countryCode")
         
         if (countryCode != null) {
             // Load flag for stored country
             try {
-                val flagResourceName = "flag_${countryCode.lowercase()}"
-                val resourceId = resources.getIdentifier(flagResourceName, "drawable", requireContext().packageName)
+                val resourceId = countryInfoRepository.flagResourceId(countryCode)
                 
-                Log.d("VPNProfileList", "Looking for flag resource: $flagResourceName, ID: $resourceId")
+                Log.d("VPNProfileList", "Looking for flag resource for $countryCode, ID: $resourceId")
                 
                 if (resourceId != 0) {
                     flagImageView.setImageResource(resourceId)
@@ -847,12 +848,6 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
             flagImageView.setImageResource(R.drawable.flag_unknown)
             Log.d("VPNProfileList", "No country stored for profile ${profile.getUUIDString()}, using placeholder")
         }
-    }
-    
-    private fun saveProfileCountry(profileUUID: String, countryCode: String) {
-        val prefs = requireContext().getSharedPreferences("profile_countries", Context.MODE_PRIVATE)
-        Log.d("VPNProfileList", "Saving country $countryCode for profile $profileUUID")
-        prefs.edit().putString(profileUUID, countryCode).apply()
     }
     
     fun refreshFlags() {

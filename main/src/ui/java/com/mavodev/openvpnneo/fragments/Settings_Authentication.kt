@@ -138,7 +138,7 @@ class Settings_Authentication : OpenVpnPreferencesFragment(), Preference.OnPrefe
         }
     }
 
-    private fun getX509String(authtype: Int, dn: String): CharSequence {
+    private fun getX509String(authtype: Int, dn: String?): CharSequence {
         var ret = ""
         when (authtype) {
             VpnProfile.X509_VERIFY_TLSREMOTE, VpnProfile.X509_VERIFY_TLSREMOTE_COMPAT_NOREMAPPING -> ret += "tls-remote "
