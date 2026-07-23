@@ -56,6 +56,10 @@ class ScreenSlidePagerAdapter(fm: FragmentManager, lc: Lifecycle, c: Context) :
         return mTabs[position].mName
     }
 
+    fun indexOfTitle(title: CharSequence): Int {
+        return mTabs.indexOfFirst { it.mName == title }
+    }
+
     override fun getItemCount(): Int {
         return mTabs.size
     }

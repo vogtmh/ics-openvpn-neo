@@ -215,6 +215,7 @@ class Settings_Authentication : OpenVpnPreferencesFragment(), Preference.OnPrefe
             dialogFragment = RemoteCNPreferenceDialog.newInstance(preference.getKey())
         }
         if (dialogFragment != null) {
+            @Suppress("DEPRECATION")
             dialogFragment.setTargetFragment(this, 0)
             dialogFragment.show(parentFragmentManager, "RemoteCNDialog")
         } else {

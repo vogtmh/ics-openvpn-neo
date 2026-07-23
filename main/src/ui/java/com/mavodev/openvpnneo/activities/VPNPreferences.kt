@@ -24,6 +24,7 @@ import com.mavodev.openvpnneo.fragments.Settings_Basic
 import com.mavodev.openvpnneo.fragments.Settings_Connections
 import com.mavodev.openvpnneo.fragments.Settings_IP
 import com.mavodev.openvpnneo.fragments.Settings_Obscure
+import com.mavodev.openvpnneo.fragments.Settings_Overview
 import com.mavodev.openvpnneo.fragments.Settings_Routing
 import com.mavodev.openvpnneo.fragments.Settings_UserEditable
 import com.mavodev.openvpnneo.fragments.ShowConfigFragment
@@ -109,7 +110,8 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         mPagerAdapter.setFragmentArgs(fragmentArguments)
 
         if (mProfile!!.mUserEditable) {
-            mPagerAdapter.addTab(R.string.basic, Settings_Basic::class.java)
+            mPagerAdapter.addTab(R.string.basic, Settings_Overview::class.java)
+            mPagerAdapter.addTab(R.string.connection_tab, Settings_Basic::class.java)
             mPagerAdapter.addTab(R.string.server_list, Settings_Connections::class.java)
             mPagerAdapter.addTab(R.string.ipdns, Settings_IP::class.java)
             mPagerAdapter.addTab(R.string.routing, Settings_Routing::class.java)
@@ -132,6 +134,16 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         }.attach()
 
         setContentView(rootview)
+    }
+
+    /**
+     * Switch the pager to the full "Server List" tab. Used by the simple server
+     * overview on the Basic tab.
+     */
+    fun showServerListTab() {
+        val index = mPagerAdapter.indexOfTitle(getString(R.string.server_list))
+        if (index >= 0)
+            mPager.currentItem = index
     }
 
 

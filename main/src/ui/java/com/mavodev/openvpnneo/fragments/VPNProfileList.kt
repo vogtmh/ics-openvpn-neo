@@ -37,6 +37,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -79,6 +80,10 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     private var defaultVPN: VpnProfile? = null
     private lateinit var mPermissionView: View
     private lateinit var mPermReceiver: ActivityResultLauncher<String>
+    private lateinit var mEditVpnLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mSelectProfileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mImportProfileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mFilePickerLauncher: ActivityResultLauncher<Intent>
     private var currentConnectionLevel: ConnectionStatus = ConnectionStatus.LEVEL_NOTCONNECTED
     private var connectingProfileUUID: String? = null // Track profile being connected
     private var connectingState: String? = null // Latest OpenVPN state string while connecting
@@ -165,6 +170,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         mAdapter = ProfileAdapter()
 
         registerPermissionReceiver()
+        registerActivityResultLaunchers()
     }
 
     private fun registerPermissionReceiver() {
@@ -173,28 +179,85 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
             ActivityResultCallback { result: Boolean? -> checkForNotificationPermission(requireView()) })
     }
 
+    private fun registerActivityResultLaunchers() {
+        mEditVpnLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+            val data = result.data
+            when (result.resultCode) {
+                RESULT_VPN_DELETED -> if (mEditProfile != null) populateVpnList()
+                RESULT_VPN_DUPLICATE -> if (data != null) {
+                    val profileUUID = data.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
+                    val profile = ProfileManager.get(getActivity(), profileUUID)
+                    if (profile != null) onAddOrDuplicateProfile(profile)
+                }
+                Activity.RESULT_OK -> {
+                    val configuredVPN = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
+                    val profile = ProfileManager.get(getActivity(), configuredVPN)
+                    profile.addChangeLogEntry("Profile edited by user")
+                    ProfileManager.saveProfile(getActivity(), profile)
+                    // Name could be modified, refresh the list
+                    populateVpnList()
+                }
+            }
+        }
+
+        mSelectProfileLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+            val fileData = result.data!!.getStringExtra(FileSelect.RESULT_DATA)
+            val uri = Uri.Builder().path(fileData).scheme("file").build()
+            startConfigImport(uri)
+        }
+
+        mImportProfileLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+            val profileUUID = result.data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
+            val importedProfile = ProfileManager.get(getActivity(), profileUUID)
+            val isFirstProfile = (mAdapter?.itemCount ?: 0) == 0
+            if (isFirstProfile && importedProfile != null) {
+                Preferences.getDefaultSharedPreferences(requireContext()).edit()
+                    .putString("alwaysOnVpn", importedProfile.getUUIDString()).apply()
+            }
+            populateVpnList()
+        }
+
+        mFilePickerLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+            val data = result.data
+            if (data != null) {
+                val uri = data.getData()
+                startConfigImport(uri)
+            }
+        }
+    }
+
     fun updateDynamicShortcuts() {
+        // ShortcutManager IPC calls (getDynamicShortcuts/updateShortcuts/removeDynamicShortcuts/
+        // disableShortcuts) can block for several seconds, so run them off the main thread.
+        val ctx = context?.applicationContext ?: return
+        Thread { updateDynamicShortcutsBlocking(ctx) }.start()
+    }
+
+    private fun updateDynamicShortcutsBlocking(ctx: Context) {
         val versionExtras = PersistableBundle()
         versionExtras.putInt("version", SHORTCUT_VERSION)
 
         val shortcutManager =
-            getContext()!!.getSystemService<ShortcutManager>(ShortcutManager::class.java)
+            ctx.getSystemService<ShortcutManager>(ShortcutManager::class.java)
         if (shortcutManager.isRateLimitingActive()) return
 
         val shortcuts = shortcutManager.getDynamicShortcuts()
         var maxvpn = shortcutManager.getMaxShortcutCountPerActivity() - 1
 
 
-        val disconnectShortcut = ShortcutInfo.Builder(getContext(), "disconnectVPN")
-            .setShortLabel(getString(R.string.cancel_connection))
-            .setLongLabel(getString(R.string.cancel_connection_long))
+        val disconnectShortcut = ShortcutInfo.Builder(ctx, "disconnectVPN")
+            .setShortLabel(ctx.getString(R.string.cancel_connection))
+            .setLongLabel(ctx.getString(R.string.cancel_connection_long))
             .setIntent(
                 Intent(
-                    getContext(),
+                    ctx,
                     DisconnectVPN::class.java
                 ).setAction(OpenVPNService.DISCONNECT_VPN)
             )
-            .setIcon(Icon.createWithResource(getContext(), R.drawable.ic_shortcut_cancel))
+            .setIcon(Icon.createWithResource(ctx, R.drawable.ic_shortcut_cancel))
             .setExtras(versionExtras)
             .build()
 
@@ -208,7 +271,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
 
 
         val sortedProfilesLRU = TreeSet<VpnProfile?>(VpnProfileLRUComparator())
-        val profileManager = ProfileManager.getInstance(getContext())
+        val profileManager = ProfileManager.getInstance(ctx)
         sortedProfilesLRU.addAll(profileManager.getProfiles())
 
         val LRUProfiles = LinkedList<VpnProfile>()
@@ -225,7 +288,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
                     || shortcut.getExtras()!!.getInt("version") != SHORTCUT_VERSION
                 ) updateShortcuts.add(disconnectShortcut)
             } else {
-                val p = ProfileManager.get(getContext(), shortcut.getId())
+                val p = ProfileManager.get(ctx, shortcut.getId())
                 if (p == null || p.profileDeleted) {
                     if (shortcut.isEnabled()) {
                         disableShortcuts.add(shortcut.getId())
@@ -238,12 +301,12 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
 
                     if ((p.getName() != shortcut.getShortLabel()) || shortcut.getExtras() == null || shortcut.getExtras()!!
                             .getInt("version") != SHORTCUT_VERSION
-                    ) updateShortcuts.add(createShortcut(p))
+                    ) updateShortcuts.add(createShortcut(ctx, p))
                 }
             }
         }
         if (addDisconnect) newShortcuts.add(disconnectShortcut)
-        for (p in LRUProfiles) newShortcuts.add(createShortcut(p))
+        for (p in LRUProfiles) newShortcuts.add(createShortcut(ctx, p))
 
         if (updateShortcuts.size > 0) shortcutManager.updateShortcuts(updateShortcuts)
         if (removeShortcuts.size > 0) shortcutManager.removeDynamicShortcuts(removeShortcuts)
@@ -254,9 +317,9 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         )
     }
 
-    fun createShortcut(profile: VpnProfile): ShortcutInfo {
+    fun createShortcut(ctx: Context, profile: VpnProfile): ShortcutInfo {
         val shortcutIntent = Intent(Intent.ACTION_MAIN)
-        shortcutIntent.setClass(requireContext(), LaunchVPN::class.java)
+        shortcutIntent.setClass(ctx, LaunchVPN::class.java)
         shortcutIntent.putExtra(LaunchVPN.EXTRA_KEY, profile.getUUID().toString())
         shortcutIntent.setAction(Intent.ACTION_MAIN)
         shortcutIntent.putExtra(OpenVPNService.EXTRA_START_REASON, "shortcut")
@@ -265,10 +328,10 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         val versionExtras = PersistableBundle()
         versionExtras.putInt("version", SHORTCUT_VERSION)
 
-        return ShortcutInfo.Builder(getContext(), profile.getUUIDString())
+        return ShortcutInfo.Builder(ctx, profile.getUUIDString())
             .setShortLabel(profile.getName())
-            .setLongLabel(getString(R.string.qs_connect, profile.getName()))
-            .setIcon(Icon.createWithResource(getContext(), R.drawable.ic_shortcut_vpn_key))
+            .setLongLabel(ctx.getString(R.string.qs_connect, profile.getName()))
+            .setIcon(Icon.createWithResource(ctx, R.drawable.ic_shortcut_vpn_key))
             .setIntent(shortcutIntent)
             .setExtras(versionExtras)
             .build()
@@ -484,7 +547,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     private fun startFilePicker(): Boolean {
         val i = Utils.getFilePickerIntent(getActivity()!!, Utils.FileType.OVPN_CONFIG)
         if (i != null) {
-            startActivityForResult(i, FILE_PICKER_RESULT_KITKAT)
+            mFilePickerLauncher.launch(i)
             return true
         } else return false
     }
@@ -493,7 +556,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         val intent = Intent(getActivity(), FileSelect::class.java)
         intent.putExtra(FileSelect.NO_INLINE_SELECTION, true)
         intent.putExtra(FileSelect.WINDOW_TITLE, R.string.import_configuration_file)
-        startActivityForResult(intent, SELECT_PROFILE)
+        mSelectProfileLauncher.launch(intent)
     }
 
     private fun onAddOrDuplicateProfile(mCopyProfile: VpnProfile?) {
@@ -562,54 +625,11 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     private val pM: ProfileManager
         get() = ProfileManager.getInstance(getActivity())
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_VPN_DELETED) {
-            if (mEditProfile != null) populateVpnList()
-        } else if (resultCode == RESULT_VPN_DUPLICATE && data != null) {
-            val profileUUID = data.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
-            val profile = ProfileManager.get(getActivity(), profileUUID)
-            if (profile != null) onAddOrDuplicateProfile(profile)
-        }
-
-        if (resultCode != Activity.RESULT_OK) return
-
-        if (requestCode == EDIT_VPN_CONFIG) {
-            val configuredVPN = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
-
-            val profile = ProfileManager.get(getActivity(), configuredVPN)
-            profile.addChangeLogEntry("Profile edited by user")
-            ProfileManager.saveProfile(getActivity(), profile)
-            // Name could be modified, refresh the list
-            populateVpnList()
-        } else if (requestCode == SELECT_PROFILE) {
-            val fileData = data!!.getStringExtra(FileSelect.RESULT_DATA)
-            val uri = Uri.Builder().path(fileData).scheme("file").build()
-
-            startConfigImport(uri)
-        } else if (requestCode == IMPORT_PROFILE) {
-            val profileUUID = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
-            val importedProfile = ProfileManager.get(getActivity(), profileUUID)
-            val isFirstProfile = (mAdapter?.itemCount ?: 0) == 0
-            if (isFirstProfile && importedProfile != null) {
-                Preferences.getDefaultSharedPreferences(requireContext()).edit()
-                    .putString("alwaysOnVpn", importedProfile.getUUIDString()).apply()
-            }
-            populateVpnList()
-        } else if (requestCode == FILE_PICKER_RESULT_KITKAT) {
-            if (data != null) {
-                val uri = data.getData()
-                startConfigImport(uri)
-            }
-        }
-    }
-
     private fun startConfigImport(uri: Uri?) {
         val startImport = Intent(getActivity(), ConfigConverter::class.java)
         startImport.setAction(ConfigConverter.IMPORT_PROFILE)
         startImport.setData(uri)
-        startActivityForResult(startImport, IMPORT_PROFILE)
+        mImportProfileLauncher.launch(startImport)
     }
 
     private fun editVPN(profile: VpnProfile) {
@@ -620,7 +640,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
                 profile.getUUID().toString()
             )
 
-        startActivityForResult(vprefintent, EDIT_VPN_CONFIG)
+        mEditVpnLauncher.launch(vprefintent)
     }
 
     // Simple method to stop all animations (called from MainActivity)
@@ -782,10 +802,6 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         // Shortcut version is increased to refresh all shortcuts
         const val SHORTCUT_VERSION: Int = 1
         private val MENU_ADD_PROFILE = Menu.FIRST
-        private const val EDIT_VPN_CONFIG = 92
-        private const val SELECT_PROFILE = 43
-        private const val IMPORT_PROFILE = 231
-        private const val FILE_PICKER_RESULT_KITKAT = 392
         private val MENU_IMPORT_PROFILE = Menu.FIRST + 1
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"

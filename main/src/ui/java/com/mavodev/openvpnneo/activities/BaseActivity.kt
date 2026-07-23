@@ -20,7 +20,6 @@ import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.core.LocaleHelper
 
 abstract class BaseActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK),

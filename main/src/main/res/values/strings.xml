@@ -192,6 +192,7 @@
     <string name="translationby">English translation by Arne Schwabe&lt;arne@rfc2549.org&gt;</string>
     <string name="ipdns">IP and DNS</string>
     <string name="basic">Basic</string>
+    <string name="connection_tab">Connection</string>
     <string name="routing">Routing</string>
     <string name="obscure">Obscure OpenVPN Settings. Normally not needed.</string>
     <string name="advanced">Advanced</string>

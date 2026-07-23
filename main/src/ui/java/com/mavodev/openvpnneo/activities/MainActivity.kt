@@ -24,13 +24,11 @@ import android.os.Handler
 import android.os.Looper
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -177,7 +175,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     private fun registerNetworkCallback() {
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                Log.d("MainActivity", "Network available - scheduling country refresh")
                 // Delay to let DHCP/routing settle before querying
                 Handler(Looper.getMainLooper()).postDelayed({
                     val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
@@ -185,7 +182,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                 }, 1500)
             }
             override fun onLost(network: Network) {
-                Log.d("MainActivity", "Network lost - refreshing country info")
                 Handler(Looper.getMainLooper()).post {
                     val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
                     if (displayCountry) fetchCountryInfo()
@@ -232,8 +228,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
     
     private fun initializeMiniChart() {
-        Log.d("MainActivity", "initializeMiniChart called")
-        
         // Find chart views (they exist in layout but weren't initialized before)
         val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
         miniChartContainer = rootLayout.findViewById(R.id.mini_chart_container)
@@ -241,7 +235,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         
         // Set click listener to open full GraphActivity
         miniChartContainer?.setOnClickListener {
-            Log.d("MainActivity", "Mini chart clicked - opening GraphActivity")
             val intent = Intent(this, GraphActivity::class.java)
             startActivity(intent)
         }
@@ -291,13 +284,9 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         // Set initial empty data
         miniChart?.data = LineData()
         miniChart?.invalidate()
-        
-        Log.d("MainActivity", "Mini chart initialization complete")
     }
     
     private fun cleanupMiniChart() {
-        Log.d("MainActivity", "cleanupMiniChart called")
-        
         // Clear chart data
         miniChart?.data = null
         miniChart?.invalidate()
@@ -310,8 +299,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         // timestamps, causing a massively skewed X-axis.
         VpnStatus.setTrafficHistory(TrafficHistory())
         firstTs = 0L
-        
-        Log.d("MainActivity", "Mini chart cleanup complete")
     }
 
     override fun onSharedPreferenceChanged(
@@ -330,24 +317,16 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     
     private fun updateMiniChart() {
         if (!chartInitialized || miniChart == null) {
-            Log.d("MainActivity", "updateMiniChart called but chart not initialized")
             return
         }
         
-        Log.d("MainActivity", "updateMiniChart called")
-        
         val list = VpnStatus.trafficHistory.seconds
-        Log.d("MainActivity", "Traffic history list size: ${list.size}")
         
         val workingList = if (list.size == 0) {
-            Log.d("MainActivity", "Using dummy list")
             TrafficHistory.getDummyList()
         } else {
-            Log.d("MainActivity", "Using real traffic data")
             list
         }
-        
-        Log.d("MainActivity", "Working list size: ${workingList.size}")
         
         val dataIn = LinkedList<Entry>()
         val dataOut = LinkedList<Entry>()
@@ -365,7 +344,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             firstTimestamp = firstItem.timestamp
             lastBytecountIn = firstItem.`in`
             lastBytecountOut = firstItem.`out`
-            Log.d("MainActivity", "First timestamp: $firstTimestamp, in: $lastBytecountIn, out: $lastBytecountOut")
         }
         
         for (tdp in workingList) {
@@ -384,8 +362,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             dataOut.add(Entry(t, processedOut))
         }
         
-        Log.d("MainActivity", "Data points created: in=${dataIn.size}, out=${dataOut.size}")
-        
         val dataSets = ArrayList<ILineDataSet>()
         
         val indata = LineDataSet(dataIn, getString(R.string.data_in))
@@ -400,10 +376,8 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         val lineData = LineData(dataSets)
         
         if (lineData.getDataSetByIndex(0).entryCount < 3) {
-            Log.d("MainActivity", "Not enough data points, setting null data")
             miniChart?.data = null
         } else {
-            Log.d("MainActivity", "Setting chart data with ${lineData.getDataSetByIndex(0).entryCount} points")
             miniChart?.data = lineData
             
             val ymax = lineData.yMax
@@ -416,8 +390,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         
         miniChart?.setNoDataText(getString(R.string.initializing))
         miniChart?.invalidate()
-        
-        Log.d("MainActivity", "Mini chart updated and invalidated - dataPoints: ${lineData.getDataSetByIndex(0).entryCount}")
     }
     
     private fun setLineDataAttributes(dataSet: LineDataSet, colour: Int) {
@@ -449,15 +421,12 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         level: ConnectionStatus,
         intent: Intent?
     ) {
-        Log.d("MainActivity", "VPN State Changed - Level: $level, State: $state")
-        
         // Only act on stable terminal states, and only when the level actually changed
         val levelChanged = level != lastKnownLevel
         lastKnownLevel = level
         
         // Fetch country info only on real connect/disconnect transitions
         if (levelChanged && (level == ConnectionStatus.LEVEL_CONNECTED || level == ConnectionStatus.LEVEL_NOTCONNECTED)) {
-            Log.d("MainActivity", "Stable VPN state reached ($level) - refreshing country info")
             runOnUiThread {
                 val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
                 if (displayCountry) {
@@ -466,7 +435,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                         // Delay the fetch so VPN routing has time to fully establish.
                         // Without this, the request goes out on the old route and returns
                         // the pre-VPN IP/country.
-                        Log.d("MainActivity", "Delaying country fetch 2s to let VPN routing settle")
                         Handler(Looper.getMainLooper()).postDelayed({
                             // Re-check: the VPN may have been disconnected during the delay.
                             // Without this, a quick connect/disconnect would fetch the
@@ -474,7 +442,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                             if (lastKnownLevel == ConnectionStatus.LEVEL_CONNECTED) {
                                 fetchCountryInfo(ConnectionStatus.LEVEL_CONNECTED)
                             } else {
-                                Log.d("MainActivity", "VPN no longer connected after delay ($lastKnownLevel) - skipping connected-country fetch")
                                 fetchCountryInfo()
                             }
                         }, 2000)
@@ -482,9 +449,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                         // Disconnect is immediate — no routing change to wait for
                         fetchCountryInfo()
                     }
-                } else {
-                    // Old country bar removed - no visibility control needed
-                    Log.d("MainActivity", "Country bar set to GONE")
                 }
             }
         }
@@ -494,29 +458,24 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             when (level) {
                 ConnectionStatus.LEVEL_CONNECTED -> {
                     if (!chartInitialized) {
-                        Log.d("MainActivity", "Scheduling mini chart initialization after VPN connection")
                         Handler(Looper.getMainLooper()).postDelayed({
                             if (!chartInitialized) {
-                                Log.d("MainActivity", "Initializing mini chart after delay")
                                 initializeMiniChart()
                                 chartInitialized = true
                                 animateMiniChartShow()
                                 VpnStatus.addByteCountListener(this)
                                 // Don't call updateMiniChart() here - let it be called when data arrives
-                                Log.d("MainActivity", "Mini chart shown and listener registered")
                             }
                         }, 2000)
                     } else {
                         animateMiniChartShow()
                         VpnStatus.addByteCountListener(this)
                         // Don't call updateMiniChart() here either - let it be called when data arrives
-                        Log.d("MainActivity", "Mini chart shown (already initialized)")
                     }
                 }
                 ConnectionStatus.LEVEL_NOTCONNECTED -> {
                     animateMiniChartHide()
                     VpnStatus.removeByteCountListener(this)
-                    Log.d("MainActivity", "Mini chart hidden and listener unregistered")
                     cleanupMiniChart()
                 }
                 ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET,
@@ -545,7 +504,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         val periodMs = 5 * 60 * 1000L // 5 minutes
         countryRefreshTimer?.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-                Log.d("MainActivity", "Periodic country refresh triggered")
                 // Only fetch if the feature is enabled; no need to touch visibility
                 val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
                 if (displayCountry) {
@@ -562,18 +520,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
 
     private fun updateCountryDisplay() {
         val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
-        Log.d("MainActivity", "updateCountryDisplay called - display_vpn_country setting: $displayCountry")
-        
-        // Old country bar is removed - only update action bar now
-        // if (displayCountry) {
-        //     countryBar.visibility = View.VISIBLE
-        //     Log.d("MainActivity", "Country bar set to VISIBLE, fetching country info")
-        //     fetchCountryInfo()
-        // } else {
-        //     countryBar.visibility = View.GONE
-        //     Log.d("MainActivity", "Country bar set to GONE")
-        // }
-        
+
         // Update action bar display
         updateActionBarDisplay()
         
@@ -585,7 +532,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     
     private fun updateActionBarDisplay() {
         val displayCountry = sharedPreferences.getBoolean("display_vpn_country", false)
-        Log.d("MainActivity", "updateActionBarDisplay called - display_vpn_country setting: $displayCountry")
         
         if (displayCountry && actionBarCountryName.text.isNotEmpty()) {
             // Show country info in action bar
@@ -602,7 +548,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
     
     private fun fetchCountryInfo(connectionLevel: ConnectionStatus? = null, retryCount: Int = 0) {
-        Log.d("MainActivity", "fetchCountryInfo called - starting API request (retry $retryCount, connectionLevel: $connectionLevel)")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val url = URL("https://api.country.is/")
@@ -615,20 +560,16 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                 try {
                     android.net.TrafficStats.setThreadStatsTag(0x12345678)
                     val responseCode = connection.responseCode
-                    Log.d("MainActivity", "API response code: $responseCode")
                     
                     if (responseCode == 200) {
                         val response = connection.getInputStream()
                         val jsonResponse = response.bufferedReader().use { it.readText() }
-                        Log.d("MainActivity", "API response received: $jsonResponse")
 
                         withContext(Dispatchers.Main) {
                             try {
                                 val json = JSONObject(jsonResponse)
                                 val ip = json.getString("ip")
                                 val country = json.getString("country")
-
-                                Log.d("MainActivity", "Parsed response - IP: $ip, Country: $country")
 
                                 // Update UI with country info (action bar only)
                                 // countryIp.text = ip
@@ -641,8 +582,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                                 // Update action bar visibility
                                 updateActionBarDisplay()
 
-                                Log.d("MainActivity", "UI updated - calling loadCountryFlag for: $country")
-
                                 // Load country flag
                                 loadCountryFlag(country)
                                 
@@ -652,27 +591,21 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                                 val currentProfileUUID = VpnStatus.getLastConnectedVPNProfile()
                                 if (currentProfileUUID != null && connectionLevel == ConnectionStatus.LEVEL_CONNECTED &&
                                         lastKnownLevel == ConnectionStatus.LEVEL_CONNECTED) {
-                                    Log.d("MainActivity", "VPN is connected, saving country $country for profile $currentProfileUUID")
                                     saveProfileCountry(currentProfileUUID, country)
                                     
                                     // Notify VPNProfileList to refresh flags
                                     refreshVPNProfileList()
-                                } else {
-                                    Log.d("MainActivity", "Not saving country - VPN not connected (connectionLevel: $connectionLevel)")
                                 }
 
                             } catch (e: Exception) {
-                                Log.e("MainActivity", "Error parsing country response", e)
                                 showFallbackInfo()
                             }
                         }
                     } else {
-                        Log.e("MainActivity", "API returned non-200 response: $responseCode")
                         withContext(Dispatchers.Main) {
                             showFallbackInfo()
                             // Retry after 2 seconds if this was triggered by VPN connection and we haven't retried too many times
                             if (retryCount < 3) {
-                                Log.d("MainActivity", "Scheduling retry ${retryCount + 1} in 2 seconds")
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     fetchCountryInfo(connectionLevel, retryCount + 1)
                                 }, 2000)
@@ -683,12 +616,10 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                     android.net.TrafficStats.clearThreadStatsTag()
                 }
             } catch (e: Exception) {
-                Log.e("MainActivity", "Error fetching country info", e)
                 withContext(Dispatchers.Main) {
                     showFallbackInfo()
                     // Retry after 2 seconds if this was triggered by VPN connection and we haven't retried too many times
                     if (retryCount < 3) {
-                        Log.d("MainActivity", "Scheduling retry ${retryCount + 1} in 2 seconds due to exception")
                         Handler(Looper.getMainLooper()).postDelayed({
                             fetchCountryInfo(connectionLevel, retryCount + 1)
                         }, 2000)
@@ -699,7 +630,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     }
     
     private fun showFallbackInfo() {
-        Log.w("MainActivity", "showFallbackInfo called - API likely failed")
         // Show fallback information when API fails
         // Old country bar removed - no fallback UI needed
         // countryName.text = "VPN Connected"
@@ -974,23 +904,18 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             val flagResourceName = "flag_${countryCode.lowercase()}"
             val resourceId = resources.getIdentifier(flagResourceName, "drawable", packageName)
             
-            Log.d("MainActivity", "Loading flag - Country: $countryCode, Resource name: $flagResourceName, Resource ID: $resourceId")
-            
             if (resourceId != 0) {
                 // countryFlag.setImageResource(resourceId)
                 actionBarCountryFlag.setImageResource(resourceId)
                 // Scale the flag to proper size (24dp x 16dp)
                 // countryFlag.scaleType = ImageView.ScaleType.FIT_CENTER
                 actionBarCountryFlag.scaleType = ImageView.ScaleType.FIT_CENTER
-                Log.d("MainActivity", "Flag loaded successfully: $flagResourceName")
             } else {
                 // Use a generic flag or placeholder if specific flag not found
-                Log.w("MainActivity", "Flag not found for: $flagResourceName, using fallback")
                 // countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
                 actionBarCountryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
             }
         } catch (e: Exception) {
-            Log.e("MainActivity", "Error loading country flag for $countryCode", e)
             // countryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
             actionBarCountryFlag.setImageResource(R.mipmap.ic_launcher_foreground)
         }
@@ -1042,8 +967,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             
             // Stop VPN profile list animations when connection is established
             stopVPNProfileAnimations()
-            
-            Log.d("MainActivity", "Animating mini chart show")
         }
     }
     
@@ -1071,23 +994,18 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             
             // Stop VPN profile list animations when connection fails/disconnects
             stopVPNProfileAnimations()
-            
-            Log.d("MainActivity", "Animating mini chart hide")
         }
     }
 
     // Stop VPN profile list animations when connection state changes
     private fun stopVPNProfileAnimations() {
-        Log.d("MainActivity", "stopVPNProfileAnimations() called")
         // Find the VPNProfileList fragment and stop animations
         supportFragmentManager.fragments.forEach { fragment ->
             if (fragment is VPNProfileList) {
-                Log.d("MainActivity", "Found VPNProfileList fragment, stopping animations")
                 fragment.stopAllAnimations()
                 return@forEach
             }
         }
-        Log.d("MainActivity", "stopVPNProfileAnimations() completed - no VPNProfileList fragment found")
     }
 
     override fun onDestroy() {
@@ -1130,7 +1048,6 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         // Find the VPNProfileList fragment and refresh it
         supportFragmentManager.fragments.forEach { fragment ->
             if (fragment is VPNProfileList) {
-                Log.d("MainActivity", "Refreshing VPNProfileList to update flags")
                 fragment.refreshFlags()
                 return@forEach
             }
