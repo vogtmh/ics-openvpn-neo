@@ -6,11 +6,10 @@ package com.mavodev.openvpnneo.activities
 
 import android.os.Build
 import android.os.Bundle
-import android.text.Html
+import androidx.core.text.HtmlCompat
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
-import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -42,9 +41,8 @@ class FAQActivity : BaseActivity() {
     
     // Direct copy from FaqFragment.onCreateView
     private fun setupRecyclerView() {
-        val displaymetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displaymetrics)
-        val dpWidth = (displaymetrics.widthPixels / resources.displayMetrics.density).toInt()
+        val displaymetrics = resources.displayMetrics
+        val dpWidth = (displaymetrics.widthPixels / displaymetrics.density).toInt()
         
         val columns = dpWidth / 360
         val finalColumns = Math.max(1, columns)
@@ -144,15 +142,15 @@ class FAQActivity : BaseActivity() {
             // Format title with version info - exact same as original
             val titleSpanned: Spanned = if (versionText != null) {
                 TextUtils.concat(
-                    Html.fromHtml(textColor + title),
-                    Html.fromHtml(textColor + "<br><small>" + versionText + "</small>")
+                    HtmlCompat.fromHtml(textColor + title, HtmlCompat.FROM_HTML_MODE_LEGACY),
+                    HtmlCompat.fromHtml(textColor + "<br><small>" + versionText + "</small>", HtmlCompat.FROM_HTML_MODE_LEGACY)
                 ) as Spanned
             } else {
-                Html.fromHtml(textColor + title)
+                HtmlCompat.fromHtml(textColor + title, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
             
             // Format body - exact same as original FaqViewAdapter
-            val bodySpanned = Html.fromHtml(textColor + content)
+            val bodySpanned = HtmlCompat.fromHtml(textColor + content, HtmlCompat.FROM_HTML_MODE_LEGACY)
             
             holder.headView.text = titleSpanned
             holder.bodyView.text = bodySpanned

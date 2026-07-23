@@ -56,12 +56,12 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
             loadtun.isEnabled = false
             devHacks.removePreference(loadtun)
         }
-        val cm9hack = findPreference<Preference>("useCM9Fix") as CheckBoxPreference
+        val cm9hack = findPreference<Preference>("useCM9Fix") as SwitchPreference
         if (!cm9hack.isChecked && Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
             devHacks.removePreference(cm9hack)
         }
         val useInternalFS =
-            findPreference<Preference>("useInternalFileSelector") as CheckBoxPreference
+            findPreference<Preference>("useInternalFileSelector") as SwitchPreference
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             devHacks.removePreference(useInternalFS)
         }
@@ -78,13 +78,13 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
         if (devHacks.preferenceCount == 0) preferenceScreen.removePreference(devHacks)
         if (!BuildConfig.openvpn3) {
             val appBehaviour = findPreference<Preference>("app_behaviour") as PreferenceCategory
-            val ovpn3 = findPreference<Preference>("ovpn3") as CheckBoxPreference
+            val ovpn3 = findPreference<Preference>("ovpn3") as SwitchPreference
             ovpn3.isEnabled = false
             ovpn3.isChecked = false
         }
 
         val startOnBoot =
-            findPreference<Preference>("restartvpnonboot") as CheckBoxPreference
+            findPreference<Preference>("restartvpnonboot") as SwitchPreference
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val vpn = VpnService()

@@ -7,7 +7,7 @@ package com.mavodev.openvpnneo.fragments
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -15,7 +15,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Icon
 import androidx.core.graphics.drawable.DrawableCompat
 import android.net.Uri
@@ -33,17 +32,23 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.MenuItem
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.ListFragment
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.mavodev.openvpnneo.LaunchVPN
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
@@ -71,15 +76,23 @@ import java.util.LinkedList
 import java.util.TreeSet
 import kotlin.math.min
 
-class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddProfileBottomSheet.Listener {
+class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfileBottomSheet.Listener {
     protected var mEditProfile: VpnProfile? = null
-    private var mArrayadapter: ArrayAdapter<VpnProfile>? = null
+    private var mAdapter: ProfileAdapter? = null
+    private var mRecyclerView: RecyclerView? = null
+    private var mEmptyView: View? = null
     private var mLastIntent: Intent? = null
     private var defaultVPN: VpnProfile? = null
     private lateinit var mPermissionView: View
     private lateinit var mPermReceiver: ActivityResultLauncher<String>
+    private lateinit var mEditVpnLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mSelectProfileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mImportProfileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mFilePickerLauncher: ActivityResultLauncher<Intent>
     private var currentConnectionLevel: ConnectionStatus = ConnectionStatus.LEVEL_NOTCONNECTED
     private var connectingProfileUUID: String? = null // Track profile being connected
+    private var connectingState: String? = null // Latest OpenVPN state string while connecting
+    private var highlightedUuids: Set<String> = emptySet()
 
     override fun updateState(
         state: String?,
@@ -90,6 +103,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
     ) {
         // Store the current connection level
         currentConnectionLevel = level ?: ConnectionStatus.LEVEL_NOTCONNECTED
+        connectingState = state
         
         // Detect when a new VPN connection is starting (from any source)
         if (level == ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET && connectingProfileUUID == null) {
@@ -104,23 +118,26 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         if (level == ConnectionStatus.LEVEL_CONNECTED && connectingProfileUUID != null) {
             Log.d("VPNProfileList", "VPN connected, clearing connectingProfileUUID: $connectingProfileUUID")
             connectingProfileUUID = null
+            connectingState = null
         }
         
         // Clear connectingProfileUUID when VPN connection fails
         if ((level == ConnectionStatus.LEVEL_AUTH_FAILED || level == ConnectionStatus.LEVEL_NONETWORK) && connectingProfileUUID != null) {
             Log.d("VPNProfileList", "VPN connection failed, clearing connectingProfileUUID: $connectingProfileUUID")
             connectingProfileUUID = null
+            connectingState = null
         }
         
         // Clear connectingProfileUUID when VPN disconnects
         if (level == ConnectionStatus.LEVEL_NOTCONNECTED && connectingProfileUUID != null) {
             Log.d("VPNProfileList", "VPN disconnected, clearing connectingProfileUUID: $connectingProfileUUID")
             connectingProfileUUID = null
+            connectingState = null
         }
         
         requireActivity().runOnUiThread(Runnable {
             mLastIntent = intent
-            mArrayadapter!!.notifyDataSetChanged()
+            refreshHighlightedRows()
             showUserRequestDialogIfNeeded(level, intent)
         })
     }
@@ -156,9 +173,66 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        setListAdapter()
+        mAdapter = ProfileAdapter()
 
         registerPermissionReceiver()
+        registerImportLaunchers()
+    }
+
+    private fun registerImportLaunchers() {
+        mEditVpnLauncher = registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            val data = result.data
+            when (result.resultCode) {
+                RESULT_VPN_DELETED -> if (mEditProfile != null) populateVpnList()
+                RESULT_VPN_DUPLICATE -> if (data != null) {
+                    val profileUUID = data.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
+                    val profile = ProfileManager.get(activity, profileUUID)
+                    if (profile != null) onAddOrDuplicateProfile(profile)
+                }
+                Activity.RESULT_OK -> {
+                    val configuredVPN = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
+                    val profile = ProfileManager.get(activity, configuredVPN)
+                    profile.addChangeLogEntry("Profile edited by user")
+                    ProfileManager.saveProfile(activity, profile)
+                    // Name (and other in-place fields) could be modified. Since the
+                    // ProfileManager returns the same VpnProfile instances, DiffUtil cannot
+                    // detect in-place edits, so force a full rebind.
+                    mAdapter?.submitList(null)
+                    populateVpnList()
+                }
+            }
+        }
+
+        mSelectProfileLauncher = registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val fileData = result.data!!.getStringExtra(FileSelect.RESULT_DATA)
+                val uri = Uri.Builder().path(fileData).scheme("file").build()
+                startConfigImport(uri)
+            }
+        }
+
+        mImportProfileLauncher = registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data!!
+                val profileUUID = data.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
+                val importedProfile = ProfileManager.get(activity, profileUUID)
+                val isFirstProfile = (mAdapter?.itemCount ?: 0) == 0
+                if (isFirstProfile && importedProfile != null) {
+                    Preferences.getDefaultSharedPreferences(requireContext()).edit()
+                        .putString("alwaysOnVpn", importedProfile.getUUIDString()).apply()
+                }
+                populateVpnList()
+            }
+        }
+
+        mFilePickerLauncher = registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null) {
+                    startConfigImport(data.getData())
+                }
+            }
+        }
     }
 
     private fun registerPermissionReceiver() {
@@ -272,12 +346,25 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
 
     override fun onResume() {
         super.onResume()
-        setListAdapter()
+        updateDefaultVpn()
+        populateVpnList()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             updateDynamicShortcuts()
         }
         VpnStatus.addStateListener(this)
+    }
+
+    /** Re-read the default profile and rebind the old + new default rows so the star moves. */
+    private fun updateDefaultVpn() {
+        val oldUuid = defaultVPN?.getUUIDString()
         defaultVPN = ProfileManager.getAlwaysOnVPN(requireContext())
+        val newUuid = defaultVPN?.getUUIDString()
+        if (oldUuid == newUuid) return
+        val adapter = mAdapter ?: return
+        for (uuid in listOfNotNull(oldUuid, newUuid)) {
+            val idx = adapter.currentList.indexOfFirst { it.getUUIDString() == uuid }
+            if (idx >= 0) adapter.notifyItemChanged(idx)
+        }
     }
 
     override fun onPause() {
@@ -290,6 +377,11 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         savedInstanceState: Bundle?
     ): View {
         val v = inflater.inflate(R.layout.vpn_profile_list, container, false)
+
+        mRecyclerView = v.findViewById(R.id.vpn_list)
+        mEmptyView = v.findViewById(R.id.empty_view)
+        mRecyclerView?.layoutManager = LinearLayoutManager(requireContext())
+        mRecyclerView?.adapter = mAdapter
 
         val newvpntext = v.findViewById<View?>(R.id.add_new_vpn_hint) as TextView
         
@@ -320,6 +412,9 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !((activity as BaseActivity).isAndroidTV))
             checkForNotificationPermission(v)
 
+        defaultVPN = ProfileManager.getAlwaysOnVPN(requireContext())
+        populateVpnList()
+
         return v
     }
 
@@ -336,30 +431,39 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         })
     }
 
-    private fun setListAdapter() {
-        if (mArrayadapter == null) {
-            mArrayadapter =
-                VPNArrayAdapter(getActivity()!!, R.layout.vpn_list_item, R.id.vpn_item_title)
-        }
-        populateVpnList()
-    }
-
     private fun populateVpnList() {
         val sortByLRU = Preferences.getDefaultSharedPreferences(requireActivity()).getBoolean(
             PREF_SORT_BY_LRU, false
         )
         this.pM.refreshVPNList(requireContext())
         val allvpn: MutableCollection<VpnProfile?>? = this.pM.getProfiles()
-        val sortedset: TreeSet<VpnProfile?>?
-        if (sortByLRU) sortedset = TreeSet<VpnProfile?>(VpnProfileLRUComparator())
-        else sortedset = TreeSet<VpnProfile?>(VpnProfileNameComparator())
+        val sortedset: TreeSet<VpnProfile?> =
+            if (sortByLRU) TreeSet(VpnProfileLRUComparator())
+            else TreeSet(VpnProfileNameComparator())
 
         sortedset.addAll(allvpn!!)
-        mArrayadapter!!.clear()
-        mArrayadapter!!.addAll(sortedset)
+        val list = sortedset.filterNotNull().toList()
+        mAdapter?.submitList(list) { updateEmptyView(list.isEmpty()) }
+    }
 
-        setListAdapter(mArrayadapter)
-        mArrayadapter!!.notifyDataSetChanged()
+    private fun updateEmptyView(isEmpty: Boolean) {
+        mEmptyView?.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        mRecyclerView?.visibility = if (isEmpty) View.GONE else View.VISIBLE
+    }
+
+    /** Refresh only the rows whose highlight (connecting/connected border) may have changed. */
+    private fun refreshHighlightedRows() {
+        val adapter = mAdapter ?: return
+        val connectedUuid =
+            if (currentConnectionLevel == ConnectionStatus.LEVEL_CONNECTED)
+                VpnStatus.getLastConnectedVPNProfile() else null
+        val newHighlights = setOfNotNull(connectingProfileUUID, connectedUuid)
+        val toRefresh = highlightedUuids + newHighlights
+        highlightedUuids = newHighlights
+        for (uuid in toRefresh) {
+            val idx = adapter.currentList.indexOfFirst { it.getUUIDString() == uuid }
+            if (idx >= 0) adapter.notifyItemChanged(idx)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -482,7 +586,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
     private fun startFilePicker(): Boolean {
         val i = Utils.getFilePickerIntent(getActivity()!!, Utils.FileType.OVPN_CONFIG)
         if (i != null) {
-            startActivityForResult(i, FILE_PICKER_RESULT_KITKAT)
+            mFilePickerLauncher.launch(i)
             return true
         } else return false
     }
@@ -491,7 +595,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         val intent = Intent(getActivity(), FileSelect::class.java)
         intent.putExtra(FileSelect.NO_INLINE_SELECTION, true)
         intent.putExtra(FileSelect.WINDOW_TITLE, R.string.import_configuration_file)
-        startActivityForResult(intent, SELECT_PROFILE)
+        mSelectProfileLauncher.launch(intent)
     }
 
     private fun onAddOrDuplicateProfile(mCopyProfile: VpnProfile?) {
@@ -550,64 +654,21 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         this.pM.saveProfileList(getActivity())
         profile.addChangeLogEntry("empty profile added via main profile list")
         ProfileManager.saveProfile(getActivity(), profile)
-        mArrayadapter!!.add(profile)
         if (isFirstProfile) {
             Preferences.getDefaultSharedPreferences(requireContext()).edit()
                 .putString("alwaysOnVpn", profile.getUUIDString()).apply()
         }
+        populateVpnList()
     }
 
     private val pM: ProfileManager
         get() = ProfileManager.getInstance(getActivity())
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_VPN_DELETED) {
-            if (mArrayadapter != null && mEditProfile != null) mArrayadapter!!.remove(mEditProfile)
-        } else if (resultCode == RESULT_VPN_DUPLICATE && data != null) {
-            val profileUUID = data.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
-            val profile = ProfileManager.get(getActivity(), profileUUID)
-            if (profile != null) onAddOrDuplicateProfile(profile)
-        }
-
-        if (resultCode != Activity.RESULT_OK) return
-
-        if (requestCode == EDIT_VPN_CONFIG) {
-            val configuredVPN = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
-
-            val profile = ProfileManager.get(getActivity(), configuredVPN)
-            profile.addChangeLogEntry("Profile edited by user")
-            ProfileManager.saveProfile(getActivity(), profile)
-            // Name could be modified, reset List adapter
-            setListAdapter()
-        } else if (requestCode == SELECT_PROFILE) {
-            val fileData = data!!.getStringExtra(FileSelect.RESULT_DATA)
-            val uri = Uri.Builder().path(fileData).scheme("file").build()
-
-            startConfigImport(uri)
-        } else if (requestCode == IMPORT_PROFILE) {
-            val profileUUID = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
-            val importedProfile = ProfileManager.get(getActivity(), profileUUID)
-            val isFirstProfile = mArrayadapter!!.count == 0
-            mArrayadapter!!.add(importedProfile)
-            if (isFirstProfile && importedProfile != null) {
-                Preferences.getDefaultSharedPreferences(requireContext()).edit()
-                    .putString("alwaysOnVpn", importedProfile.getUUIDString()).apply()
-            }
-        } else if (requestCode == FILE_PICKER_RESULT_KITKAT) {
-            if (data != null) {
-                val uri = data.getData()
-                startConfigImport(uri)
-            }
-        }
-    }
-
     private fun startConfigImport(uri: Uri?) {
         val startImport = Intent(getActivity(), ConfigConverter::class.java)
         startImport.setAction(ConfigConverter.IMPORT_PROFILE)
         startImport.setData(uri)
-        startActivityForResult(startImport, IMPORT_PROFILE)
+        mImportProfileLauncher.launch(startImport)
     }
 
     private fun editVPN(profile: VpnProfile) {
@@ -618,7 +679,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
                 profile.getUUID().toString()
             )
 
-        startActivityForResult(vprefintent, EDIT_VPN_CONFIG)
+        mEditVpnLauncher.launch(vprefintent)
     }
 
     // Simple method to stop all animations (called from MainActivity)
@@ -628,7 +689,7 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         if (connectingProfileUUID != null) {
             Log.d("VPNProfileList", "Had connecting profile, clearing animation")
             connectingProfileUUID = null
-            mArrayadapter?.notifyDataSetChanged()
+            refreshHighlightedRows()
         } else {
             Log.d("VPNProfileList", "No connecting profile to clear")
         }
@@ -637,10 +698,11 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
     private fun startVPN(profile: VpnProfile) {
         ProfileManager.saveProfile(getActivity(), profile)
         
-        // Start animation immediately when user clicks
-        Log.d("VPNProfileList", "startVPN called for profile: " + profile.getUUIDString() + " - starting animation")
+        // Start progress indicator immediately when user clicks
+        Log.d("VPNProfileList", "startVPN called for profile: " + profile.getUUIDString() + " - starting progress")
         connectingProfileUUID = profile.getUUIDString()
-        mArrayadapter?.notifyDataSetChanged()
+        connectingState = null
+        refreshHighlightedRows()
 
         val intent = Intent(getActivity(), LaunchVPN::class.java)
         intent.putExtra(LaunchVPN.EXTRA_KEY, profile.getUUID().toString())
@@ -681,46 +743,75 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         }
     }
 
-    private inner class VPNArrayAdapter(
-        context: Context, resource: Int,
-        textViewResourceId: Int
-    ) : ArrayAdapter<VpnProfile>(context, resource, textViewResourceId) {
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val v = super.getView(position, convertView, parent)
+    private inner class ProfileViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val title: TextView = view.findViewById(R.id.vpn_item_title)
+        val row: View = view.findViewById(R.id.vpn_list_item_left)
+        val settings: View = view.findViewById(R.id.quickedit_settings)
+        val flag: ImageView = view.findViewById(R.id.vpn_item_country_flag)
+        val star: ImageView = view.findViewById(R.id.vpn_item_default_star)
+        val container: View = view.findViewById(R.id.vpn_item_container)
+        val progress: LinearProgressIndicator = view.findViewById(R.id.vpn_item_progress)
+    }
 
-            val profile = getListAdapter()!!.getItem(position) as VpnProfile
+    private inner class ProfileAdapter :
+        ListAdapter<VpnProfile, ProfileViewHolder>(PROFILE_DIFF) {
 
-            val titleview = v.findViewById<View>(R.id.vpn_list_item_left)
-            titleview.setOnClickListener(View.OnClickListener { v1: View? -> startOrStopVPN(profile) })
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
+            val v = layoutInflater.inflate(R.layout.vpn_list_item, parent, false)
+            return ProfileViewHolder(v)
+        }
 
-            val settingsview = v.findViewById<View>(R.id.quickedit_settings)
-            settingsview.setOnClickListener(View.OnClickListener { view: View? -> editVPN(profile) })
+        override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
+            val profile = getItem(position)
 
-            val countryFlag = v.findViewById<ImageView>(R.id.vpn_item_country_flag)
-            val defaultStar = v.findViewById<ImageView>(R.id.vpn_item_default_star)
+            holder.title.text = profile.getName()
+            holder.row.setOnClickListener { startOrStopVPN(profile) }
+            holder.settings.setOnClickListener { editVPN(profile) }
 
             // Load country flag for this profile
-            loadProfileCountryFlag(profile, countryFlag)
+            loadProfileCountryFlag(profile, holder.flag)
 
+            val uuid = profile.getUUIDString()
             // Show/hide default profile star
-            defaultStar.visibility = if (profile === defaultVPN) View.VISIBLE else View.GONE
+            holder.star.visibility =
+                if (uuid == defaultVPN?.getUUIDString()) View.VISIBLE else View.GONE
 
-            val container = v.findViewById<View>(R.id.vpn_item_container)
-            if (profile.getUUIDString() == connectingProfileUUID) {
-                // User clicked to connect this profile - show pulsing animation
-                container.setBackgroundResource(R.drawable.vpn_item_border_pulse)
-                val animationDrawable = container.background as AnimationDrawable
-                animationDrawable.start()
-            } else if (profile.getUUIDString() == VpnStatus.getLastConnectedVPNProfile() && currentConnectionLevel == ConnectionStatus.LEVEL_CONNECTED) {
-                // VPN is connected - show solid border
-                container.setBackgroundResource(R.drawable.vpn_item_border)
+            val isConnecting = uuid == connectingProfileUUID
+            val isConnected = uuid == VpnStatus.getLastConnectedVPNProfile() &&
+                currentConnectionLevel == ConnectionStatus.LEVEL_CONNECTED
+
+            if (isConnecting) {
+                // Show a determinate progress bar that advances through the connection steps
+                holder.container.background = null
+                val wasVisible = holder.progress.visibility == View.VISIBLE
+                holder.progress.visibility = View.VISIBLE
+                holder.progress.setProgressCompat(progressForState(connectingState), wasVisible)
             } else {
-                // Not connecting and not connected - no border
-                container.background = null
+                holder.progress.visibility = View.GONE
+                if (isConnected) {
+                    // VPN is connected - show solid border
+                    holder.container.setBackgroundResource(R.drawable.vpn_item_border)
+                } else {
+                    // Not connecting and not connected - no border
+                    holder.container.background = null
+                }
             }
-
-            return v
         }
+    }
+
+    /** Map an OpenVPN management state to a coarse connection progress (0-100). */
+    private fun progressForState(state: String?): Int = when (state) {
+        "VPN_GENERATE_CONFIG" -> 5
+        "CONNECTING" -> 15
+        "RESOLVE" -> 25
+        "TCP_CONNECT" -> 40
+        "WAIT" -> 50
+        "AUTH", "AUTH_PENDING" -> 65
+        "GET_CONFIG" -> 75
+        "ASSIGN_IP" -> 85
+        "ADD_ROUTES" -> 92
+        "CONNECTED" -> 100
+        else -> 10
     }
 
     internal inner class MiniImageGetter : Html.ImageGetter {
@@ -750,10 +841,6 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         // Shortcut version is increased to refresh all shortcuts
         const val SHORTCUT_VERSION: Int = 1
         private val MENU_ADD_PROFILE = Menu.FIRST
-        private const val EDIT_VPN_CONFIG = 92
-        private const val SELECT_PROFILE = 43
-        private const val IMPORT_PROFILE = 231
-        private const val FILE_PICKER_RESULT_KITKAT = 392
         private val MENU_IMPORT_PROFILE = Menu.FIRST + 1
         private val MENU_CHANGE_SORTING = Menu.FIRST + 2
         private val MENU_SHOW_LOG = Menu.FIRST + 4
@@ -764,6 +851,16 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
         private val MENU_OPENSSL_SPEED = Menu.FIRST + 9
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"
+
+        private val PROFILE_DIFF = object : DiffUtil.ItemCallback<VpnProfile>() {
+            override fun areItemsTheSame(oldItem: VpnProfile, newItem: VpnProfile): Boolean =
+                oldItem.getUUIDString() == newItem.getUUIDString()
+
+            override fun areContentsTheSame(oldItem: VpnProfile, newItem: VpnProfile): Boolean =
+                oldItem.getUUIDString() == newItem.getUUIDString() &&
+                    oldItem.getName() == newItem.getName() &&
+                    oldItem.mVersion == newItem.mVersion
+        }
     }
     
     private fun loadProfileCountryFlag(profile: VpnProfile, flagImageView: ImageView) {
@@ -806,6 +903,6 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener, AddP
     
     fun refreshFlags() {
         Log.d("VPNProfileList", "refreshFlags() called - updating all profile flags")
-        mArrayadapter?.notifyDataSetChanged()
+        mAdapter?.notifyDataSetChanged()
     }
 }

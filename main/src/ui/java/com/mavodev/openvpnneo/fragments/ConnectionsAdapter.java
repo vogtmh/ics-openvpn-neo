@@ -5,7 +5,7 @@
 
 package com.mavodev.openvpnneo.fragments;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
@@ -177,10 +177,10 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
     class ConnectionsHolder extends RecyclerView.ViewHolder {
         private final EditText mServerNameView;
         private final EditText mPortNumberView;
-        private final Switch mRemoteSwitch;
+        private final CompoundButton mRemoteSwitch;
         private final RadioGroup mProtoGroup;
         private final EditText mCustomOptionText;
-        private final Switch mCustomOptionCB;
+        private final CompoundButton mCustomOptionCB;
         private final View mCustomOptionsLayout;
         private final ImageButton mDeleteButton;
         private final EditText mConnectText;
@@ -194,7 +194,7 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
         private final View mProxyAuthLayout;
         private final EditText mProxyAuthUser;
         private final EditText mProxyAuthPassword;
-        private final Switch mProxyAuthCb;
+        private final CompoundButton mProxyAuthCb;
 
         protected Connection mConnection; // Set to null on update
 
@@ -215,8 +215,8 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.
             mProxyGroup = card.findViewById(R.id.proxyradiogroup);
             mProxyNameView = card.findViewById(R.id.proxyname);
             mProxyPortNumberView = card.findViewById(R.id.proxyport);
-            mProxyPortNameView = card.findViewById(R.id.proxyport_label);
-            mProxyNameLabel = card.findViewById(R.id.proxyserver_label);
+            mProxyPortNameView = card.findViewById(R.id.proxyport_layout);
+            mProxyNameLabel = card.findViewById(R.id.proxyname_layout);
 
             mProxyAuthLayout = card.findViewById(R.id.proxyauthlayout);
             mProxyAuthCb = card.findViewById(R.id.enable_proxy_auth);

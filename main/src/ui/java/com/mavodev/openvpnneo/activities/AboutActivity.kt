@@ -6,7 +6,7 @@ package com.mavodev.openvpnneo.activities
 
 import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
-import android.text.Html
+import androidx.core.text.HtmlCompat
 import android.text.method.LinkMovementMethod
 import android.view.MenuItem
 import android.view.View
@@ -80,7 +80,7 @@ class AboutActivity : BaseActivity() {
         
         // Setup full licenses - same as AboutFragment
         val fullLicenses = findViewById<TextView>(R.id.full_licenses)
-        fullLicenses.text = Html.fromHtml(readHtmlFromAssets())
+        fullLicenses.text = HtmlCompat.fromHtml(readHtmlFromAssets(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         fullLicenses.movementMethod = LinkMovementMethod.getInstance()
     }
     

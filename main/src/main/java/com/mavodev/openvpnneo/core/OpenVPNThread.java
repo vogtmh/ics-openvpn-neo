@@ -61,7 +61,9 @@ public class OpenVPNThread implements Runnable {
     }
 
     public void stopProcess() {
-        mProcess.destroy();
+        Process p = mProcess;
+        if (p != null)
+            p.destroy();
     }
 
     void setReplaceConnection()

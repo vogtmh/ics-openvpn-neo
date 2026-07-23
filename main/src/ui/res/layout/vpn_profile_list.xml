@@ -28,18 +28,22 @@
                 android:visibility="gone"
                 android:text="@string/missing_notification_permission" />
 
-        <ListView
-                android:id="@android:id/list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/vpn_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
                 android:descendantFocusability="afterDescendants" />
 
         <LinearLayout
-                android:id="@android:id/empty"
+                android:id="@+id/empty_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <TextView
                     android:layout_width="fill_parent"

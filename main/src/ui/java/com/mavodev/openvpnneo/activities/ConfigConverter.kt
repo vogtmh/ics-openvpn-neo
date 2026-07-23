@@ -8,12 +8,13 @@ package com.mavodev.openvpnneo.activities
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
+import androidx.core.os.BundleCompat
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -67,7 +68,7 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     private lateinit var mTLSProfileLabel: TextView
     private lateinit var mLogLayout: LinearLayout
     private lateinit var mProfilenameLabel: TextView
-    private lateinit var mMakeDefaultProfile: Switch
+    private lateinit var mMakeDefaultProfile: CompoundButton
 
     override fun onClick(v: View) {
         if (v.id == R.id.fab_save)
@@ -264,7 +265,7 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
 
     private fun installPKCS12(): Intent? {
 
-        if (!(findViewById<View>(R.id.importpkcs12) as Switch).isChecked) {
+        if (!(findViewById<View>(R.id.importpkcs12) as CompoundButton).isChecked) {
             setAuthTypeToEmbeddedPKCS12()
             return null
 
@@ -653,13 +654,13 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         mTLSProfile = findViewById(R.id.tls_profile) as Spinner
         mTLSProfileLabel = findViewById(R.id.tls_profile_label) as TextView
 
-        mMakeDefaultProfile = findViewById(R.id.make_default_profile ) as Switch
+        mMakeDefaultProfile = findViewById(R.id.make_default_profile ) as CompoundButton
 
         if (savedInstanceState != null && savedInstanceState.containsKey(VPNPROFILE)) {
-            mResult = savedInstanceState.getSerializable(VPNPROFILE) as VpnProfile?
+            mResult = BundleCompat.getSerializable(savedInstanceState, VPNPROFILE, VpnProfile::class.java)
             mAliasName = savedInstanceState.getString("mAliasName")
             mEmbeddedPwFile = savedInstanceState.getString("pwfile")
-            mSourceUri = savedInstanceState.getParcelable("mSourceUri")
+            mSourceUri = BundleCompat.getParcelable(savedInstanceState, "mSourceUri", Uri::class.java)
             mProfilename.setText(mResult!!.mName)
             mCompatmode.setSelection(Utils.mapCompatVer(mResult!!.mCompatMode))
             mTLSProfile.setSelection(translateTLSProfileToSelection(mResult?.mTlSCertProfile))

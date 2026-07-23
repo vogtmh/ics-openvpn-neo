@@ -27,8 +27,8 @@ public class Settings_Basic extends KeyChainSettingsFragment implements OnItemSe
     private FileSelectLayout mClientCert;
     private FileSelectLayout mCaCert;
     private FileSelectLayout mClientKey;
-    private Switch mUseLzo;
-    private Switch mUseLegacyProvider;
+    private CompoundButton mUseLzo;
+    private CompoundButton mUseLegacyProvider;
     private Spinner mType;
     private Spinner mCompatMode;
     private FileSelectLayout mpkcs12;
@@ -39,9 +39,9 @@ public class Settings_Basic extends KeyChainSettingsFragment implements OnItemSe
     private View mView;
     private EditText mProfileName;
     private EditText mKeyPassword;
-    private Switch mEnablePeerFingerprint;
+    private CompoundButton mEnablePeerFingerprint;
     private EditText mPeerFingerprints;
-    private Switch mMakeDefaultProfile;
+    private CompoundButton mMakeDefaultProfile;
 
     private SparseArray<FileSelectLayout> fileselects = new SparseArray<>();
     private Spinner mAuthRetry;

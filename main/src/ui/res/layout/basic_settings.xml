@@ -17,17 +17,19 @@
         android:orientation="vertical"
         android:padding="4dp" >
 
-        <TextView
-            style="@style/item"
-            android:text="@string/profilename"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:labelFor="@id/profilename"
-            />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="@string/profilename">
 
-        <EditText
-            android:id="@+id/profilename"
-            style="@style/item"
-            android:inputType="text" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profilename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,10 +43,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Set as default profile"
+                android:text="@string/set_as_default_profile"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
                 
-            <Switch
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/make_default_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -76,7 +78,7 @@
                 android:text="@string/loadossllegacy"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
                 
-            <Switch
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/legacyprovider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -97,7 +99,7 @@
                 android:text="@string/useLZO"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
                 
-            <Switch
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/lzo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -171,7 +173,7 @@
                     android:text="@string/check_peer_fingerprint"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
                     
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/enable_peer_fingerprint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

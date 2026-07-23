@@ -76,7 +76,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/keychain_notification">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/import_profile_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                 android:nextFocusUp="@+id/vpntoggle"
                 android:nextFocusDown="@+id/vpntoggle" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/import_as_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

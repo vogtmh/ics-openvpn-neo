@@ -14,7 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -59,7 +59,7 @@ public class FileSelectionFragment extends ListFragment {
     private File selectedFile;
     private HashMap<String, Integer> lastPositions = new HashMap<>();
     private String mStartPath;
-    private CheckBox mInlineImport;
+    private CompoundButton mInlineImport;
     private Button mClearButton;
     private boolean mHideImport = false;
 
@@ -87,7 +87,7 @@ public class FileSelectionFragment extends ListFragment {
 
         myPath = (TextView) v.findViewById(R.id.path);
 
-        mInlineImport = (CheckBox) v.findViewById(R.id.doinline);
+        mInlineImport = (CompoundButton) v.findViewById(R.id.doinline);
 
         if (mHideImport) {
             mInlineImport.setVisibility(View.GONE);

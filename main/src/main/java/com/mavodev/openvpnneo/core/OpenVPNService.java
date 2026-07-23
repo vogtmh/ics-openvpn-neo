@@ -111,6 +111,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     private TunConfig tunConfig = new TunConfig();
 
     private final Object mProcessLock = new Object();
+    /** How long to wait after a graceful stop before force-killing the openvpn process. */
+    private static final long DISCONNECT_WATCHDOG_MS = 4000;
     private String lastChannel;
     private Thread mProcessThread = null;
     private VpnProfile mProfile;
@@ -236,8 +238,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     @Override
     public void onRevoke() {
         VpnStatus.logError(R.string.permission_revoked);
-        final OpenVPNManagement managment = mManagement;
-        mCommandHandler.post(() -> managment.stopVPN(false));
+        mCommandHandler.post(() -> stopVpnInternal(false));
 
         endVpnService();
     }
@@ -506,10 +507,37 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     @Override
     public boolean stopVPN(boolean replaceConnection) throws RemoteException {
+        return stopVpnInternal(replaceConnection);
+    }
+
+    private boolean stopVpnInternal(boolean replaceConnection) {
+        boolean stopped = false;
         if (getManagement() != null)
-            return getManagement().stopVPN(replaceConnection);
-        else
-            return false;
+            stopped = getManagement().stopVPN(replaceConnection);
+
+        // Safety net: on a real disconnect (not a reconnect/replace) make sure the process
+        // actually goes away even if the management command could not be delivered (e.g. the
+        // management socket was not connected yet) or openvpn is stuck.
+        if (!replaceConnection)
+            scheduleForceStopWatchdog();
+
+        return stopped;
+    }
+
+    private void scheduleForceStopWatchdog() {
+        final Handler handler = mCommandHandler;
+        if (handler == null)
+            return;
+        handler.postDelayed(() -> {
+            boolean stillAlive;
+            synchronized (mProcessLock) {
+                stillAlive = mProcessThread != null && mProcessThread.isAlive();
+            }
+            if (stillAlive) {
+                VpnStatus.logInfo("VPN did not stop in time, forcing process termination");
+                forceStopOpenVpnProcess();
+            }
+        }, DISCONNECT_WATCHDOG_MS);
     }
 
     @Override
@@ -730,6 +758,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
         synchronized (mProcessLock) {
             mProcessThread = new Thread(processThread, "OpenVPNProcessThread");
+            mOpenVPNThread = processThread;
             mProcessThread.start();
         }
 
@@ -776,10 +805,17 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     public void forceStopOpenVpnProcess() {
         synchronized (mProcessLock) {
+            // Kill the native openvpn process, not just the JVM thread. Interrupting the
+            // thread alone does not terminate the spawned binary, which is a common cause
+            // of "the connection cannot be terminated".
+            if (mOpenVPNThread instanceof OpenVPNThread) {
+                ((OpenVPNThread) mOpenVPNThread).stopProcess();
+            }
             if (mProcessThread != null) {
                 mProcessThread.interrupt();
                 try {
-                    Thread.sleep(1000);
+                    // Wait for the thread to actually finish instead of a blind sleep.
+                    mProcessThread.join(2000);
                 } catch (InterruptedException e) {
                     //ignore
                 }

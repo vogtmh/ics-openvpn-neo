@@ -15,7 +15,7 @@
         android:textColor="?android:attr/textColorPrimary"
         android:text="Algorithm Name" />
 
-    <Switch
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/algorithm_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

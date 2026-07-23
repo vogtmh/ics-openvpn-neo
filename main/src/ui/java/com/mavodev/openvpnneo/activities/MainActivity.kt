@@ -36,10 +36,9 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import android.widget.Toast
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.fragments.VPNProfileList
 import com.mavodev.openvpnneo.core.VpnStatus
@@ -114,25 +113,9 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         if (isAndroidTV) {
             requestWindowFeature(android.view.Window.FEATURE_OPTIONS_PANEL)
         }
-        // Override BaseActivity edge-to-edge with black status bar
-        enableEdgeToEdge(androidx.activity.SystemBarStyle.dark(android.graphics.Color.BLACK))
         super.onCreate(savedInstanceState)
-        
-        // Additional window flags to ensure status bar color
-        window.apply {
-            clearFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            statusBarColor = android.graphics.Color.BLACK
-            navigationBarColor = android.graphics.Color.BLACK
-        }
-        
-        val view = layoutInflater.inflate(R.layout.main_activity, null)
 
-        // Force status bar color after layout is ready
-        view.post {
-            window.statusBarColor = android.graphics.Color.BLACK
-            window.navigationBarColor = android.graphics.Color.BLACK
-        }
+        val view = layoutInflater.inflate(R.layout.main_activity, null)
 
         // Initialize SharedPreferences
         sharedPreferences = Preferences.getDefaultSharedPreferences(this)
@@ -149,25 +132,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
 
         setUpEdgeEdgeInsetsListener(view, R.id.root_linear_layout)
         setContentView(view)
-        
-        // Manually add top padding for status bar since we removed fitsSystemWindows
-        view.post {
-            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-            if (resourceId > 0) {
-                val statusBarHeight = resources.getDimensionPixelSize(resourceId) / 2  // Reduce from full height to half
-                val rootLayout = findViewById<LinearLayout>(R.id.root_linear_layout)
-                
-                // Get navigation bar height
-                val navBarResourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-                val navBarHeight = if (navBarResourceId > 0) {
-                    resources.getDimensionPixelSize(navBarResourceId)
-                } else 0
-                
-                // Set padding: only bottom for navigation bar (no top padding)
-                rootLayout.setPadding(0, 0, 0, navBarHeight)
-            }
-        }
-        
+
         // Register network connectivity listener
         registerNetworkCallback()
         
@@ -285,18 +250,18 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         }
         
         // Set up chart colors
-        colourIn = resources.getColor(R.color.dataIn)
-        colourOut = resources.getColor(R.color.dataOut)
-        colourPoint = resources.getColor(android.R.color.white) // White points for visibility
+        colourIn = ContextCompat.getColor(this, R.color.dataIn)
+        colourOut = ContextCompat.getColor(this, R.color.dataOut)
+        colourPoint = ContextCompat.getColor(this, android.R.color.white) // White points for visibility
         
         // Force white text for dark background
-        textColour = resources.getColor(android.R.color.white)
+        textColour = ContextCompat.getColor(this, android.R.color.white)
         
         // Configure chart appearance - less aggressive scaling
         miniChart?.description?.isEnabled = false
         miniChart?.setDrawGridBackground(false)
         miniChart?.legend?.textColor = textColour
-        miniChart?.setNoDataTextColor(resources.getColor(R.color.accent))
+        miniChart?.setNoDataTextColor(ContextCompat.getColor(this, R.color.accent))
         
         // Less aggressive axis configuration
         val xAxis = miniChart?.xAxis
@@ -399,7 +364,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         
         // Initialize first timestamp from the first item
         if (workingList.isNotEmpty()) {
-            val firstItem = workingList.first
+            val firstItem = workingList[0]
             firstTimestamp = firstItem.timestamp
             lastBytecountIn = firstItem.`in`
             lastBytecountOut = firstItem.`out`
@@ -447,8 +412,9 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             val ymax = lineData.yMax
             val yAxis = miniChart?.axisLeft
             yAxis?.axisMinimum = 2f
-            yAxis?.axisMaximum = Math.ceil(ymax.toDouble()).toFloat()
-            yAxis?.labelCount = Math.ceil(ymax.toDouble() - 2.0).toInt()
+            // Add headroom above the peak so the smoothed (bezier) curve is not clipped at the top
+            yAxis?.axisMaximum = Math.ceil((ymax + 0.5f).toDouble()).toFloat()
+            yAxis?.labelCount = Math.max(2, Math.ceil(ymax.toDouble() - 2.0).toInt())
         }
         
         miniChart?.setNoDataText(getString(R.string.initializing))
@@ -465,6 +431,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         dataSet.fillColor = colour
         dataSet.color = colour
         dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER  // Smooth curved lines
+        dataSet.cubicIntensity = 0.15f  // Reduce overshoot so peaks are not clipped
         dataSet.setDrawValues(false)
         dataSet.valueTextColor = textColour
     }
@@ -503,7 +470,17 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                         // Without this, the request goes out on the old route and returns
                         // the pre-VPN IP/country.
                         Log.d("MainActivity", "Delaying country fetch 2s to let VPN routing settle")
-                        Handler(Looper.getMainLooper()).postDelayed({ fetchCountryInfo(ConnectionStatus.LEVEL_CONNECTED) }, 2000)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            // Re-check: the VPN may have been disconnected during the delay.
+                            // Without this, a quick connect/disconnect would fetch the
+                            // pre-VPN country and save it to the profile's flag.
+                            if (lastKnownLevel == ConnectionStatus.LEVEL_CONNECTED) {
+                                fetchCountryInfo(ConnectionStatus.LEVEL_CONNECTED)
+                            } else {
+                                Log.d("MainActivity", "VPN no longer connected after delay ($lastKnownLevel) - skipping connected-country fetch")
+                                fetchCountryInfo()
+                            }
+                        }, 2000)
                     } else {
                         // Disconnect is immediate — no routing change to wait for
                         fetchCountryInfo()
@@ -672,9 +649,12 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                                 // Load country flag
                                 loadCountryFlag(country)
                                 
-                                // Save country for current profile (only when VPN is actually connected)
+                                // Save country for current profile (only when VPN is actually connected).
+                                // connectionLevel can be stale (captured when the fetch/retry was scheduled),
+                                // so also verify the VPN is STILL connected right now.
                                 val currentProfileUUID = VpnStatus.getLastConnectedVPNProfile()
-                                if (currentProfileUUID != null && connectionLevel == ConnectionStatus.LEVEL_CONNECTED) {
+                                if (currentProfileUUID != null && connectionLevel == ConnectionStatus.LEVEL_CONNECTED &&
+                                        lastKnownLevel == ConnectionStatus.LEVEL_CONNECTED) {
                                     Log.d("MainActivity", "VPN is connected, saving country $country for profile $currentProfileUUID")
                                     saveProfileCountry(currentProfileUUID, country)
                                     

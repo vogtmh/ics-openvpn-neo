@@ -8,7 +8,6 @@ package com.mavodev.openvpnneo.fragments
 import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView

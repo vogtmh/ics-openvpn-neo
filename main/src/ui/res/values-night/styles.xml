@@ -5,32 +5,34 @@
 
 <resources>
 
-    <style name="blinkt.baseTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">#000000</item>
+    <style name="blinkt.baseTheme" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="colorPrimaryDark">#000000</item>
-        <item name="colorAccent">#9718EC</item>
+
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
         <item name="preferenceTheme">@style/blinkt.preferenceTheme</item>
+        <item name="bottomSheetDialogTheme">@style/blinkt.BottomSheet</item>
 
-        <item name="android:navigationBarColor">
-            @android:color/black
-        </item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Optional: set to transparent if your app is drawing behind the status bar. -->
-        <item name="android:statusBarColor">
-            @android:color/black
-        </item>
+        <item name="actionBarStyle">@style/blinkt.actionBar</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
 
-        <!-- Optional: set for a light status bar with dark content. -->
-        <item name="android:windowLightStatusBar">
-            false
-        </item>
-        
-        <!-- Force #111111 background in dark mode -->
+        <!-- Preserve the app's near-black surfaces in dark mode -->
         <item name="android:colorBackground">#111111</item>
         <item name="android:windowBackground">#111111</item>
-        
-        <!-- Force #252525 background for popup dialogs/menus -->
+        <item name="colorSurface">#1A1A1A</item>
+        <item name="colorSurfaceContainerLowest">#111111</item>
+        <item name="colorSurfaceContainerLow">#1A1A1A</item>
+        <item name="colorSurfaceContainer">#252525</item>
+        <item name="colorSurfaceContainerHigh">#2E2E2E</item>
+        <item name="colorSurfaceContainerHighest">#333333</item>
         <item name="colorBackgroundFloating">#252525</item>
         <item name="android:colorBackgroundFloating">#252525</item>
     </style>
@@ -52,14 +54,13 @@
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="blinkt.alertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="blinkt.alertDialog" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <!-- Force #333333 background for all dialogs -->
         <item name="android:colorBackground">#333333</item>
-        <item name="android:windowBackground">#333333</item>
-        
+        <item name="colorSurface">#333333</item>
+        <item name="colorSurfaceContainerHigh">#333333</item>
         <item name="colorBackgroundFloating">#333333</item>
         <item name="android:colorBackgroundFloating">#333333</item>
 
@@ -67,13 +68,14 @@
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
-    <style name="blinkt.BottomSheet" parent="Theme.Design.BottomSheetDialog">
-        <item name="android:colorBackground">#333333</item>
+    <style name="blinkt.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="colorSurface">#333333</item>
+        <item name="colorSurfaceContainerLow">#333333</item>
         <item name="bottomSheetStyle">@style/blinkt.BottomSheetStyle</item>
     </style>
 
-    <style name="blinkt.BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">#333333</item>
+    <style name="blinkt.BottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">#333333</item>
     </style>
 
     <!-- Custom preference theme to remove default padding -->
@@ -82,6 +84,7 @@
         <item name="preferenceCategoryStyle">@style/blinkt.preferenceCategory</item>
         <item name="preferenceStyle">@style/blinkt.preference</item>
         <item name="checkBoxPreferenceStyle">@style/blinkt.checkBoxPreference</item>
+        <item name="switchPreferenceStyle">@style/blinkt.switchPreference</item>
         <item name="preferenceInformationStyle">@style/blinkt.preference</item>
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
         <item name="editTextPreferenceStyle">@style/blinkt.editTextPreference</item>
@@ -96,6 +99,8 @@
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingStart">0dp</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/accent</item>
     </style>
     
     <style name="blinkt.preference" parent="Preference">
@@ -103,7 +108,6 @@
         <item name="android:paddingStart">0dp</item>
         <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginStart">0dp</item>
-        <item name="android:textSize">12sp</item>
         <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
     </style>
     
@@ -112,12 +116,19 @@
         <item name="android:paddingStart">0dp</item>
         <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginStart">0dp</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
+    </style>
+
+    <style name="blinkt.switchPreference" parent="Preference.SwitchPreference">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginStart">0dp</item>
         <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
     </style>
     
     <style name="blinkt.preferenceTitle" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

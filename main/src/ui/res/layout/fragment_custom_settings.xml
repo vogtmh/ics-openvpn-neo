@@ -17,6 +17,4 @@
             android:dividerHeight="0dp" />
 
     </LinearLayout>
-
-    <include layout="@layout/status_bg" />
 </FrameLayout>

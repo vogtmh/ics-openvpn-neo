@@ -41,31 +41,35 @@ abstract class BaseActivity : AppCompatActivity() {
         if (isAndroidTV) {
             requestWindowFeature(Window.FEATURE_OPTIONS_PANEL)
         }
-        this.enableEdgeToEdge(SystemBarStyle.dark(android.graphics.Color.BLACK))
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK)
+        )
         super.onCreate(savedInstanceState)
-        
+
+        // Single source of truth for the opaque black status bar: draw a black strip
+        // behind the transparent (edge-to-edge) status bar, sized to the status bar inset.
+        // Keeps black bars in both light and dark mode without per-activity hacks.
         window.decorView.post {
-            window.apply {
-                clearFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                navigationBarColor = android.graphics.Color.BLACK
+            val decorView = window.decorView as? ViewGroup ?: return@post
+            val statusBarBg = View(this@BaseActivity).apply {
+                setBackgroundColor(android.graphics.Color.BLACK)
             }
-            
-            // Programmatically draw a black background behind the transparent status bar
-            val decorView = window.decorView as? ViewGroup
-            if (decorView != null) {
-                val statusBarBg = View(this@BaseActivity).apply {
-                    setBackgroundColor(android.graphics.Color.BLACK)
-                }
-                decorView.addView(statusBarBg, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0))
-                
-                ViewCompat.setOnApplyWindowInsetsListener(statusBarBg) { v, windowInsets ->
-                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-                    v.layoutParams.height = insets.top
-                    v.requestLayout()
-                    windowInsets
-                }
+            // Seed the height from the current insets so it is opaque immediately;
+            // the listener keeps it correct across rotation / inset changes.
+            val initialTop = ViewCompat.getRootWindowInsets(decorView)
+                ?.getInsets(WindowInsetsCompat.Type.statusBars())?.top ?: 0
+            decorView.addView(
+                statusBarBg,
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, initialTop)
+            )
+            ViewCompat.setOnApplyWindowInsetsListener(statusBarBg) { v, windowInsets ->
+                v.layoutParams.height =
+                    windowInsets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+                v.requestLayout()
+                windowInsets
             }
+            ViewCompat.requestApplyInsets(decorView)
         }
     }
 
@@ -79,12 +83,6 @@ abstract class BaseActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(contentView) { v, windowInsets ->
             val insets =
                 windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            val statusbarbg = findViewById<View>(R.id.statusbar_background);
-
-            val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-
-            statusbarbg?.layoutParams?.height = statusBarInsets.top
-
 
             v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 topMargin = insets.top

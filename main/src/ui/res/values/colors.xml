@@ -4,5 +4,5 @@
     <color name="primary_dark">#000000</color>
     <color name="accent">#9718EC</color>
     <color name="text_primary">#000000</color>
-    <color name="text_secondary">#000000</color>
+    <color name="text_secondary">#8A000000</color>
 </resources>

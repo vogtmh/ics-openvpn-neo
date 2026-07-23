@@ -17,7 +17,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.Button
-import android.widget.Switch
+import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Spinner
@@ -398,7 +398,7 @@ class OpenSSLSpeed : BaseActivity() {
             val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.algorithm_checkbox_item, parent, false)
             val item = algorithms[position]
             
-            val switch = view.findViewById<Switch>(R.id.algorithm_switch)
+            val switch = view.findViewById<CompoundButton>(R.id.algorithm_switch)
             val text = view.findViewById<TextView>(R.id.algorithm_text)
             
             switch.isChecked = item.isSelected

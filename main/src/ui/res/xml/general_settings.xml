@@ -16,14 +16,14 @@
                 android:entryValues="@array/theme_values"
                 android:defaultValue="system" />
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:key="showlogwindow"
                 android:singleLineTitle="true"
                 android:summary="@string/show_log_summary"
                 android:title="@string/show_log_window" />
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="@bool/allowTranslationDefault"
                 android:key="allow_translation"
                 android:singleLineTitle="true"
@@ -31,14 +31,14 @@
                 android:title="@string/allow_translations_title" />
 
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:disableDependentsState="true"
                 android:key="ovpn3"
                 android:singleLineTitle="true"
-                android:summaryOff="Use OpenVPN 2.x"
-                android:summaryOn="Use the C++ OpenVPN library (experimental)"
-                android:title="OpenVPN 3 Core" />
+                android:summaryOff="@string/ovpn3_summary_off"
+                android:summaryOn="@string/ovpn3_summary_on"
+                android:title="@string/ovpn3_title" />
 
 
         <com.mavodev.openvpnneo.views.DefaultVPNListPreference
@@ -47,14 +47,14 @@
                 android:title="@string/defaultvpn"
                 tools:summary="@string/defaultvpnsummary" />
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:key="restartvpnonboot"
                 android:singleLineTitle="true"
                 android:summary="@string/keep_vpn_connected_summary"
                 android:title="@string/keep_vpn_connected" />
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="true"
 
                 android:key="preferencryption"
@@ -70,14 +70,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/vpnbehaviour">
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="true"
                 android:dependency="ovpn3"
                 android:key="usesystemproxy"
                 android:singleLineTitle="false"
                 android:summary="@string/use_system_proxy_summary"
                 android:title="@string/use_system_proxy" />
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="true"
                 android:key="netchangereconnect"
                 android:singleLineTitle="false"
@@ -85,39 +85,39 @@
                 android:title="@string/netchange" />
 
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:key="screenoff"
                 android:singleLineTitle="false"
                 android:summary="@string/screenoff_summary"
                 android:title="@string/screenoff_title" />
 
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:key="disableconfirmation"
                 android:singleLineTitle="false"
                 android:summary="@string/confirmations_summary"
-                android:title="@string/confirmations_title" />\
+                android:title="@string/confirmations_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
             android:key="device_hacks"
             android:title="@string/device_specific">
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:key="useCM9Fix"
                 android:summary="@string/owner_fix_summary"
                 android:title="@string/owner_fix" />
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:key="loadTunModule"
                 android:summary="@string/setting_loadtun_summary"
                 android:title="@string/setting_loadtun" />
-        <CheckBoxPreference
+        <SwitchPreference
                 android:defaultValue="false"
                 android:key="useInternalFileSelector"
-                android:summary="Always use the very basic file browser instead of the Android file browser. Use this option if you have problems selecting files."
-                android:title="Use internal file browser" />
+                android:summary="@string/use_internal_file_selector_summary"
+                android:title="@string/use_internal_file_selector_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

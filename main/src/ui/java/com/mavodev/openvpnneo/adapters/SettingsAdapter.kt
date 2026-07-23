@@ -1,13 +1,15 @@
 package com.mavodev.openvpnneo.adapters
 
 import android.content.Context
+import android.util.TypedValue
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Switch
+import android.widget.CompoundButton
 import android.widget.TextView
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.model.SettingItem
@@ -25,7 +27,7 @@ class SettingsAdapter(
 
         val titleView = view.findViewById<TextView>(R.id.settings_item_title)
         val subtitleView = view.findViewById<TextView>(R.id.settings_item_subtitle)
-        val toggle = view.findViewById<Switch>(R.id.settings_toggle)
+        val toggle = view.findViewById<CompoundButton>(R.id.settings_toggle)
         val actionButton = view.findViewById<Button>(R.id.settings_action)
         val leftContainer = view.findViewById<View>(R.id.settings_item_left)
         val controlContainer = view.findViewById<View>(R.id.settings_control_container)
@@ -112,7 +114,7 @@ class SettingsAdapter(
                     
                     if (allowedApps.isEmpty()) {
                         // Disable the item visually
-                        titleView.setTextColor(context.getResources().getColor(android.R.color.darker_gray))
+                        titleView.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
                         actionButton.alpha = 0.5f // Make button semi-transparent
                         leftContainer.isClickable = false
                         leftContainer.isFocusable = false
@@ -122,7 +124,11 @@ class SettingsAdapter(
                         actionButton.isEnabled = false
                     } else {
                         // Enable the item
-                        titleView.setTextColor(context.getResources().getColor(android.R.color.primary_text_light))
+                        val tv = TypedValue()
+                        context.theme.resolveAttribute(android.R.attr.textColorPrimary, tv, true)
+                        val enabledColor = if (tv.resourceId != 0)
+                            ContextCompat.getColor(context, tv.resourceId) else tv.data
+                        titleView.setTextColor(enabledColor)
                         actionButton.alpha = 1.0f
                         leftContainer.isClickable = false
                         leftContainer.isFocusable = false

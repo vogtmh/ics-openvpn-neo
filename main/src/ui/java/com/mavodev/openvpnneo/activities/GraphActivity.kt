@@ -6,10 +6,11 @@
 package com.mavodev.openvpnneo.activities
 
 import android.content.Context
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.ListView
+import androidx.core.content.ContextCompat
 import android.widget.TextView
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
@@ -89,16 +91,16 @@ class GraphActivity : BaseActivity(), VpnStatus.ByteCountListener {
         chartAdapter = ChartDataAdapter(this, charts)
         listView.adapter = chartAdapter
         
-        colourIn = resources.getColor(R.color.dataIn)
-        colourOut = resources.getColor(R.color.dataOut)
-        colourPoint = resources.getColor(android.R.color.black)
+        colourIn = ContextCompat.getColor(this, R.color.dataIn)
+        colourOut = ContextCompat.getColor(this, R.color.dataOut)
+        colourPoint = ContextCompat.getColor(this, android.R.color.black)
         
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        textColour = when (currentNightMode) {
-            Configuration.UI_MODE_NIGHT_NO -> resources.getColor(android.R.color.primary_text_light)
-            Configuration.UI_MODE_NIGHT_YES -> resources.getColor(android.R.color.primary_text_dark)
-            else -> resources.getColor(android.R.color.primary_text_light)
-        }
+        // Use the theme's primary text color, which already adapts to day/night mode
+        val textColorValue = TypedValue()
+        theme.resolveAttribute(android.R.attr.textColorPrimary, textColorValue, true)
+        textColour = if (textColorValue.resourceId != 0)
+            ContextCompat.getColor(this, textColorValue.resourceId)
+        else textColorValue.data
         
         logScaleView.setOnCheckedChangeListener { _, isChecked ->
             logScale = isChecked
@@ -106,7 +108,7 @@ class GraphActivity : BaseActivity(), VpnStatus.ByteCountListener {
             getPreferences(MODE_PRIVATE).edit().putBoolean(PREF_USE_LOG, isChecked).apply()
         }
         
-        handler = Handler()
+        handler = Handler(Looper.getMainLooper())
         triggerRefresh = createTriggerRefresh()
     }
     
@@ -191,7 +193,7 @@ class GraphActivity : BaseActivity(), VpnStatus.ByteCountListener {
             holder.chart.legend.textColor = textColour
             
             // Set no data text color to match our purple theme
-            holder.chart.setNoDataTextColor(resources.getColor(R.color.accent))
+            holder.chart.setNoDataTextColor(ContextCompat.getColor(mContext, R.color.accent))
             
             val xAxis = holder.chart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM

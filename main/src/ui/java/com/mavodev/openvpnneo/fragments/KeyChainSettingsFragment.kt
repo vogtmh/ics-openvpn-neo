@@ -7,12 +7,14 @@ package com.mavodev.openvpnneo.fragments
 
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.AlertDialog
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import android.security.KeyChain
 import android.security.KeyChainException
@@ -41,6 +43,15 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
     private var mHandler: Handler? = null
     private lateinit var mExtAliasName: TextView
     private lateinit var mExtAuthSpinner: Spinner
+
+    private val mExtAuthConfigLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val data = result.data
+            if (data != null && result.resultCode == Activity.RESULT_OK) {
+                mProfile.mAlias = data.getStringExtra(ExtAuthHelper.EXTRA_ALIAS)
+                mExtAliasName.text = data.getStringExtra(ExtAuthHelper.EXTRA_DESCRIPTION)
+            }
+        }
 
     private val isInHardwareKeystore: Boolean
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -156,7 +167,7 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
         mAliasCertificate = v.findViewById(R.id.alias_certificate)
         mExtAuthSpinner = v.findViewById(R.id.extauth_spinner)
         mExtAuthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedProvider = parent.getItemAtPosition(position) as ExtAuthHelper.ExternalAuthProvider
                 if (selectedProvider.packageName != mProfile.mExternalAuthenticator) {
                     mProfile.mAlias = ""
@@ -170,7 +181,7 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
         mExtAliasName = v.findViewById(R.id.extauth_detail)
         mAliasName = v.findViewById(R.id.aliasname)
         if (mHandler == null) {
-            mHandler = Handler(this)
+            mHandler = Handler(Looper.getMainLooper(), this)
         }
         ExtAuthHelper.setExternalAuthProviderSpinnerList(mExtAuthSpinner, mProfile.mExternalAuthenticator)
 
@@ -197,7 +208,7 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
         val extauth = Intent(ExtAuthHelper.ACTION_CERT_CONFIGURATION)
         extauth.setPackage(eAuth.packageName)
         extauth.putExtra(ExtAuthHelper.EXTRA_ALIAS, mProfile.mAlias)
-        startActivityForResult(extauth, UPDATEE_EXT_ALIAS)
+        mExtAuthConfigLauncher.launch(extauth)
     }
 
     override fun savePreferences() {
@@ -223,7 +234,7 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
                     mProfile.mAlias)// List of acceptable key types. null for any
             // alias to preselect, null if unavailable
         } catch (anf: ActivityNotFoundException) {
-            val ab = AlertDialog.Builder(activity)
+            val ab = AlertDialog.Builder(requireActivity())
             ab.setTitle(R.string.broken_image_cert_title)
             ab.setMessage(R.string.broken_image_cert)
             ab.setPositiveButton(android.R.string.ok, null)
@@ -249,17 +260,7 @@ internal abstract class KeyChainSettingsFragment : Settings_Fragment(), View.OnC
         return true
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (data != null && requestCode == UPDATEE_EXT_ALIAS && resultCode == Activity.RESULT_OK) {
-            mProfile.mAlias = data.getStringExtra(ExtAuthHelper.EXTRA_ALIAS)
-            mExtAliasName.text = data.getStringExtra(ExtAuthHelper.EXTRA_DESCRIPTION)
-        }
-    }
-
     companion object {
         private val UPDATE_ALIAS = 20
-        private val UPDATEE_EXT_ALIAS = 210
     }
 }

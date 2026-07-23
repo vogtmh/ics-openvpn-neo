@@ -126,7 +126,7 @@ internal class PackageAdapter(c: Context, vp: VpnProfile) : RecyclerView.Adapter
         val  settingsView = holder.rootView
         val allowTextView = settingsView.findViewById<View>(R.id.default_allow_text) as TextView
 
-        val vpnOnDefaultSwitch = settingsView.findViewById<View>(R.id.default_allow) as Switch
+        val vpnOnDefaultSwitch = settingsView.findViewById<View>(R.id.default_allow) as CompoundButton
 
         changeDisallowText(allowTextView, mProfile.mAllowedAppsVpnAreDisallowed)
         vpnOnDefaultSwitch.isChecked = mProfile.mAllowedAppsVpnAreDisallowed
@@ -137,7 +137,7 @@ internal class PackageAdapter(c: Context, vp: VpnProfile) : RecyclerView.Adapter
 
 
 
-        val vpnAllowBypassSwitch = settingsView.findViewById<View>(R.id.allow_bypass) as Switch
+        val vpnAllowBypassSwitch = settingsView.findViewById<View>(R.id.allow_bypass) as CompoundButton
 
         vpnAllowBypassSwitch.setOnCheckedChangeListener { _, isChecked -> mProfile.mAllowAppVpnBypass = isChecked }
 
@@ -225,6 +225,7 @@ internal class PackageAdapter(c: Context, vp: VpnProfile) : RecyclerView.Adapter
             return results
         }
 
+        @Suppress("UNCHECKED_CAST")
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
 
             mFilteredData = results.values as Vector<ApplicationInfo>

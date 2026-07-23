@@ -26,5 +26,4 @@
 
     </LinearLayout>
 
-    <include layout="@layout/status_bg" />
 </FrameLayout>

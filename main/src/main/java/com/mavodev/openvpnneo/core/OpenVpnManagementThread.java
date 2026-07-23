@@ -19,6 +19,7 @@ import android.util.Log;
 import com.mavodev.openvpnneo.R;
 import com.mavodev.openvpnneo.VpnProfile;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,6 +120,16 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
         int tries = 8;
 
         String socketName = (c.getCacheDir().getAbsolutePath() + "/" + "mgmtsocket");
+
+        // Remove a stale socket file left behind by a previous process that did not exit
+        // cleanly; otherwise bind() fails with "address already in use" and the profile
+        // never connects.
+        File staleSocket = new File(socketName);
+        if (staleSocket.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            staleSocket.delete();
+        }
+
         // The mServerSocketLocal is transferred to the LocalServerSocket, ignore warning
 
         mServerSocketLocal = new LocalSocket();
@@ -413,11 +424,10 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
     private void releaseHoldCmd() {
         mResumeHandler.removeCallbacks(mResumeHoldRunnable);
         if ((System.currentTimeMillis() - mLastHoldRelease) < 5000) {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ignored) {
-            }
-
+            // Throttle rapid hold releases, but do not block the management socket thread
+            // with Thread.sleep (which stalls reading further management messages).
+            mResumeHandler.postDelayed(this::releaseHoldCmd, 3000);
+            return;
         }
         mWaitingForRelease = false;
         mLastHoldRelease = System.currentTimeMillis();

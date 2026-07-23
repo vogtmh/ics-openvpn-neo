@@ -61,13 +61,13 @@
         android:paddingStart="16dp"
         android:paddingEnd="8dp">
 
-        <Switch
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/settings_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/settings_action"
             android:layout_width="60dp"
             android:layout_height="32dp"

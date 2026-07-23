@@ -20,6 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="false"
+    android:orientation="vertical"
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight">
 
@@ -116,5 +117,20 @@
         app:tint="@color/text_primary" />
 
     </LinearLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/vpn_item_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="2dp"
+        android:visibility="gone"
+        app:indicatorColor="@color/accent"
+        app:trackColor="#339718EC"
+        app:trackCornerRadius="2dp"
+        app:trackStopIndicatorSize="0dp"
+        app:trackThickness="3dp"
+        tools:visibility="visible" />
 
 </LinearLayout>
