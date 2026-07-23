@@ -29,8 +29,8 @@ android {
         applicationId = "com.mavodev.openvpnneo"
         minSdk = 26
         targetSdk = 36
-        versionCode = 13
-        versionName = "1.6.764"
+        versionCode = 14
+        versionName = "1.7.764"
         externalNativeBuild {
             cmake {
                 //arguments+= "-DCMAKE_VERBOSE_MAKEFILE=1"
