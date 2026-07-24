@@ -23,13 +23,6 @@
                 android:summary="@string/show_log_summary"
                 android:title="@string/show_log_window" />
 
-        <SwitchPreference
-                android:defaultValue="@bool/allowTranslationDefault"
-                android:key="allow_translation"
-                android:singleLineTitle="true"
-                android:summary="@string/allow_translations_summary"
-                android:title="@string/allow_translations_title" />
-
 
         <SwitchPreference
                 android:defaultValue="false"

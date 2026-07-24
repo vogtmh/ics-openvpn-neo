@@ -48,7 +48,6 @@
     <string name="set_as_default_profile">Set as default profile</string>
     <string name="about_credits">Credits</string>
     <string name="about_versions">Component versions</string>
-    <string name="about_translations">Translations</string>
     <string name="about_licenses">Open source licenses</string>
     <string name="no_keystore_cert_selected">You must select a User certificate</string>
     <string name="no_ca_cert_selected">You must select a CA certificate or enable peer fingerprint check</string>
@@ -131,7 +130,7 @@
     <string name="copying_log_entries">Copying log entries</string>
     <string name="faq_copying">To copy a single log entry press and hold on the log entry. To copy/send the whole log use the Send Log option. Use the hardware menu button, if the button is not visible in the GUI.</string>
     <string name="faq_shortcut">Shortcut to start</string>
-    <string name="faq_howto_shortcut">You can place a shortcut to start OpenVPN on your desktop. Depending on your homescreen program you will have to add either a shortcut or a widget.</string>
+    <string name="faq_howto_shortcut">You can place a shortcut to start CentVPN on your desktop. Depending on your homescreen program you will have to add either a shortcut or a widget.</string>
     <string name="no_vpn_support_image">Your image does not support the VPNService API, sorry :(</string>
     <string name="encryption">Encryption</string>
     <string name="cipher_dialog_title">Enter data encryption methods</string>
@@ -189,7 +188,6 @@
     <string name="mobile_info">%10$s %9$s running on %3$s %1$s (%2$s), Android %6$s (%7$s) API %4$d, ABI %5$s, (%8$s)</string>
     <string name="error_rsa_sign">Error signing with Android keystore key %1$s: %2$s</string>
     <string name="error_extapp_sign">Error signing with external authenticator app (%3$s): %1$s: %2$s</string>
-    <string name="translationby">English translation by Arne Schwabe&lt;arne@rfc2549.org&gt;</string>
     <string name="ipdns">IP and DNS</string>
     <string name="basic">Basic</string>
     <string name="connection_tab">Connection</string>
@@ -277,7 +275,6 @@
     <string name="rdn">RDN (common name)</string>
     <string name="rdn_prefix">RDN prefix</string>
     <string name="tls_remote_deprecated">tls-remote (DEPRECATED)</string>
-    <string name="help_translate">You can help translating by visiting https://crowdin.net/project/ics-openvpn/invite</string>
     <string name="screenoff_summary">Pause VPN when screen is off and less than 64 kB transferred data in 60s. When the \"Persistent Tun\" option is enabled pausing the VPN will leave your device with NO network connectivity. Without the \"Persistent Tun\" option the device will have no VPN connection/protection.</string>
     <string name="screenoff_title">Pause VPN connection after screen off</string>
     <string name="screenoff_pause">Pausing connection in screen off state: less than %1$s in %2$ss</string>
@@ -349,11 +346,11 @@
     <string name="duplicate_vpn">Duplicate VPN profile</string>
     <string name="duplicate_profile_title">Duplicating profile: %s</string>
     <string name="show_log">Show log</string>
-    <string name="faq_android_clients">Multiple OpenVPN clients for Android exist. The most common ones are OpenVPN for Android (this client), OpenVPN Connect and OpenVPN Settings.&lt;p&gt;The clients can be grouped into two groups: OpenVPN for Android and OpenVPN Connect use the official VPNService API (Android 4.0+) and require no root and OpenVPN Settings which uses root.&lt;p&gt;OpenVPN for Android is an open source client and developed by Arne Schwabe.  It is targeted at more advanced users and offers many settings and the ability to import profiles from files and to configure/change profiles inside the app. The client is based on the community version of OpenVPN. It is based on the OpenVPN 2.x source code. This client can be seen as the semi officially client of the community. &lt;p&gt;OpenVPN Connect is non open source client that is developed by OpenVPN Technologies, Inc. The client is indented to be general use client and more targeted at the average user and allows the import of OpenVPN profiles. This client is based on the OpenVPN C++ reimplementation of the OpenVPN protocol (This was required to allow OpenVPN Technologies, Inc to publish an iOS OpenVPN app). This client is the official client of the OpenVPN technologies &lt;p&gt; OpenVPN Settings is the oldest of the clients and also a UI for the open source OpenVPN. In contrast to OpenVPN  for Android it requires root and does not use the VPNService API. It does not depend on Android 4.0+</string>
+    <string name="faq_android_clients">Multiple OpenVPN clients for Android exist. The most common ones are OpenVPN for Android, OpenVPN Connect and OpenVPN Settings. CentVPN (this app) is a fork based on OpenVPN for Android.&lt;p&gt;The clients can be grouped into two groups: OpenVPN for Android and OpenVPN Connect use the official VPNService API (Android 4.0+) and require no root and OpenVPN Settings which uses root.&lt;p&gt;OpenVPN for Android is an open source client originally developed by Arne Schwabe.  It is targeted at more advanced users and offers many settings and the ability to import profiles from files and to configure/change profiles inside the app. The client is based on the community version of OpenVPN. It is based on the OpenVPN 2.x source code. This client can be seen as the semi officially client of the community. &lt;p&gt;CentVPN is a modernised, more user-friendly continuation of OpenVPN for Android. It keeps the full power and flexibility of the original client while adding a refreshed Material design interface, a live display of your current public IP and country, quality-of-life improvements and up-to-date OpenVPN, OpenSSL and dependency versions. It targets modern Android (8.0+) devices and is maintained independently of the original project. &lt;p&gt;OpenVPN Connect is non open source client that is developed by OpenVPN Technologies, Inc. The client is indented to be general use client and more targeted at the average user and allows the import of OpenVPN profiles. This client is based on the OpenVPN C++ reimplementation of the OpenVPN protocol (This was required to allow OpenVPN Technologies, Inc to publish an iOS OpenVPN app). This client is the official client of the OpenVPN technologies &lt;p&gt; OpenVPN Settings is the oldest of the clients and also a UI for the open source OpenVPN. In contrast to OpenVPN  for Android it requires root and does not use the VPNService API. It does not depend on Android 4.0+</string>
     <string name="faq_androids_clients_title">Differences between the OpenVPN Android clients</string>
     <string name="ignore_multicast_route">Ignoring multicast route: %s</string>
-    <string name="ab_only_cidr">Android supports only CIDR routes to the VPN. Since non-CIDR routes are almost never used, OpenVPN for Android will use a /32 for routes that are not CIDR and issue a warning.</string>
-    <string name="ab_proxy">Android will keep using your proxy settings specified for the mobile/Wi-Fi connection when no DNS servers are set. OpenVPN for Android will warn you about this in the log.<p>When a VPN sets a DNS server Android will not use a proxy. There is no API to set a proxy for a VPN connection.</p></string>
+    <string name="ab_only_cidr">Android supports only CIDR routes to the VPN. Since non-CIDR routes are almost never used, CentVPN will use a /32 for routes that are not CIDR and issue a warning.</string>
+    <string name="ab_proxy">Android will keep using your proxy settings specified for the mobile/Wi-Fi connection when no DNS servers are set. CentVPN will warn you about this in the log.<p>When a VPN sets a DNS server Android will not use a proxy. There is no API to set a proxy for a VPN connection.</p></string>
     <string name="ab_not_route_to_vpn">The configured client IP and the IPs in its network mask are not routed to the VPN. OpenVPN works around this bug by explicitly adding a route that corrosponds to the client IP and its netmask</string>
     <string name="ab_only_cidr_title">Non CIDR Routes</string>
     <string name="ab_proxy_title">Proxy behaviour for VPNs</string>
@@ -448,7 +445,7 @@
     <string name="openvpn3_socksproxy">OpenVPN 3 C++ implementation does not support connecting via Socks proxy</string>
     <string name="no_orbotfound">Orbot application cannot be found. Please install Orbot or use manual Socks v5 integration.</string>
     <string name="faq_remote_api_title">Remote API</string>
-    <string name="faq_remote_api">OpenVPN for Android supports two remote APIs, a sophisticated API using AIDL (remoteEXample in the git repository) and a simple one using Intents. &lt;p>Examples using adb shell and the intents. Replace profilname with your profile name&lt;p>&lt;p> adb shell am start-activity -a android.intent.action.MAIN com.mavodev.openvpnneo/.api.DisconnectVPN&lt;p> adb shell am start-activity -a android.intent.action.MAIN -e com.mavodev.openvpnneo.api.profileName Blinkt com.mavodev.openvpnneo/.api.ConnectVPN</string>
+    <string name="faq_remote_api">CentVPN supports two remote APIs, a sophisticated API using AIDL (remoteEXample in the git repository) and a simple one using Intents. &lt;p>Examples using adb shell and the intents. Replace profilname with your profile name&lt;p>&lt;p> adb shell am start-activity -a android.intent.action.MAIN com.mavodev.openvpnneo/.api.DisconnectVPN&lt;p> adb shell am start-activity -a android.intent.action.MAIN -e com.mavodev.openvpnneo.api.profileName Blinkt com.mavodev.openvpnneo/.api.ConnectVPN</string>
     <string name="enableproxyauth">Enable Proxy Authentication</string>
     <string name="error_orbot_and_proxy_options">Cannot use extra http-proxy-option statement and Orbot integration at the same time</string>
     <string name="info_from_server">Info from server: \'%s\'</string>
@@ -463,7 +460,7 @@
     <string name="configure">Configure</string>
     <string name="extauth_not_configured">External Authenticator not configured</string>
     <string name="faq_killswitch_title">Block non VPN connection (\"Killswitch\")</string>
-    <string name="faq_killswitch">It is often desired to block connections without VPN. Other apps often use markting terms like \"Killswitch\" or \"Seamless tunnel\" for this feature. OpenVPN and this app offer persist-tun, a feature to implement this functionality.&lt;p>The problem with all these methods offered by apps is that they can only provide best effort and are no complete solutions. On boot, app crashing and other corner cases the app cannot ensure that this block of non VPN connection works. Thus giving the user a false sense of security.&lt;p>The &lt;b>only&lt;/b> reliable way to ensure non VPN connections are blocked is to use Android 8.0 or later and use the \"block connections without VPN\" setting that can be found under Settings > Network &amp; Internet > Advanced/VPN > OpenVPN for Android > Enable Always ON VPN, Enable Block Connections without VPN</string>
+    <string name="faq_killswitch">It is often desired to block connections without VPN. Other apps often use markting terms like \"Killswitch\" or \"Seamless tunnel\" for this feature. OpenVPN and this app offer persist-tun, a feature to implement this functionality.&lt;p>The problem with all these methods offered by apps is that they can only provide best effort and are no complete solutions. On boot, app crashing and other corner cases the app cannot ensure that this block of non VPN connection works. Thus giving the user a false sense of security.&lt;p>The &lt;b>only&lt;/b> reliable way to ensure non VPN connections are blocked is to use Android 8.0 or later and use the \"block connections without VPN\" setting that can be found under Settings > Network &amp; Internet > Advanced/VPN > CentVPN > Enable Always ON VPN, Enable Block Connections without VPN</string>
     <string name="summary_block_address_families">This option instructs Android to not allow protocols (IPv4/IPv6) if the VPN does not set any IPv4 or IPv6 addresses.</string>
     <string name="title_block_address_families">Block IPv6 (or IPv4) if not used by the VPN</string>
     <string name="install_keychain">Install new certificate</string>
@@ -484,8 +481,6 @@
     <string name="compat_mode_label">Compatibility mode</string>
     <string name="loadossllegacy">Load OpenSSL legacy provider</string>
     <string name="bf_cbc_requires_legacy">Profiles uses BF-CBC which depends on OpenSSL legacy provider (not enabled).</string>
-    <string name="allow_translations_title">Allow community contributed translations</string>
-    <string name="allow_translations_summary">Allows the app to be translated with translations contributed by the community. Requires a restart of the app to activate.</string>
     <string name="tls_profile">TLS Security Profile</string>
     <string name="encrypt_profiles">Encrypt profiles</string>
     <string name="encrypt_profiles_summary">Try to encrypt profiles on storage (if supported by Android OS)</string>

@@ -55,16 +55,6 @@ class AboutFragment : Fragment() {
 
         osslVer.text = String.format(Locale.US, "OpenSSL version: %s", NativeUtils.getOpenSSLVersion())
 
-        /* recreating view without onCreate/onDestroy cycle */
-        val translation = v.findViewById<TextView>(R.id.translation)
-
-        // Don't print a text for myself
-        if (getString(R.string.translationby).contains("Arne Schwabe")) {
-            translation.text = ""
-        } else {
-            translation.setText(R.string.translationby)
-        }
-
         val wv = v.findViewById<TextView>(R.id.full_licenses)
         wv.text = HtmlCompat.fromHtml(readHtmlFromAssets(), HtmlCompat.FROM_HTML_MODE_LEGACY)
 

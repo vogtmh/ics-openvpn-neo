@@ -16,6 +16,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.widget.doAfterTextChanged
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.activities.VPNPreferences
 import com.mavodev.openvpnneo.core.Connection
@@ -28,7 +29,8 @@ import com.mavodev.openvpnneo.core.Connection
 class Settings_Overview : Settings_Fragment() {
 
     private lateinit var mProfileName: EditText
-    private lateinit var mPassword: EditText
+    private lateinit var mKeyPassword: EditText
+    private lateinit var mKeyPassLayout: View
     private lateinit var mMakeDefaultProfile: CompoundButton
     private lateinit var mConnectRetryMax: Spinner
     private lateinit var mConnectRetry: EditText
@@ -41,7 +43,8 @@ class Settings_Overview : Settings_Fragment() {
         val v = inflater.inflate(R.layout.basic_overview, container, false)
 
         mProfileName = v.findViewById(R.id.profilename)
-        mPassword = v.findViewById(R.id.auth_password)
+        mKeyPassword = v.findViewById(R.id.key_password)
+        mKeyPassLayout = v.findViewById(R.id.basic_keypass_layout)
         mMakeDefaultProfile = v.findViewById(R.id.make_default_profile)
         mConnectRetryMax = v.findViewById(R.id.connectretrymax)
         mConnectRetry = v.findViewById(R.id.connectretry)
@@ -55,6 +58,7 @@ class Settings_Overview : Settings_Fragment() {
 
         viewInitialized = true
         loadPreferences()
+        attachLiveSyncListeners()
 
         return v
     }
@@ -63,11 +67,18 @@ class Settings_Overview : Settings_Fragment() {
         super.onResume()
         // The server list may have been edited in the Server List tab
         mServerAdapter?.notifyDataSetChanged()
+        // Reload the fields that are shared with the Connection tab so this tab always
+        // reflects the latest profile state (e.g. a password entered on the other tab).
+        if (viewInitialized) loadPreferences()
     }
 
     private fun loadPreferences() {
         mProfileName.setText(mProfile.mName)
-        mPassword.setText(mProfile.mPassword)
+        // The Basic tab exposes the private key password — the secret needed for
+        // certificate auth with an encrypted client key. Only show it when the
+        // selected client key actually requires a password.
+        mKeyPassword.setText(mProfile.mKeyPassword)
+        mKeyPassLayout.visibility = if (mProfile.requireTLSKeyPassword()) View.VISIBLE else View.GONE
 
         mConnectRetry.setText(mProfile.mConnectRetry)
         mConnectRetryMaxTime.setText(mProfile.mConnectRetryMaxTime)
@@ -81,21 +92,34 @@ class Settings_Overview : Settings_Fragment() {
     override fun savePreferences() {
         if (!viewInitialized) return
 
-        mProfile.mName = mProfileName.text.toString()
-        mProfile.mPassword = mPassword.text.toString()
+        // Profile name, password and the default-profile toggle are shared with the
+        // Connection tab and are written live (see attachLiveSyncListeners) to avoid a
+        // stale tab overwriting them on save. Only the fields unique to this tab are
+        // persisted here.
         mProfile.mConnectRetry = mConnectRetry.text.toString()
         mProfile.mConnectRetryMaxTime = mConnectRetryMaxTime.text.toString()
         mProfile.mConnectRetryMax = CRM_VALUES[mConnectRetryMax.selectedItemPosition]
+    }
 
+    /**
+     * Profile name, private key password and the "make default" toggle are also editable
+     * on the Connection tab. Writing them to the profile live (instead of only in
+     * savePreferences) keeps both tabs in sync and prevents an out-of-view tab from
+     * clobbering the value when the editor is closed.
+     */
+    private fun attachLiveSyncListeners() {
+        mProfileName.doAfterTextChanged { mProfile.mName = it.toString() }
+        mKeyPassword.doAfterTextChanged { mProfile.mKeyPassword = it.toString() }
+        mMakeDefaultProfile.setOnCheckedChangeListener { _, isChecked -> setDefaultProfile(isChecked) }
+    }
+
+    private fun setDefaultProfile(makeDefault: Boolean) {
         val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(activity)
         val editor = defaultPrefs.edit()
-        if (mMakeDefaultProfile.isChecked) {
+        if (makeDefault) {
             editor.putString("alwaysOnVpn", mProfile.getUUIDString())
-        } else {
-            val currentDefaultUUID = defaultPrefs.getString("alwaysOnVpn", "")
-            if (mProfile.getUUIDString() == currentDefaultUUID) {
-                editor.putString("alwaysOnVpn", "")
-            }
+        } else if (mProfile.getUUIDString() == defaultPrefs.getString("alwaysOnVpn", "")) {
+            editor.putString("alwaysOnVpn", "")
         }
         editor.apply()
     }

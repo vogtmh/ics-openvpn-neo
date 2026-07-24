@@ -24,11 +24,8 @@
     <string name="copyright_file_dialog" translatable="false">File Dialog based on work by Alexander Ponomarev</string>
     <string name="lzo_copyright" translatable="false">Copyright © 1996 – 2011 Markus Franz Xaver Johannes Oberhumer
     </string>
-    <string name="copyright_openssl" translatable="false">This product includes software developed by the OpenSSL
-        Project for use in the OpenSSL Toolkit\n
-        Copyright © 1998-2008 The OpenSSL Project. All rights reserved.\n\n
-        This product includes cryptographic software written by Eric Young (eay@cryptsoft.com)\n
-        Copyright © 1995-1998 Eric Young (eay@cryptsoft.com) All rights reserved.
+    <string name="copyright_openssl" translatable="false">Licensed under the Apache License 2.0\n
+        Copyright © 1998–2026 The OpenSSL Project Authors. All rights reserved.
     </string>
     <string name="openvpn" translatable="false">OpenVPN</string>
     <string name="privpolicy" translatable="false">Privacy policy</string>
@@ -39,9 +36,17 @@
     <string name="unknown_state" translatable="false">Unknown state</string>
     <string name="permission_description">Allows another app to control OpenVPN</string>
     <string name="bouncy_castle" translatable="false">Bouncy Castle Crypto APIs</string>
-    <string name="copyright_bouncycastle" translatable="false">Copyright © 2000–2012 The Legion Of The Bouncy Castle
-        (http://www.bouncycastle.org)
+    <string name="copyright_bouncycastle" translatable="false">Copyright © 2000–2025 The Legion Of The Bouncy Castle Inc.
+        (https://www.bouncycastle.org)
     </string>
+    <string name="lz4" translatable="false">LZ4</string>
+    <string name="copyright_lz4" translatable="false">Copyright © 2011–2023 Yann Collet. BSD 2-Clause License</string>
+    <string name="fmt" translatable="false">{fmt}</string>
+    <string name="copyright_fmt" translatable="false">Copyright © 2012–present Victor Zverovich and {fmt} contributors. MIT License</string>
+    <string name="asio" translatable="false">Asio</string>
+    <string name="copyright_asio" translatable="false">Copyright © 2003–2025 Christopher M. Kohlhoff. Boost Software License 1.0</string>
+    <string name="apache_libs" translatable="false">AndroidX, Material Components, Kotlin, OkHttp, MPAndroidChart</string>
+    <string name="copyright_apache_libs" translatable="false">Licensed under the Apache License 2.0</string>
 
     <string-array name="tls_directions_values" translatable="false">
         <item>0</item>
@@ -81,7 +86,7 @@
     <string name="apprest_certalias_desc">Alias of a certificate in the Android keystore to use. Leave empty to not use the certificate store.</string>
     <string name="apprest_ver">Version of the managed configuration schema (Currently always 1)</string>
     <string name="apprest_defprof">UUID of the profile that should be selected as default profile in the app</string>
-    <string name="privacy_policy">The app OpenVPN for Android does not communicate to any server other than the OpenVPN servers provided in configuration files. The author himself does not collect any data and no therefore also no data is saved. For the privacy policy for the OpenVPN server/VPN service you are using (or other services related to the project like GitHub), please refer to their respective privacy policy.</string>
+    <string name="privacy_policy">The app CentVPN does not communicate to any server other than the OpenVPN servers provided in configuration files, with one exception: to display your current public IP address and country, the app queries the third-party geolocation service api.country.is. This sends your public IP address to that service; no other data is transmitted, and the response (IP and country code) is only stored locally on your device. The author himself does not collect any data and therefore also no data is saved. For the privacy policy of the OpenVPN server/VPN service you are using, the api.country.is geolocation service, or other services related to the project like GitHub, please refer to their respective privacy policy.</string>
     <string name="eol_notice_header">End of service</string>
     <string name="eol_notice">The program and its components are under open-source licenses that allow you to use this app forever  according to terms of the open-source licenses for details.&lt;p&gt; However, the author reserves the right to suspend development or stop publishing the OpenVPN app or updates  to it at any time.</string>
     <string translatable="false" name="import_from_access_server">OpenVPN Access Server</string>

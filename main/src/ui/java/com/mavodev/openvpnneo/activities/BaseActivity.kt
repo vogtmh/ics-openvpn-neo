@@ -4,8 +4,6 @@
  */
 package com.mavodev.openvpnneo.activities
 
-import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import com.mavodev.openvpnneo.R
-import com.mavodev.openvpnneo.core.LocaleHelper
 
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,14 +76,5 @@ abstract class BaseActivity : AppCompatActivity() {
                 windowInsets
             }
         }
-    }
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleHelper.updateResources(base))
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        LocaleHelper.onConfigurationChange(this)
     }
 }

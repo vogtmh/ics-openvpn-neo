@@ -139,43 +139,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Translations -->
-        <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.Material3.CardView.Elevated"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="16dp">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_translations"
-                        android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                <TextView
-                        android:id="@+id/translation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:autoLink="all"
-                        tools:ignore="SelectableText" />
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:autoLink="all"
-                        android:text="@string/help_translate" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
         <!-- Privacy policy -->
         <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.Material3.CardView.Elevated"
@@ -319,6 +282,54 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/copyright_bouncycastle" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/lz4"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/copyright_lz4" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/fmt"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/copyright_fmt" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/asio"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/copyright_asio" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/apache_libs"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/copyright_apache_libs" />
 
                 <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"

@@ -88,14 +88,6 @@ class SettingsActivity : BaseActivity() {
         ))
 
         settings.add(SettingItem(
-            key = "allow_translation",
-            title = getString(R.string.allow_translations_title),
-            description = getString(R.string.allow_translations_summary),
-            type = SettingType.TOGGLE_SLIDER,
-            value = sharedPreferences.getBoolean("allow_translation", resources.getBoolean(R.bool.allowTranslationDefault))
-        ))
-
-        settings.add(SettingItem(
             key = "ovpn3",
             title = "OpenVPN 3 Core",
             description = "Use the C++ OpenVPN library (experimental)",

@@ -44,6 +44,21 @@ class CountryInfoRepository(context: Context) {
     private val httpClient = OkHttpClient.Builder()
         .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
         .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        // Hard cap for the whole call, including DNS resolution (which connect/read
+        // timeouts do NOT cover and which can hang long after a route change).
+        .callTimeout(CALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        .build()
+
+    /**
+     * Aggressive profile used right after a VPN connect/disconnect: at that point the
+     * tunnel route either works (answers well under a second) or is black-holed (will
+     * never answer), so fail fast and let the retry loop act as a readiness probe.
+     * newBuilder() shares the connection pool and dispatcher with [httpClient].
+     */
+    private val fastHttpClient = httpClient.newBuilder()
+        .connectTimeout(FAST_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        .readTimeout(FAST_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        .callTimeout(FAST_CALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
         .build()
 
     private var connectivityManager: ConnectivityManager? = null
@@ -53,24 +68,47 @@ class CountryInfoRepository(context: Context) {
 
     /**
      * Fetches the current public IP/country from the single configured provider,
-     * retrying up to [maxRetries] times with a short delay. On success the result is
-     * cached. Returns null if all attempts fail. Safe to call from any coroutine.
+     * retrying up to [maxRetries] times with [retryDelayMs] between attempts. On
+     * success the result is cached. Returns null if all attempts fail. Safe to call
+     * from any coroutine.
      */
-    suspend fun fetchCountryInfo(maxRetries: Int = DEFAULT_MAX_RETRIES): CountryInfo? {
+    suspend fun fetchCountryInfo(
+        maxRetries: Int = DEFAULT_MAX_RETRIES,
+        retryDelayMs: Long = RETRY_DELAY_MS,
+        fast: Boolean = false,
+    ): CountryInfo? {
+        val client = if (fast) fastHttpClient else httpClient
         var attempt = 0
         while (true) {
-            val info = tryFetchOnce()
+            val isLastAttempt = attempt >= maxRetries
+            val info = tryFetchOnce(client, logVerbose = isLastAttempt)
             if (info != null) {
                 cacheCurrentCountryInfo(info)
                 return info
             }
-            if (attempt >= maxRetries) return null
+            if (isLastAttempt) return null
             attempt++
-            delay(RETRY_DELAY_MS)
+            delay(retryDelayMs)
         }
     }
 
-    private suspend fun tryFetchOnce(): CountryInfo? = withContext(Dispatchers.IO) {
+    /**
+     * Fast-probing variant for right after a VPN connect/disconnect transition:
+     * short per-attempt timeouts and quick retries so a black-holed request (route
+     * not settled yet) is abandoned early and the next probe fires sooner. Total
+     * give-up window is roughly the same (~25 s) as the default profile.
+     */
+    suspend fun fetchCountryInfoAfterRouteChange(): CountryInfo? =
+        fetchCountryInfo(
+            maxRetries = FAST_MAX_RETRIES,
+            retryDelayMs = FAST_RETRY_DELAY_MS,
+            fast = true,
+        )
+
+    private suspend fun tryFetchOnce(
+        client: OkHttpClient,
+        logVerbose: Boolean,
+    ): CountryInfo? = withContext(Dispatchers.IO) {
         try {
             // Tag the socket for traffic stats to avoid StrictMode warnings.
             TrafficStats.setThreadStatsTag(TRAFFIC_STATS_TAG)
@@ -78,7 +116,7 @@ class CountryInfoRepository(context: Context) {
                 .url(API_URL)
                 .header("User-Agent", USER_AGENT)
                 .build()
-            httpClient.newCall(request).execute().use { response ->
+            client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
                     Log.w(TAG, "Country API returned ${response.code}")
                     return@withContext null
@@ -88,7 +126,10 @@ class CountryInfoRepository(context: Context) {
                 CountryInfo(json.getString("ip"), json.getString("country"))
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Country API request failed", e)
+            // Only the final attempt logs the full stack trace; intermediate failures
+            // (expected while the tunnel route settles) stay quiet.
+            if (logVerbose) Log.w(TAG, "Country API request failed", e)
+            else Log.d(TAG, "Country API attempt failed: ${e.javaClass.simpleName}: ${e.message}")
             null
         } finally {
             TrafficStats.clearThreadStatsTag()
@@ -191,9 +232,17 @@ class CountryInfoRepository(context: Context) {
         private const val API_URL = "https://api.country.is/"
         private const val USER_AGENT = "OpenVPN-Neo/1.0"
         private const val TIMEOUT_SECONDS = 5L
+        private const val CALL_TIMEOUT_SECONDS = 10L
         private const val TRAFFIC_STATS_TAG = 0x12345678
         private const val DEFAULT_MAX_RETRIES = 3
         private const val RETRY_DELAY_MS = 2000L
+
+        // Aggressive post-route-change profile: 7 attempts x <=3 s + 6 x 0.75 s pause
+        // ~= 25.5 s worst case, but probes every ~1-3.75 s instead of every ~7 s.
+        private const val FAST_TIMEOUT_SECONDS = 2L
+        private const val FAST_CALL_TIMEOUT_SECONDS = 3L
+        private const val FAST_MAX_RETRIES = 6
+        private const val FAST_RETRY_DELAY_MS = 750L
         private const val NETWORK_SETTLE_DELAY_MS = 1500L
 
         private const val CACHE_PREFS = "country_cache"

@@ -449,20 +449,22 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
                     if (level == ConnectionStatus.LEVEL_CONNECTED) {
                         // Delay the fetch so VPN routing has time to fully establish.
                         // Without this, the request goes out on the old route and returns
-                        // the pre-VPN IP/country.
+                        // the pre-VPN IP/country. Kept short: the fast fetch profile
+                        // abandons a black-holed attempt within ~3 s and re-probes.
                         Handler(Looper.getMainLooper()).postDelayed({
                             // Re-check: the VPN may have been disconnected during the delay.
                             // Without this, a quick connect/disconnect would fetch the
                             // pre-VPN country and save it to the profile's flag.
                             if (lastKnownLevel == ConnectionStatus.LEVEL_CONNECTED) {
-                                fetchCountryInfo(ConnectionStatus.LEVEL_CONNECTED)
+                                fetchCountryInfo(ConnectionStatus.LEVEL_CONNECTED, afterRouteChange = true)
                             } else {
-                                fetchCountryInfo()
+                                fetchCountryInfo(afterRouteChange = true)
                             }
-                        }, 2000)
+                        }, 1000)
                     } else {
-                        // Disconnect is immediate — no routing change to wait for
-                        fetchCountryInfo()
+                        // Disconnect is immediate — no routing change to wait for,
+                        // but the default route still flips back: probe fast here too.
+                        fetchCountryInfo(afterRouteChange = true)
                     }
                 }
             }
@@ -572,9 +574,17 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         }
     }
     
-    private fun fetchCountryInfo(connectionLevel: ConnectionStatus? = null) {
+    private fun fetchCountryInfo(
+        connectionLevel: ConnectionStatus? = null,
+        afterRouteChange: Boolean = false,
+    ) {
         lifecycleScope.launch {
-            val info = countryInfoRepository.fetchCountryInfo()
+            // Right after a connect/disconnect the tunnel route may not be settled yet;
+            // use the fast-probing profile (short timeouts, quick retries) there.
+            val info = if (afterRouteChange)
+                countryInfoRepository.fetchCountryInfoAfterRouteChange()
+            else
+                countryInfoRepository.fetchCountryInfo()
             if (info == null) {
                 showFallbackInfo()
                 return@launch

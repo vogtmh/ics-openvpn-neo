@@ -69,15 +69,6 @@ class AboutActivity : BaseActivity() {
         
         osslVer.text = String.format(Locale.US, "OpenSSL version: %s", NativeUtils.getOpenSSLVersion())
         
-        // Setup translation info - same as AboutFragment
-        val translation = findViewById<TextView>(R.id.translation)
-        
-        // Don't print a text for myself
-        if (getString(R.string.translationby).contains("Arne Schwabe"))
-            translation.text = ""
-        else
-            translation.setText(R.string.translationby)
-        
         // Setup full licenses - same as AboutFragment
         val fullLicenses = findViewById<TextView>(R.id.full_licenses)
         fullLicenses.text = HtmlCompat.fromHtml(readHtmlFromAssets(), HtmlCompat.FROM_HTML_MODE_LEGACY)

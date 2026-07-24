@@ -88,7 +88,6 @@ class FAQActivity : BaseActivity() {
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.faq_killswitch_title, R.string.faq_killswitch),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.faq_remote_api_title, R.string.faq_remote_api),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.weakmd_title, R.string.weakmd),
-            FAQEntryWrapper(Build.VERSION_CODES.LOLLIPOP, -1, R.string.samsung_broken_title, R.string.samsung_broken),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.faq_duplicate_notification_title, R.string.faq_duplicate_notification),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.faq_androids_clients_title, R.string.faq_android_clients),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.battery_consumption_title, R.string.baterry_consumption),
@@ -98,10 +97,10 @@ class FAQActivity : BaseActivity() {
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.faq_shortcut, R.string.faq_howto_shortcut),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.tap_mode, R.string.tap_faq2),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.copying_log_entries, R.string.faq_copying),
-            FAQEntryWrapper(Build.VERSION_CODES.KITKAT, -1, R.string.faq_routing_title, R.string.faq_routing),
+            FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.faq_routing_title, R.string.faq_routing),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.ab_only_cidr_title, R.string.ab_only_cidr),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.ab_proxy_title, R.string.ab_proxy),
-            FAQEntryWrapper(Build.VERSION_CODES.LOLLIPOP, -1, R.string.ab_not_route_to_vpn_title, R.string.ab_not_route_to_vpn),
+            FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.ab_not_route_to_vpn_title, R.string.ab_not_route_to_vpn),
             FAQEntryWrapper(Build.VERSION_CODES.ICE_CREAM_SANDWICH, -1, R.string.tap_mode, R.string.tap_faq3)
         )
     }

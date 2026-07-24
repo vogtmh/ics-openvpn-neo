@@ -18,6 +18,7 @@ import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
 import com.mavodev.openvpnneo.views.FileSelectLayout
@@ -92,9 +93,22 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
         mAuthRetry.onItemSelectedListener = this
         mEnablePeerFingerprint.setOnCheckedChangeListener(this)
 
+        // Profile name, private key password and the default-profile toggle are shared
+        // with the Basic tab; write them to the profile live so the two tabs stay in
+        // sync and a stale tab cannot overwrite them when the editor is closed.
+        mProfileName.doAfterTextChanged { mProfile.mName = it.toString() }
+        mKeyPassword.doAfterTextChanged { mProfile.mKeyPassword = it.toString() }
+        mMakeDefaultProfile.setOnCheckedChangeListener(this)
+
         initKeychainViews(mView)
 
         return mView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reload so fields shared with the Basic tab reflect the latest profile state.
+        loadPreferences()
     }
 
     @Deprecated("Deprecated in Java")
@@ -209,7 +223,6 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
 
     override fun savePreferences() {
         super.savePreferences()
-        mProfile.mName = mProfileName.text.toString()
         mProfile.mCaFilename = mCaCert.data
         mProfile.mClientCertFilename = mClientCert.data
         mProfile.mClientKeyFilename = mClientKey.data
@@ -223,25 +236,12 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
 
         mProfile.mPassword = mPassword.text.toString()
         mProfile.mUsername = mUserName.text.toString()
-        mProfile.mKeyPassword = mKeyPassword.text.toString()
         mProfile.mAuthRetry = mAuthRetry.selectedItemPosition
         mProfile.mCheckPeerFingerprint = mEnablePeerFingerprint.isChecked
         mProfile.mPeerFingerPrints = mPeerFingerprints.text.toString()
         mProfile.mCompatMode = Utils.mapCompatMode(mCompatMode.selectedItemPosition)
-
-        // Save default profile setting
-        val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(activity)
-        val editor = defaultPrefs.edit()
-        if (mMakeDefaultProfile.isChecked) {
-            editor.putString("alwaysOnVpn", mProfile.getUUIDString())
-        } else {
-            // If unchecked, check if this was the default and remove it
-            val currentDefaultUUID = defaultPrefs.getString("alwaysOnVpn", "")
-            if (mProfile.getUUIDString() == currentDefaultUUID) {
-                editor.putString("alwaysOnVpn", "")
-            }
-        }
-        editor.apply()
+        // Profile name, private key password and the default-profile toggle are written
+        // live (see onCreateView) so they are intentionally not persisted here.
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -256,7 +256,20 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         if (buttonView === mEnablePeerFingerprint) {
             mPeerFingerprints.visibility = if (isChecked) View.VISIBLE else View.GONE
+        } else if (buttonView === mMakeDefaultProfile) {
+            setDefaultProfile(isChecked)
         }
+    }
+
+    private fun setDefaultProfile(makeDefault: Boolean) {
+        val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(activity)
+        val editor = defaultPrefs.edit()
+        if (makeDefault) {
+            editor.putString("alwaysOnVpn", mProfile.getUUIDString())
+        } else if (mProfile.getUUIDString() == defaultPrefs.getString("alwaysOnVpn", "")) {
+            editor.putString("alwaysOnVpn", "")
+        }
+        editor.apply()
     }
 
     companion object {
