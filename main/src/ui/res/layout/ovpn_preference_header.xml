@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Header row for preference-based tabs: renders the section title (bound to
+  ~ @android:id/title) as the first, scrolling item of the preference list.
+  -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/title"
+    style="@style/SectionTitle" />

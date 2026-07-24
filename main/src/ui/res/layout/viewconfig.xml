@@ -13,14 +13,26 @@
         android:padding="@dimen/vpn_setting_padding"
         android:scrollbarStyle="outsideOverlay">
 
-        <TextView
-            android:id="@+id/configview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="12sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textIsSelectable="true" />
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/SectionTitle"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:text="@string/generated_config" />
+
+            <TextView
+                android:id="@+id/configview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textIsSelectable="true" />
+        </LinearLayout>
     </ScrollView>
 
     <include layout="@layout/share_fab" />

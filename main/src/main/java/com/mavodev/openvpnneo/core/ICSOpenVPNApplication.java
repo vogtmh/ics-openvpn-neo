@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 
 import com.mavodev.openvpnneo.BuildConfig;
 import com.mavodev.openvpnneo.R;
-import com.mavodev.openvpnneo.api.AppRestrictions;
 
 public class ICSOpenVPNApplication extends Application {
     private StatusListener mStatus;
@@ -59,8 +58,6 @@ public class ICSOpenVPNApplication extends Application {
         mStatus.init(getApplicationContext());
 
         createFirstLaunchSetting();
-
-        AppRestrictions.getInstance(this).checkRestrictions(this);
     }
 
     private void createFirstLaunchSetting() {

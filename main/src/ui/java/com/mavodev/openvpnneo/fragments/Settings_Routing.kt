@@ -43,6 +43,8 @@ class Settings_Routing : OpenVpnPreferencesFragment(), Preference.OnPreferenceCh
         mExcludedRoutes.onPreferenceChangeListener = this
         mExcludedRoutesv6.onPreferenceChangeListener = this
         mBlockUnusedAF.onPreferenceChangeListener = this
+        mUseDefaultRoute.onPreferenceChangeListener = this
+        mUseDefaultRoutev6.onPreferenceChangeListener = this
 
         loadSettings()
     }
@@ -70,6 +72,8 @@ class Settings_Routing : OpenVpnPreferencesFragment(), Preference.OnPreferenceCh
         onPreferenceChange(mCustomRoutesv6, mCustomRoutesv6.text)
         onPreferenceChange(mExcludedRoutes, mExcludedRoutes.text)
         onPreferenceChange(mExcludedRoutesv6, mExcludedRoutesv6.text)
+
+        updateRouteVisibility(mUseDefaultRoute.isChecked, mUseDefaultRoutev6.isChecked)
     }
 
     override fun saveSettings() {
@@ -89,9 +93,22 @@ class Settings_Routing : OpenVpnPreferencesFragment(), Preference.OnPreferenceCh
             preference === mExcludedRoutes || preference === mExcludedRoutesv6
         ) {
             preference.summary = newValue as String?
+        } else if (preference === mUseDefaultRoute) {
+            updateRouteVisibility(newValue as Boolean, mUseDefaultRoutev6.isChecked)
+        } else if (preference === mUseDefaultRoutev6) {
+            updateRouteVisibility(mUseDefaultRoute.isChecked, newValue as Boolean)
         }
 
         saveSettings()
         return true
+    }
+
+    private fun updateRouteVisibility(useDefault: Boolean, useDefaultv6: Boolean) {
+        // Custom/excluded routes only apply when not routing all traffic through the VPN
+        mCustomRoutes.isVisible = !useDefault
+        mExcludedRoutes.isVisible = !useDefault
+        mCustomRoutesv6.isVisible = !useDefaultv6
+        // Excluded IPv6 routes are not supported by OpenVPN itself -> always hidden
+        mExcludedRoutesv6.isVisible = false
     }
 }

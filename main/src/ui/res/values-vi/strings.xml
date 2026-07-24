@@ -261,12 +261,6 @@
     <string name="rdn_prefix">Tiền tố RDN</string>
     <string name="tls_remote_deprecated">tls-remote (DEPRECATED)</string>
     <string name="help_translate">Bạn có thể giúp phiên dịch bằng cách truy cập http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s cố gắng để kiểm soát %2$s</string>
-    <string name="remote_warning">Hiện tại, bạn đang cho phép các ứng dụng có quyền kiểm soát OpenVPN cho Android và chặn tất cả lưu lượng mạng.<b>KHÔNG chấp nhận nếu bạn không tin tưởng ứng dụng này.</b>Nếu không, bạn có nguy cơ bị tổn hại dữ liệu bởi những phần mềm chứa mã độc.\"</string>
-    <string name="remote_trust">Tôi tin tưởng ứng dụng này.</string>
-    <string name="no_external_app_allowed">Không có ứng dụng cho phép sử dụng API bên ngoài</string>
-    <string name="allowed_apps">Cho phép ứng dụng: %s</string>
-    <string name="clearappsdialog">Xóa danh sách ứng dụng bên ngoài được cho phép?\nDanh sách hiện tại các ứng dụng được cho phép:\n\n%s</string>
     <string name="screenoff_summary">\"Tạm dừng VPN khi màn hình tắt và truyền dữ liệu ít hơn 64KB trong 60 giây. Khi tùy chọn \"TUN thường dùng\" được kích hoạt sẽ tạm dừng các VPN để ứng dụng của bạn KHÔNG kết nối mạng. Nếu không chọn tùy chọn \"TUN thường dùng\" thì thiết bị sẽ không có kết nối VPN/hoặc bảo vệ.</string>
     <string name="screenoff_title">Tạm dừng kết nối VPN sau khi tắt màn hình</string>
     <string name="screenoff_pause">Tạm dừng kết nối khi màn hình tắt: ít hơn %1$s trong %2$s</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">Hành vi VPN</string>
     <string name="allow_vpn_changes">Cho phép thay đổi Hồ sơ VPN</string>
     <string name="hwkeychain">Khóa lưu trữ phần cứng:</string>
-    <string name="permission_icon_app">Biểu tượng của ứng dụng đang cố gắng sử dụng OpenVPN cho Android</string>
     <string name="thanks_for_donation">Cảm ơn bạn đã tài trợ %s!</string>
     <string name="logCleared">Xóa Bản ghi.</string>
     <string name="show_password">Hiển thị mật khẩu</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">Ghi đè lên giá trị MSS của TCP payload</string>
     <string name="mssfix_dialogtitle">Đặt MSS của TCP payload</string>
     <string name="client_behaviour">Hành vi máy trạm</string>
-    <string name="clear_external_apps">Xóa các ứng dụng bên ngoài đã cho phép</string>
     <string name="loading">Đang tải...</string>
     <string name="allowed_vpn_apps_info">Cho phép các ứng dụng VPN: %1$s</string>
     <string name="disallowed_vpn_apps_info">Không cho phép ứng dụng VPN: %1$s</string>
@@ -423,12 +415,7 @@
     <string name="channel_name_status">Thay đổi trạng thái kết nối</string>
     <string name="channel_description_status">Thay đổi trạng thái của kết nối OpenVPN (Đang kết nối, xác thực,&#8230;)</string>
     <string name="weakmd_title">Hàm băm yếu (MD5) trong chữ ký chứng chỉ (SSL_CTX_use_certificate md quá yếu)</string>
-    <string name="title_activity_open_sslspeed">Kiểm tra tốc độ OpenSSL</string>
     <string name="openssl_cipher_name">Tên mã hóa OpenSSL</string>
-    <string name="osslspeedtest">Kiểm tra tốc độ OpenSSL Crypto</string>
-    <string name="openssl_error">OpenSSL trả về lỗi</string>
-    <string name="running_test">Đang chạy kiểm tra&#8230;</string>
-    <string name="test_algoirhtms">Kiểm tra các thuật toán đã chọn</string>
     <string name="all_app_prompt">Một ứng dụng bên ngoài cố gắng kiểm soát %s. Không thể xác định ứng dụng yêu cầu quyền truy cập. Cho phép ứng dụng này cấp cho TẤT CẢ quyền truy cập ứng dụng.</string>
     <string name="openvpn3_nostatickeys">Việc triển khai OpenVPN 3 C ++ không hỗ trợ các khóa tĩnh. Vui lòng thay đổi thành OpenVPN 2.x trong cài đặt chung.</string>
     <string name="openvpn3_pkcs12">Việc sử dụng tệp PKCS12 trực tiếp với triển khai OpenVPN 3 C ++ không được hỗ trợ. Vui lòng nhập tệp pkcs12 vào kho khóa Android hoặc thay đổi thành OpenVPN 2.x trong cài đặt chung.</string>

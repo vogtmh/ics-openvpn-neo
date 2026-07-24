@@ -259,12 +259,6 @@
     <string name="rdn_prefix">RDN eesliide</string>
     <string name="tls_remote_deprecated">tls-remote (TAUNITAV)</string>
     <string name="help_translate">Tõlkimisel saate abi pakkuda külastades veebilehte http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s katset et juhtida %2$s</string>
-    <string name="remote_warning">Jätkates annate sellele programmile täieliku kontrolli üle Androidi OpenVPN-i ja samuti õiguse jälgida kogu võrguliiklust. <b> Kui te ei usalda seda programmi, siis ÄRGE NÕUSTUGE. </b> Vastasel juhul seate oma andmed pahatahtliku tarkvara poolt ohtu.\"</string>
-    <string name="remote_trust">Ma usaldan seda programmi.</string>
-    <string name="no_external_app_allowed">Ühelgi programmil pole luba kasutada välist API-t</string>
-    <string name="allowed_apps">Lubatud programmid: %s</string>
-    <string name="clearappsdialog">Kas tühjenda lubatud väliste programmide nimekiri?\nKehtiv lubatud programmide nimekiri:\n\n%s</string>
     <string name="screenoff_summary">\"Peata VPN kui ekraan on välja lülitatud ja viimase 60s jooksul on üle kantud alla 64kB anmeid. Kui \"Katkematu Tun\" valik on sees, siis jätab VPN peatamine teie seadme ilma võrguühenduseta. \"Katkematu Tun\" valikuta ei ole aga seadmel VPN ühendust/kaitset.</string>
     <string name="screenoff_title">Peata VPN ühendus peale ekraani välja lülitamist</string>
     <string name="screenoff_pause">Ühenduse peatamine väljalülitatud ekraani korral: vähem kui %1$s %2$ss jooksul</string>
@@ -280,7 +274,6 @@
     <string name="vpnbehaviour">VPN käitumine</string>
     <string name="allow_vpn_changes">Luba muudatused VPN profiilides</string>
     <string name="hwkeychain">Riistvaraline võtmehoidla:</string>
-    <string name="permission_icon_app">\'OpenVPN Androidile\' üritatakse kasutada programmi ikooni poolt</string>
     <string name="thanks_for_donation">Aitäh annetatud %s eest!</string>
     <string name="logCleared">Logi tühjendatud.</string>
     <string name="show_password">Näita salasõna</string>
@@ -310,7 +303,6 @@
     <string name="mssfix_checkbox">Ignoreeri TCP lasti MSS väärtust</string>
     <string name="mssfix_dialogtitle">Sea TCP lasti MSS väärtus</string>
     <string name="client_behaviour">Kliendi toimimine</string>
-    <string name="clear_external_apps">Nulli lubatud välised programmid</string>
     <string name="loading">Laadimine&#8230;</string>
     <string name="allowed_vpn_apps_info">Lubatud VPN programmid: %1$s</string>
     <string name="disallowed_vpn_apps_info">Keelatud VPN programmid: %1$s</string>
@@ -414,12 +406,7 @@
     <string name="channel_name_status">Ühenduse oleku muutus</string>
     <string name="channel_description_status">OpenVPN-ühenduse oleku muutused (ühendamine, autentimine,&#8230;)</string>
     <string name="weakmd_title">Nõrgad (MD5) räsid sertifikaadi allkirjas (SSL_CTX_use_certificate md on liiga nõrk)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL kiirus test</string>
     <string name="openssl_cipher_name">OpenSSL šifri nimed</string>
-    <string name="osslspeedtest">OpenSSL krüptokiiruse test</string>
-    <string name="openssl_error">OpenSSL tagastati tõrge</string>
-    <string name="running_test">Jooksukatse&#8230;</string>
-    <string name="test_algoirhtms">Testige valitud algoritme</string>
     <string name="all_app_prompt">Väline rakendus proovib juhtida %s. Juurdepääsu taotlevat rakendust ei saa kindlaks teha. Selle rakenduse lubamine annab kõigile rakendustele juurdepääsu.</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C ++ teostus ei toeta staatilisi võtmeid. Valige üldseadete alt OpenVPN 2.x.</string>
     <string name="openvpn3_pkcs12">PKCS12-failide kasutamist otse OpenVPN 3 C ++ rakendusega ei toetata. Importige pkcs12-failid Androidi võtmehoidlasse või vahetage OpenVPN 2.x-i üldiseadete all.</string>

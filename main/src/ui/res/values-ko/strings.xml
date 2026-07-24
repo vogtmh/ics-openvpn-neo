@@ -258,12 +258,6 @@
     <string name="rdn_prefix">RDN 접두사</string>
     <string name="tls_remote_deprecated">tls-remote (지원되지 않음)</string>
     <string name="help_translate">http://crowdin.net/project/ics-openvpn/invite 를 방문하여 번역을 도울 수 있습니다</string>
-    <string name="prompt">%1$s가 %2$s를 제어하려고 합니다</string>
-    <string name="remote_warning">계속 진행하면, 당신은 해당 앱에 OpenVPN for Android의 완벽한 제어권과 모든 네트워크 트래픽을 가로챌 수 있는 권한을 허락합니다.<b>그 앱을 신뢰하지 않는다면 허락하지 마십시오.</b> 그렇지 않으면 악성 소프트웨어가 당신의 데이터를 유출할 수 있습니다.</string>
-    <string name="remote_trust">나는 이 앱을 신뢰합니다.</string>
-    <string name="no_external_app_allowed">어떤 앱도 외부 API를 사용할 수 없습니다</string>
-    <string name="allowed_apps">허용된 앱: %s</string>
-    <string name="clearappsdialog">허용된 외부 앱 목록을 비우겠습니까?\n현재 허용된 외부 앱:\n\n%s</string>
     <string name="screenoff_summary">\"화면이 꺼져 있고 60 초 동안 64kB 미만의 데이터가 전송되면 VPN 일시 정지. \"지속적인 TUN\" 옵션이 활성화되어 있으면 VPN 일시 정지시 당신의 장비는 네트워크 연결이 없는 상태가 됩니다. \"지속적인 TUN\" 옵션이 없는 경우 기기는 VPN 연결/보호를 잃습니다.</string>
     <string name="screenoff_title">화면 꺼짐 후 VPN 연결 일시 정지</string>
     <string name="screenoff_pause">화면이 꺼진 상태에서 연결 일시 정지: %2$s 초 안에 %1$s 미만</string>
@@ -279,7 +273,6 @@
     <string name="vpnbehaviour">VPN 동작</string>
     <string name="allow_vpn_changes">VPN 프로파일 변경을 허용</string>
     <string name="hwkeychain">하드웨어 키 저장소:</string>
-    <string name="permission_icon_app">OpenVPN for Android를 사용하려고 하는 앱의 아이콘</string>
     <string name="thanks_for_donation">%s를 기부해 주셔서 감사합니다!</string>
     <string name="logCleared">로그가 삭제되었습니다.</string>
     <string name="show_password">암호 표시</string>
@@ -309,7 +302,6 @@
     <string name="mssfix_checkbox">TCP 페이로드의 MSS 값 재정의</string>
     <string name="mssfix_dialogtitle">TCP 페이로드의 MSS 설정</string>
     <string name="client_behaviour">클라이언트 동작</string>
-    <string name="clear_external_apps">허용된 외부 앱 비우기</string>
     <string name="loading">로드 중...</string>
     <string name="allowed_vpn_apps_info">VPN을 사용할 앱들: %1$s</string>
     <string name="disallowed_vpn_apps_info">VPN을 사용하지 않을 앱들: %1$s</string>
@@ -414,12 +406,7 @@
     <string name="channel_name_status">연결 상태 변화</string>
     <string name="channel_description_status">OpenVPN 연결의 상태 변화 (연결중, 인증중,&#8230;)</string>
     <string name="weakmd_title">인증서 서명에 약한 (MD5) 해시 사용 (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL 속도 테스트</string>
     <string name="openssl_cipher_name">OpenSSL 암호화 알고리즘 이름</string>
-    <string name="osslspeedtest">OpenSSL 암호화 속도 테스트</string>
-    <string name="openssl_error">OpenSSL이 오류를 반환함</string>
-    <string name="running_test">테스트 수행 중&#8230;</string>
-    <string name="test_algoirhtms">선택한 알고리즘 테스트</string>
     <string name="all_app_prompt">어떤 외부 앱이 %s를 제어하려고 합니다. 접근을 요청하는 앱을 정해 놓을 수 없습니다. 이 앱을 허용하면 모든 앱의 접근을 승인하게 됩니다.</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C++ 구현은 고정 키를 지원하지 않습니다. 일반 설정에서 OpenVPN 2.x로 변경해 주세요.</string>
     <string name="openvpn3_pkcs12">OpenVPN 3 C++ 구현과 함께 PKCS12 파일을 직접 사용하는 것은 지원되지 않습니다. PKCS12 파일을 안드로이드 키 저장소로 가져 오거나 일반 설정에서 OpenVPN 2.x으로 변경하세요.</string>

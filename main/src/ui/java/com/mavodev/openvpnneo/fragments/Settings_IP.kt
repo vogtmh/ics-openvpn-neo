@@ -98,11 +98,12 @@ class Settings_IP : OpenVpnPreferencesFragment(), Preference.OnPreferenceChangeL
     }
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        if (preference === mUsePull || preference === mOverrideDNS)
-            if (preference === mOverrideDNS) {
-                // Set so the function gets the right value
-                mOverrideDNS.isChecked = (newValue as Boolean)
-            }
+        // Apply the new value immediately so visibility is computed from the new state
+        if (preference === mUsePull) {
+            mUsePull.isChecked = (newValue as Boolean)
+        } else if (preference === mOverrideDNS) {
+            mOverrideDNS.isChecked = (newValue as Boolean)
+        }
         setDNSState()
         saveSettings()
         return true
@@ -114,12 +115,17 @@ class Settings_IP : OpenVpnPreferencesFragment(), Preference.OnPreferenceChangeL
     }
 
     private fun setDNSState() {
-        val enabled: Boolean
-        mOverrideDNS.isEnabled = mUsePull.isChecked
-        enabled = if (!mUsePull.isChecked) true else mOverrideDNS.isChecked
-        mDNS1.isEnabled = enabled
-        mDNS2.isEnabled = enabled
-        mSearchdomain.isEnabled = enabled
+        val pull = mUsePull.isChecked
+        // Manual IP fields only apply when NOT pulling settings from the server
+        mIPv4.isVisible = !pull
+        mIPv6.isVisible = !pull
+        // Overriding pushed DNS only makes sense when pulling from the server
+        mOverrideDNS.isVisible = pull
+        // DNS fields: manual when not pulling, or when pulling with override enabled
+        val dnsVisible = !pull || mOverrideDNS.isChecked
+        mDNS1.isVisible = dnsVisible
+        mDNS2.isVisible = dnsVisible
+        mSearchdomain.isVisible = dnsVisible
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

@@ -6,382 +6,345 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:card_view="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="wrap_content"
+             android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_margin="@dimen/stdpadding">
+
     <!-- A MaterialCardView that contains the connection editor -->
     <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_view"
             style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            card_view:cardBackgroundColor="@color/server_card_background"
             card_view:cardCornerRadius="16dp">
 
-
-        <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:animateLayoutChanges="true"
                 android:padding="16dp">
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/portnumber_layout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="96dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:hint="@string/port">
-
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/portnumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:text="1194"
-                        tools:ignore="HardcodedText"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/servername_layout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+            <!-- Header: enable toggle on the left, delete on the right -->
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toStartOf="@id/portnumber_layout"
-                    android:layout_toLeftOf="@id/portnumber_layout"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:hint="@string/address">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/servername"
-                        android:layout_width="match_parent"
+                <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/remoteSwitch"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:inputType="textUri"
-                        android:singleLine="true"
-                        tools:text="openvpn.blinkt.de"
-                        tools:ignore="HardcodedText"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_weight="1"
+                        android:text="@string/enabled_connection_entry" />
 
+                <ImageButton
+                        android:id="@+id/remove_connection"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/ic_menu_delete_grey"
+                        android:contentDescription="@string/remove_connection_entry" />
+            </LinearLayout>
+
+            <!-- Server address + port -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/servername_layout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/address">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/servername"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textUri"
+                            android:singleLine="true"
+                            tools:text="openvpn.blinkt.de"
+                            tools:ignore="HardcodedText" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/portnumber_layout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="96dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/port">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/portnumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:text="1194"
+                            tools:ignore="HardcodedText" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Protocol -->
             <TextView
                     android:id="@+id/protocol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/servername_layout"
-                    android:paddingTop="10dp"
-                    android:text="@string/protocol"/>
+                    android:layout_marginTop="16dp"
+                    android:text="@string/protocol" />
 
             <RadioGroup
                     android:id="@+id/udptcpradiogroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/protocol"
-                    android:orientation="horizontal"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp">
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
 
                 <RadioButton
                         android:id="@+id/udp_proto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="UDP"
-                        tools:ignore="HardcodedText"/>
+                        tools:ignore="HardcodedText" />
 
                 <Space
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content" />
 
                 <RadioButton
                         android:id="@+id/tcp_proto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TCP"
-                        tools:ignore="HardcodedText"/>
+                        tools:ignore="HardcodedText" />
             </RadioGroup>
 
+            <!-- Proxy -->
             <TextView
                     android:id="@+id/proxy_label"
-                    android:layout_below="@id/udptcpradiogroup"
-                    android:text="@string/proxy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-            />
+                    android:layout_marginTop="16dp"
+                    android:text="@string/proxy" />
 
             <com.mavodev.openvpnneo.views.MultiLineRadioGroup
                     android:id="@+id/proxyradiogroup"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/proxy_label"
-                    android:orientation="horizontal"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp">
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
                 <RadioButton
                         android:id="@+id/proxy_none"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Use_no_proxy"/>
+                        android:text="@string/Use_no_proxy" />
 
                 <Space
-                        android:layout_width="10dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content" />
 
                 <RadioButton
                         android:id="@+id/proxy_http"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="HTTP"
-                        tools:ignore="HardcodedText"/>
+                        tools:ignore="HardcodedText" />
 
                 <Space
-                        android:layout_width="10dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content" />
 
                 <RadioButton
                         android:id="@+id/proxy_socks"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Socksv5"
-                        tools:ignore="HardcodedText"/>
+                        tools:ignore="HardcodedText" />
 
                 <Space
-                        android:layout_width="10dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content" />
 
                 <RadioButton
                         android:id="@+id/proxy_orbot"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tor_orbot"
-                />
-
+                        android:text="@string/tor_orbot" />
             </com.mavodev.openvpnneo.views.MultiLineRadioGroup>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/proxyport_layout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="96dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/proxyradiogroup"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:hint="@string/port">
 
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/proxyport"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:text="8080"
-                        tools:ignore="HardcodedText"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/proxyname_layout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+            <!-- Proxy server address + port -->
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/proxyradiogroup"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toStartOf="@id/proxyport_layout"
-                    android:layout_toLeftOf="@id/proxyport_layout"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:hint="@string/address">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/proxyname"
-                        android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/proxyname_layout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:inputType="textUri"
-                        android:singleLine="true"
-                        tools:text="proxy.blinkt.de"
-                        tools:ignore="HardcodedText"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/address">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:visibility="gone"
-                    tools:visibility="visible"
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/proxyname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textUri"
+                            android:singleLine="true"
+                            tools:text="proxy.blinkt.de"
+                            tools:ignore="HardcodedText" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/proxyport_layout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="96dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/port">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/proxyport"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:text="8080"
+                            tools:ignore="HardcodedText" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Proxy authentication (HTTP only) -->
+            <LinearLayout
                     android:id="@+id/proxyauthlayout"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp"
-
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_below="@id/proxyname_layout">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/enable_proxy_auth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/enableproxyauth"
-                        card_view:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="0dp" card_view:layout_constraintStart_toStartOf="parent"
-                />
+                        android:text="@string/enableproxyauth" />
 
-
-                <TextView
-                        android:id="@+id/httpuser_label"
-                        style="@style/item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="17dp"
-                        android:layout_below="@id/enable_proxy_auth"
-                        android:text="@string/proxy_auth_username"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:layout_marginTop="12dp"
-                        card_view:layout_constraintTop_toBottomOf="@+id/enable_proxy_auth"
-                        card_view:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-                        android:layout_marginStart="0dp"/>
-
-
-                <TextView
-                        android:layout_toRightOf="@id/httpuser_label"
-                        android:layout_toEndOf="@id/httpuser_label"
-                        android:layout_below="@id/enable_proxy_auth"
-                        android:layout_width="wrap_content"
-                        android:id="@+id/httppassword_label"
-                        style="@style/item"
-                        android:text="@string/auth_pwquery"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        card_view:layout_constraintStart_toStartOf="@+id/proxypassword"
+                <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        card_view:layout_constraintBottom_toBottomOf="@+id/httpuser_label"
-                />
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
 
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:hint="@string/proxy_auth_username">
 
-                <EditText
-                        android:id="@+id/proxyuser"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_below="@id/httpuser_label"
-                        android:inputType="text"
-                        android:hint="username"
-                        android:minEms="6"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                        tools:ignore="HardcodedText"
-                        android:layout_marginTop="8dp" card_view:layout_constraintTop_toBottomOf="@+id/httpuser_label"
-                        card_view:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/proxyuser"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:singleLine="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_weight="1"
+                            android:hint="@string/auth_pwquery">
 
-                <EditText
-                        android:id="@+id/proxypassword"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_below="@id/httppassword_label"
-                        android:layout_toRightOf="@id/proxyuser"
-                        android:minEms="6"
-                        android:layout_toEndOf="@id/proxyuser"
-                        android:inputType="textPassword"
-                        android:singleLine="true"
-                        tools:text="geheim"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                        card_view:layout_constraintTop_toTopOf="@+id/proxyuser"
-                        card_view:layout_constraintStart_toEndOf="@+id/proxyuser" android:layout_marginLeft="16dp"
-                        android:layout_marginStart="8dp"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/proxypassword"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPassword"
+                                android:singleLine="true"
+                                tools:text="geheim"
+                                tools:ignore="HardcodedText" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+            <!-- Connection timeout -->
             <TextView
                     android:id="@+id/connect_timeout_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/proxyauthlayout"
-                    android:paddingTop="10dp"
-                    android:text="@string/connect_timeout"/>
+                    android:layout_marginTop="16dp"
+                    android:text="@string/connect_timeout" />
 
-            <EditText
-                    android:id="@+id/connect_timeout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/connect_timeout_label"
-                    android:ems="3"
-                    tools:text="232"
-                    android:labelFor="@id/connect_silder"
-                    android:gravity="end"
-                    android:inputType="numberDecimal"/>
-
-            <SeekBar
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/connect_silder"
-                    android:max="300"
-                    android:layout_alignBottom="@id/connect_timeout"
-                    android:layout_toLeftOf="@id/connect_timeout"
-                    android:layout_toStartOf="@id/connect_timeout"
-                    android:layout_below="@id/connect_timeout_label"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp">
 
+                <SeekBar
+                        android:id="@+id/connect_silder"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="300" />
 
+                <EditText
+                        android:id="@+id/connect_timeout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:ems="3"
+                        android:gravity="end"
+                        android:inputType="numberDecimal"
+                        android:labelFor="@id/connect_silder"
+                        tools:text="232" />
+            </LinearLayout>
+
+            <!-- Custom connection options -->
             <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/use_customoptions"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/connect_timeout"
-                    android:paddingTop="10dp"
-                    android:text="@string/custom_connection_options"/>
+                    android:layout_marginTop="16dp"
+                    android:text="@string/custom_connection_options" />
 
             <LinearLayout
                     android:id="@+id/custom_options_layout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/use_customoptions"
                     android:orientation="vertical"
-                    android:paddingRight="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingStart="10dp">
+                    android:layout_marginTop="8dp">
 
                 <TextView
                         android:id="@+id/warnung_custom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:labelFor="@id/customoptions"
-                        android:text="@string/custom_connection_options_warng"/>
+                        android:text="@string/custom_connection_options_warng" />
 
                 <EditText
                         android:id="@+id/customoptions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:inputType="textMultiLine"
-                        android:lines="5"/>
+                        android:lines="5" />
             </LinearLayout>
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/remoteSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/portnumber_layout"
-                    android:layout_alignRight="@+id/portnumber_layout"
-                    android:layout_below="@+id/portnumber_layout"
-                    android:layout_gravity="right|bottom"
-                    android:text="@string/enabled_connection_entry"/>
-
-            <ImageButton
-                    android:id="@+id/remove_connection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/portnumber_layout"
-                    android:layout_alignRight="@+id/portnumber_layout"
-                    android:layout_below="@id/remoteSwitch"
-                    android:layout_margin="12dp"
-                    android:background="@drawable/ic_menu_delete_grey"
-                    android:contentDescription="@string/remove_connection_entry"
-                    android:padding="12dp"/>
-
-
-        </RelativeLayout>
+        </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 </FrameLayout>

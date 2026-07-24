@@ -56,7 +56,6 @@ import com.mavodev.openvpnneo.activities.AboutActivity
 import com.mavodev.openvpnneo.activities.FAQActivity
 import com.mavodev.openvpnneo.activities.SettingsActivity
 import com.mavodev.openvpnneo.activities.GraphActivity
-import com.mavodev.openvpnneo.activities.OpenSSLSpeed
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.core.OpenVPNService
 import com.mavodev.openvpnneo.core.PasswordDialogFragment.Companion.newInstance
@@ -468,10 +467,6 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     }
 
     // MainMenuBottomSheet.Listener
-    override fun onMenuChangeSorting() {
-        changeSorting()
-    }
-
     override fun onMenuSettings() {
         startActivity(Intent(getActivity(), SettingsActivity::class.java as Class<SettingsActivity>))
     }
@@ -482,10 +477,6 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
 
     override fun onMenuGraph() {
         startActivity(Intent(getActivity(), GraphActivity::class.java as Class<GraphActivity>))
-    }
-
-    override fun onMenuOpenSSLSpeed() {
-        startActivity(Intent(getActivity(), OpenSSLSpeed::class.java))
     }
 
     override fun onMenuFAQ() {
@@ -515,7 +506,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         startASProfileImport()
     }
 
-    private fun changeSorting(): Boolean {
+    fun changeSorting(): Boolean {
         val prefs = Preferences.getDefaultSharedPreferences(requireActivity())
         val oldValue = prefs.getBoolean(PREF_SORT_BY_LRU, false)
         val prefsedit = prefs.edit()

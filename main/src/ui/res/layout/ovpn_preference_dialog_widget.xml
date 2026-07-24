@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Widget shown on the right of dialog-opening preference rows (ListPreference,
+  ~ EditTextPreference, DialogPreference, file pickers) in the profile editor.
+  ~ Mirrors the "action" button used on the general settings screen so these rows
+  ~ get an explicit "open dialog" affordance instead of relying on the whole row.
+  ~ It is purely decorative (not focusable/clickable); the preference row itself
+  ~ still handles the click and opens the dialog.
+  -->
+<androidx.appcompat.widget.AppCompatButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="60dp"
+    android:layout_height="32dp"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/settings_action_button_bg"
+    android:clickable="false"
+    android:focusable="false"
+    android:duplicateParentState="true"
+    android:gravity="center"
+    android:text="›"
+    android:textColor="?android:attr/textColorPrimary"
+    android:textSize="18sp"
+    android:contentDescription="@null" />

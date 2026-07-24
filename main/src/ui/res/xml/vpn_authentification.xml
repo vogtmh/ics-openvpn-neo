@@ -5,6 +5,11 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+            android:layout="@layout/ovpn_preference_header"
+            android:selectable="false"
+            android:title="@string/settings_auth"
+            app:iconSpaceReserved="false" />
     <PreferenceCategory android:title="@string/tls_settings">
         <ListPreference
                 android:entries="@array/tls_profile_entries"
@@ -12,6 +17,7 @@
                 android:key="tls_profile"
                 android:persistent="false"
                 android:title="@string/tls_profile"
+                android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
         <SwitchPreference
                 android:key="remoteServerTLS"
@@ -29,14 +35,16 @@
                 android:key="remotecn"
                 android:negativeButtonText="@string/cancel"
                 android:positiveButtonText="@android:string/ok"
-                android:title="@string/enter_tlscn_title" />
+                android:title="@string/enter_tlscn_title"
+                android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
         <EditTextPreference
                 android:dependency="checkRemoteCN"
                 android:dialogMessage="Field  in  the X.509 certificate subject to be used as the username (default=CN)."
                 android:key="remotex509name"
                 android:persistent="false"
-                android:title="X509 Username Field" />
+                android:title="X509 Username Field"
+                android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/tls_authentication">
@@ -52,6 +60,7 @@
 
                 android:key="tlsAuthFile"
                 android:title="@string/tls_auth_file"
+                android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
 
         <ListPreference
@@ -62,6 +71,7 @@
                 android:key="tls_direction"
                 android:persistent="false"
                 android:title="@string/tls_direction"
+                android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/encryption">
@@ -71,6 +81,7 @@
                 android:key="dataciphers"
                 android:persistent="false"
                 android:title="@string/encryption_cipher"
+                android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
         <EditTextPreference
                 android:dialogMessage="@string/auth_dialog_message"
@@ -79,6 +90,7 @@
                 android:persistent="false"
                 android:title="@string/packet_auth"
 
+                android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

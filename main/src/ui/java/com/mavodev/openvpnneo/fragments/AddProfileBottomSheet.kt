@@ -18,7 +18,7 @@ import com.mavodev.openvpnneo.R
  */
 class AddProfileBottomSheet : BottomSheetDialogFragment() {
 
-    override fun getTheme(): Int = R.style.blinkt_BottomSheet
+    override fun getTheme(): Int = R.style.ThemeOverlay_OpenVPNNeo_BottomSheet
 
     interface Listener {
         fun onCreateManually()

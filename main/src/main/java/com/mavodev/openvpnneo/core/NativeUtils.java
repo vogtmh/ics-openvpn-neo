@@ -6,7 +6,6 @@
 package com.mavodev.openvpnneo.core;
 
 import android.os.Build;
-import com.mavodev.openvpnneo.BuildConfig;
 
 import java.security.InvalidKeyException;
 
@@ -54,18 +53,9 @@ public class NativeUtils {
 
     private static native byte[] rsapss(int hashtype, int MSBits, int rsa_size, byte[] from);
 
-    public final static int[] openSSLlengths = {
-        16, 64, 256, 1024, 1500, 8 * 1024, 16 * 1024
-    };
-
-    public static native double[] getOpenSSLSpeed(String algorithm, int testnum);
-
     static {
         if (!isRoboUnitTest()) {
             System.loadLibrary("ovpnutil");
-            if (!BuildConfig.FLAVOR.equals("skeleton")) {
-                System.loadLibrary("osslspeedtest");
-            }
         }
     }
 

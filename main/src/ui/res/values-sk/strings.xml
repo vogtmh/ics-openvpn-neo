@@ -259,12 +259,6 @@
     <string name="rdn_prefix">RDN prefix</string>
     <string name="tls_remote_deprecated">tls-remote (ZASTARANÉ)</string>
     <string name="help_translate">Môžeš pomôcť s prekladom, navštív http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s sa pokúša o kontrolu %2$s</string>
-    <string name="remote_warning">Pokračovaním dávaš aplikácií privilégiá pre kompletnú kontrolu OpenVPN a na zachytávanie všetkého sieťovej prevádzky.<b>Nepotvrdzuj, ak neveríš aplikácií.</b> V opačnom prípade riskuješ napadnutia nebezpečným softvérom</string>
-    <string name="remote_trust">Verím tejto aplikácii.</string>
-    <string name="no_external_app_allowed">Žiadne aplikácii nie je povolené použiť externý API</string>
-    <string name="allowed_apps">Povolené aplikácie: %s</string>
-    <string name="clearappsdialog">Vyčistiť zoznam povolených aplikácií?\nSúčasný zoznam povolených aplikácií:\n\n%s</string>
     <string name="screenoff_summary">\"Pozastaviť VPN, ak je obrazovka vypnutá a za posledných 60 sekúnd sa prenieslo menej ako 64 kB. Ak je voľba\" Trvalé TUN\" povolená, pozastavenie VPN dostane zariadenie do stavu BEZ konektivity. Bez \"Trvalé TUN\" možnosti nebude mať zariadenie VPN pripojenie (ochranu).</string>
     <string name="screenoff_title">Pozastaviť VPN pripojenia pri vypnutí obrazovky</string>
     <string name="screenoff_pause">Pozastaviť pripojenie pri vypnutej obrazovke: menej ako %1$s za %2$s sekund</string>
@@ -280,7 +274,6 @@
     <string name="vpnbehaviour">Správanie VPN</string>
     <string name="allow_vpn_changes">Povoliť zmeny VPN profilov</string>
     <string name="hwkeychain">Hardvérové úložisko:</string>
-    <string name="permission_icon_app">Ikona aplikácie snažiaci sa použiť OpenVPN pre Android</string>
     <string name="thanks_for_donation">Vďaka za sponzorovanie %s!</string>
     <string name="logCleared">Log vyčistený.</string>
     <string name="show_password">ukázať heslo</string>
@@ -310,7 +303,6 @@
     <string name="mssfix_checkbox">Prepísať hodnotu MSS pre TCP obsah</string>
     <string name="mssfix_dialogtitle">Nastaviť MSS pre TCP obsah</string>
     <string name="client_behaviour">Správanie klienta</string>
-    <string name="clear_external_apps">Zrušiť povolene externé aplikácie</string>
     <string name="loading">Načítanie...</string>
     <string name="allowed_vpn_apps_info">Povolené VPN aplikácie: %1$s</string>
     <string name="disallowed_vpn_apps_info">Zakázané VPN aplikácie: %1$s</string>
@@ -415,12 +407,7 @@
     <string name="channel_name_status">Zmena stavu spojenia</string>
     <string name="channel_description_status">Stav spojení s OpenVPN sa mení (Pripaja, overujem, ...)</string>
     <string name="weakmd_title">Slabé (MD5) kontrolnej sumy v podpisu certifikátu (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">Rýchlostný test OpenSSL</string>
     <string name="openssl_cipher_name">Mená OpenSSL šifer</string>
-    <string name="osslspeedtest">Rýchlostný krypto test OpnSSL</string>
-    <string name="openssl_error">OpenSSL vrátilo chybu</string>
-    <string name="running_test">Test beží...</string>
-    <string name="test_algoirhtms">Testuj vybrané algoritmy</string>
     <string name="all_app_prompt">Externá aplikácia sa pokúša ovládať %s. Aplikáciu požadujúcu prístup nie je možné určiť. Povolením tejto aplikácie získate prístup k VŠETKÝM aplikáciám.</string>
     <string name="openvpn3_nostatickeys">Implementácia OpenVPN 3 C ++ nepodporuje statické kľúče. V rámci všeobecných nastavení zmeňte na OpenVPN 2.x.</string>
     <string name="openvpn3_pkcs12">Priame použitie súborov PKCS12 s implementáciou OpenVPN 3 C ++ nie je podporované. Importujte súbory pkcs12 do úložiska kľúčov Android alebo ich zmeňte na OpenVPN 2.x v rámci všeobecných nastavení.</string>

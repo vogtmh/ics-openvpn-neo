@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
-import com.mavodev.openvpnneo.api.AppRestrictions
 
 internal class Settings_UserEditable : KeyChainSettingsFragment() {
 
@@ -27,10 +26,6 @@ internal class Settings_UserEditable : KeyChainSettingsFragment() {
     }
 
     private fun getPackageString(packageName: String?): String {
-        if (AppRestrictions.PROFILE_CREATOR == packageName) {
-            return "Android Enterprise Management"
-        }
-
         val pm = requireActivity().packageManager
         val ai = try {
             pm.getApplicationInfo(packageName ?: "", 0)

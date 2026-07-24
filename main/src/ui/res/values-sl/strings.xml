@@ -256,12 +256,6 @@
     <string name="rdn_prefix">Predpona RDN</string>
     <string name="tls_remote_deprecated">tls-remote (OPUŠČENO)</string>
     <string name="help_translate">Prevajati lahko pomagate z obiskom http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s poizkuša nadzirati %2$s</string>
-    <string name="remote_warning">Z nadaljevanjem dajete programu dovoljenje za popoln nadzor OpenVPN-a za Android in prestrezanje vsega omrežnega prometa. <b>NE sprejmite, razen če zaupate programu.</b> V nasprotnem primeru lahko vaši podatki postanejo tarča zlonamerne programske opreme.</string>
-    <string name="remote_trust">Zaupam temu programu.</string>
-    <string name="no_external_app_allowed">Noben program ne sme uporabiti zunanjega API-ja</string>
-    <string name="allowed_apps">Programi z dovoljenjem: %s</string>
-    <string name="clearappsdialog">Počisti seznam zunanjih programov z dovoljenjem?\nTrenutni seznam:\n\n%s</string>
     <string name="screenoff_summary">\"Premor VPN-a, ko je zaslon izklopljen in je v 60 s preneseno manj kot 64 kB. Ko je omogočena možnost \"Vztrajni TUN\", bo premor VPN-a odstranil VSO povezljivost naprave. Brez te možnosti naprava ne bo imela povezave VPN/zaščite.</string>
     <string name="screenoff_title">Premor VPN-a po izk. zas.</string>
     <string name="screenoff_pause">Premor povezave v stanju izklopljenega zaslona: manj kot %1$s v %2$s s</string>
@@ -277,7 +271,6 @@
     <string name="vpnbehaviour">Vedenje VPN-a</string>
     <string name="allow_vpn_changes">Dovoli spremembe profilov VPN</string>
     <string name="hwkeychain">Strojna shramba ključev:</string>
-    <string name="permission_icon_app">Ikona programa poizkuša uporabiti OpenVPN za Android</string>
     <string name="thanks_for_donation">Hvala, da ste darovali %s!</string>
     <string name="logCleared">Dnevnik počiščen.</string>
     <string name="show_password">Prikaži geslo</string>
@@ -307,7 +300,6 @@
     <string name="mssfix_checkbox">Preglasi vrednost MSS vsebine TCP</string>
     <string name="mssfix_dialogtitle">Nastavi MSS vsebine TCP</string>
     <string name="client_behaviour">Vedenje odjemalca</string>
-    <string name="clear_external_apps">Počisti zun. prog. z dov.</string>
     <string name="loading">Nalaganje &#8230;</string>
     <string name="allowed_vpn_apps_info">Programi VPN z dovoljenjem: %1$s</string>
     <string name="disallowed_vpn_apps_info">Programi VPN brez dovoljenja: %1$s</string>
@@ -405,8 +397,6 @@
     <string name="volume_gbyte">%.1f GB</string>
     <string name="channel_name_background">Statistika povezave</string>
     <string name="weakmd_title">Šibke zgoščene vrednosti (MD5) v podpisu certifikata.</string>
-    <string name="title_activity_open_sslspeed">Test hitrosti OpenSSL</string>
-    <string name="running_test">Izvajam testiranje...</string>
     <string name="proxy">Posredniški strežnik</string>
     <string name="Use_no_proxy">Noben</string>
     <string name="tor_orbot">Tor (Orbot)</string>

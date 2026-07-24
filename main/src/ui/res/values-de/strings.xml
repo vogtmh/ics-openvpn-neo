@@ -269,12 +269,6 @@
     <string name="rdn_prefix">RDN-Präfix</string>
     <string name="tls_remote_deprecated">tls-remote (VERALTET)</string>
     <string name="help_translate">Sie können helfen, die Übersetzung zu verbessern: Besuchen Sie http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s versucht, %2$s zu steuern</string>
-    <string name="remote_warning">Wenn Sie fortfahren, gestatten Sie der App, OpenVPN für Android komplett zu kontrollieren und den gesamten Netzwerkverkehr abzufangen.<b>Akzeptieren Sie nur, wenn Sie der App vertrauen.</b>Anderenfalls riskieren Sie, dass Ihre Daten von schädlicher Software manipuliert werden.</string>
-    <string name="remote_trust">Ich vertraue dieser App.</string>
-    <string name="no_external_app_allowed">Keine App für die Verwendung der API freigegeben</string>
-    <string name="allowed_apps">Zugelassene Apps: %s</string>
-    <string name="clearappsdialog">Liste der freigegeben externen Apps löschen? \nAktuelle Liste der freigegebenen Apps:\n\n%s</string>
     <string name="screenoff_summary">VPN anhalten, wenn der Bildschirm ausgeschaltet ist und weniger als 64 kB in 60 Sekunden übertragen wurden. Falls die Option \"Persistentes tun-Device\" ausgewählt ist, wird durch das Gerät nach dem Anhalten des VPNs KEINE Netzwerkverbindung haben. Ohne die Option \"Persistentes tun-Device\" benutzt das Gerät die normale (ungesicherte) Internetverbindung, wenn das VPN angehalten wird.</string>
     <string name="screenoff_title">Anhalten bei Inaktivität</string>
     <string name="screenoff_pause">VPN-Verbindung wird angehalten, da weniger als %1$s in %2$ss</string>
@@ -290,7 +284,6 @@
     <string name="vpnbehaviour">VPN</string>
     <string name="allow_vpn_changes">Änderungen an VPN-Profilen zulassen</string>
     <string name="hwkeychain">Im Hardware-Zertifikatsspeicher gespeichert:</string>
-    <string name="permission_icon_app">Symbol der App, die versucht, OpenVPN für Android zu steuern</string>
     <string name="thanks_for_donation">Vielen Dank für die %s Spende!</string>
     <string name="logCleared">Protokoll gelöscht.</string>
     <string name="show_password">Passwort anzeigen</string>
@@ -320,7 +313,6 @@
     <string name="mssfix_checkbox">MSS-Wert der TCP-Nutzlast überschreiben</string>
     <string name="mssfix_dialogtitle">MSS der TCP-Nutzlast</string>
     <string name="client_behaviour">Client-Verhalten</string>
-    <string name="clear_external_apps">Berechtigungen für die Steuerung von OpenVPN widerrufen</string>
     <string name="loading">Wird geladen&#8230;</string>
     <string name="allowed_vpn_apps_info">Zugelassene Apps für das VPN: %1$s</string>
     <string name="disallowed_vpn_apps_info">Nicht zugelassene Apps für das VPN: %1$s</string>
@@ -426,12 +418,7 @@
     <string name="channel_name_status">Verbindungsstatus Änderungen</string>
     <string name="channel_description_status">Statusänderungen der OpenVPN-Verbindung (Verbindung, Authentifizierung,...)</string>
     <string name="weakmd_title">Schwache (MD5) Hashes in Zertifikatssignatur (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL Geschwindigkeitstest</string>
     <string name="openssl_cipher_name">OpenSSL Chiffrenamen</string>
-    <string name="osslspeedtest">OpenSSL Crypto Geschwindigkeitstest</string>
-    <string name="openssl_error">OpenSSL hat einen Fehler gemeldet</string>
-    <string name="running_test">Test läuft&#8230;</string>
-    <string name="test_algoirhtms">Ausgewählte Algorithmen testen</string>
     <string name="all_app_prompt">Eine andere App versucht, %s zu steuern. Die anforderne App kann nicht bestimmt werden. Wenn Sie diesen Zugriff zulassen, erhalten ALLE Apps Zugriff.</string>
     <string name="openvpn3_nostatickeys">Die OpenVPN 3 C ++ - Implementierung unterstützt keine statischen Schlüssel. Bitte wechseln Sie zu OpenVPN 2.x unter den allgemeinen Einstellungen.</string>
     <string name="openvpn3_pkcs12">Die Benutzung von PKCS12 Dateien mit der OpenVPN 3 C++ Implementierung wird nicht unterstützt. Bitte importieren Sie entweder die PKCS12 Datei in den Android Keystore oder wählen Sie die Option OpenVPN 2.x in den allgemeinen Einstellungen aus.</string>

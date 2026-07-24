@@ -266,12 +266,6 @@ API VPNService не позволяет указывать сети, которы
     <string name="rdn_prefix">Префикс RDN</string>
     <string name="tls_remote_deprecated">tls-remote (УСТАРЕЛО)</string>
     <string name="help_translate">Вы можете помочь с переводом, посетив https://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s пытается контролировать %2$s</string>
-    <string name="remote_warning">Продолжая, вы даёте приложению «OpenVPN для Android» разрешение на полный контроль и перехват всего сетевого трафика. <b> Не продолжайте, если не доверяете этому приложению. </b> В противном случае вы рискуете подвергнуть свои данные риску компрометации вредоносным ПО.</string>
-    <string name="remote_trust">Я доверяю этому приложению.</string>
-    <string name="no_external_app_allowed">Нет приложений, разрешённых для внешнего API</string>
-    <string name="allowed_apps">Разрешённые приложения: %s</string>
-    <string name="clearappsdialog">Очистить список разрешенных внешних приложений?\nТекущий список разрешенных приложений:\n\n%s</string>
     <string name="screenoff_summary">Приостанавливать VPN, если экран выключен и передано меньше 64kb данных за 60 сек. Когда включена опция \"Постоянный туннель\", приостановка VPN оставит ваше устройство без сетевого подключения. Без опции \"Постоянный туннель\" устройство не будет иметь VPN-соединения/защиты.</string>
     <string name="screenoff_title">Приостановить VPN-соединение после выключения экрана</string>
     <string name="screenoff_pause">Приостановка подключения при выключенном экране: менее %1$s в %2$ss</string>
@@ -287,7 +281,6 @@ API VPNService не позволяет указывать сети, которы
     <string name="vpnbehaviour">Поведение VPN</string>
     <string name="allow_vpn_changes">Разрешить изменение конфигураций VPN</string>
     <string name="hwkeychain">Аппаратное хранилище ключей:</string>
-    <string name="permission_icon_app">Значок приложения, пытающегося использовать «OpenVPN для Android»</string>
     <string name="thanks_for_donation">Спасибо за донат %s!</string>
     <string name="logCleared">Журнал очищен.</string>
     <string name="show_password">Показать пароль</string>
@@ -319,7 +312,6 @@ API VPNService не позволяет указывать сети, которы
     <string name="mssfix_checkbox">Переопределить MSS для нагрузки TCP</string>
     <string name="mssfix_dialogtitle">Задать MSS для нагрузки TCP</string>
     <string name="client_behaviour">Поведение клиента</string>
-    <string name="clear_external_apps">Очистить разрешённые внешние приложения</string>
     <string name="loading">Загрузка&#8230;</string>
     <string name="allowed_vpn_apps_info">Разрешённые приложения VPN: %1$s</string>
     <string name="disallowed_vpn_apps_info">Запрещённые приложения VPN: %1$s</string>
@@ -431,12 +423,7 @@ DNS не работает, если сервер DNS не в диапазоне 
     <string name="channel_name_status">Изменение статуса подключения</string>
     <string name="channel_description_status">Изменения состояния соединения OpenVPN (подключение, аутентификация, &#8230;)</string>
     <string name="weakmd_title">Слабые (MD5) хеши в сигнатуре сертификата (SSL_CTX_use_certificate MD слишком слабый)</string>
-    <string name="title_activity_open_sslspeed">Тест скорости OpenSSL</string>
     <string name="openssl_cipher_name">Названия шифров OpenSSL</string>
-    <string name="osslspeedtest">Тест скорости шифрования OpenSSL</string>
-    <string name="openssl_error">OpenSSL возвратил ошибку</string>
-    <string name="running_test">Тестирование&#8230;</string>
-    <string name="test_algoirhtms">Тест выбранных алгоритмов</string>
     <string name="all_app_prompt">Внешнее приложение пытается управлять %s. Приложение, запрашивающее доступ, не может быть определено. Разрешение этого приложения предоставляет доступ ко ВСЕМ приложениям.</string>
     <string name="openvpn3_nostatickeys">Реализация OpenVPN 3 на C ++ не поддерживает статические ключи. Переключитесь на OpenVPN 2.x в общих настройках.</string>
     <string name="openvpn3_pkcs12">Использование файлов PKCS12 напрямую с помощью OpenVPN 3 C ++ не поддерживается. Импортируйте файлы PKCS12 в хранилище ключей Android или переключитесь на OpenVPN 2.x в общих настройках.</string>

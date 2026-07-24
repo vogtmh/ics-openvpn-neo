@@ -46,7 +46,7 @@
         <activity android:name=".activities.InternalWebView" />
         <activity
                 android:name=".activities.CredentialsPopup"
-                android:theme="@style/blinkt.dialog" />
+                android:theme="@style/Theme.OpenVPNNeo.Dialog" />
 
 
         <activity
@@ -161,17 +161,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-
-        <activity
-                android:exported="false"
-                android:name=".activities.OpenSSLSpeed"
-                android:label="@string/title_activity_open_sslspeed"
-                android:enableOnBackInvokedCallback="false"
-                android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.mavodev.openvpnneo.activities.MainActivity" />
         </activity>
 
         <activity

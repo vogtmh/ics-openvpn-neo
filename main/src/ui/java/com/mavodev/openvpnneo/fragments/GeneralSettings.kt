@@ -4,12 +4,8 @@
  */
 package com.mavodev.openvpnneo.fragments
 
-import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.net.VpnService
 import android.os.Build
 import android.os.Bundle
@@ -20,15 +16,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.preference.*
 import com.mavodev.openvpnneo.BuildConfig
 import com.mavodev.openvpnneo.R
-import com.mavodev.openvpnneo.activities.OpenSSLSpeed
-import com.mavodev.openvpnneo.api.ConfirmDialog.ANONYMOUS_PACKAGE
-import com.mavodev.openvpnneo.api.ExternalAppDatabase
 import com.mavodev.openvpnneo.core.ProfileManager
 import java.io.File
 
-class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener,
-    DialogInterface.OnClickListener, Preference.OnPreferenceChangeListener {
-    private lateinit var mExtapp: ExternalAppDatabase
+class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
     private lateinit var mAlwaysOnVPN: ListPreference
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,9 +58,6 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
             if (useInternalFileSelector != null)
                 devHacks.removePreference(useInternalFileSelector)
         }
-        mExtapp = ExternalAppDatabase(activity)
-        val clearapi = findPreference<Preference>("clearapi") as Preference
-        clearapi.onPreferenceClickListener = this
         if (devHacks.preferenceCount == 0) preferenceScreen.removePreference(devHacks)
         if (!BuildConfig.openvpn3) {
             val appBehaviour = findPreference<Preference>("app_behaviour") as PreferenceCategory
@@ -123,8 +111,6 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
                 }
                 true
             }
-
-        setClearApiSummary()
     }
 
     override fun onResume() {
@@ -155,64 +141,8 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
         return true
     }
 
-    private fun setClearApiSummary() {
-        val clearapi = findPreference<Preference>("clearapi") as Preference
-        if (mExtapp.extAppList.isEmpty()) {
-            clearapi.isEnabled = false
-            clearapi.setSummary(R.string.no_external_app_allowed)
-        } else {
-            clearapi.isEnabled = true
-            clearapi.summary = getString(R.string.allowed_apps, getExtAppList(", "))
-        }
-    }
-
-    private fun getExtAppList(delim: String): String {
-        var app: ApplicationInfo
-        val pm = requireActivity().packageManager
-        val applist = StringBuilder()
-        for (packagename in mExtapp.extAppList) {
-            if (packagename == ANONYMOUS_PACKAGE) {
-                applist.append("(Any app)")
-            } else {
-                try {
-                    app = pm.getApplicationInfo(packagename, 0)
-                    if (applist.length != 0) applist.append(delim)
-                    applist.append(app.loadLabel(pm))
-                } catch (e: PackageManager.NameNotFoundException) {
-                    // App not found. Remove it from the list
-                    mExtapp.removeApp(packagename)
-                }
-            }
-        }
-        return applist.toString()
-    }
-
     // Check if the tun module exists on the file system
     private val isTunModuleAvailable: Boolean
         get() =// Check if the tun module exists on the file system
             File("/system/lib/modules/tun.ko").length() > 10
-
-    override fun onPreferenceClick(preference: Preference): Boolean {
-        if (!mExtapp.checkAllowingModifyingRemoteControl(requireContext()))
-        {
-            return false;
-        }
-        if (preference.key == "clearapi") {
-            val builder = MaterialAlertDialogBuilder(
-                requireContext()
-            )
-            builder.setPositiveButton(R.string.clear, this)
-            builder.setNegativeButton(android.R.string.cancel, null)
-            builder.setMessage(getString(R.string.clearappsdialog, getExtAppList("\n")))
-            builder.show()
-        }
-        return true
-    }
-
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        if (which == Dialog.BUTTON_POSITIVE) {
-            mExtapp.clearAllApiApps()
-            setClearApiSummary()
-        }
-    }
 }

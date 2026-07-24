@@ -66,7 +66,6 @@ import com.mavodev.openvpnneo.LaunchVPN;
 import com.mavodev.openvpnneo.R;
 import com.mavodev.openvpnneo.VpnProfile;
 import com.mavodev.openvpnneo.activities.DisconnectVPN;
-import com.mavodev.openvpnneo.api.ExternalAppDatabase;
 import com.mavodev.openvpnneo.core.VpnStatus.ByteCountListener;
 import com.mavodev.openvpnneo.core.VpnStatus.StateListener;
 
@@ -140,17 +139,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         }
 
         @Override
-        public void addAllowedExternalApp(String packagename) throws RemoteException {
-            OpenVPNService.this.addAllowedExternalApp(packagename);
-        }
-
-        @Override
-        public boolean isAllowedExternalApp(String packagename) throws RemoteException {
-            return OpenVPNService.this.isAllowedExternalApp(packagename);
-
-        }
-
-        @Override
         public void challengeResponse(String repsonse) throws RemoteException {
             OpenVPNService.this.challengeResponse(repsonse);
         }
@@ -202,20 +190,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     }
 
 
-
-    @Override
-    public void addAllowedExternalApp(String packagename) throws RemoteException {
-        ExternalAppDatabase extapps = new ExternalAppDatabase(OpenVPNService.this);
-        if(extapps.checkAllowingModifyingRemoteControl(this)) {
-            extapps.addApp(packagename);
-        }
-    }
-
-    @Override
-    public boolean isAllowedExternalApp(String packagename) throws RemoteException {
-        ExternalAppDatabase extapps = new ExternalAppDatabase(OpenVPNService.this);
-        return extapps.checkRemoteActionPermission(this, packagename);
-    }
 
     @Override
     public void challengeResponse(String response) throws RemoteException {

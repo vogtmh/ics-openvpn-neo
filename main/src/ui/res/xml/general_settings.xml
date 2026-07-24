@@ -61,12 +61,6 @@
                 android:singleLineTitle="true"
                 android:summary="@string/encrypt_profiles_summary"
                 android:title="@string/encrypt_profiles" />
-
-        <Preference
-                android:key="clearapi"
-                android:persistent="false"
-                android:singleLineTitle="false"
-                android:title="@string/clear_external_apps" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/vpnbehaviour">

@@ -258,12 +258,6 @@
     <string name="rdn_prefix">RDN උපසර්ගය</string>
     <string name="tls_remote_deprecated">tls-දුරස්ථ (අත් හරින ලද)</string>
     <string name="help_translate">ඔබට https://crowdin.net/project/ics-openvpn/invite වෙත පිවිසීමෙන් පරිවර්තනයට උදවු කළ හැක</string>
-    <string name="prompt">%1$s පාලනය කිරීමට උත්සාහ %2$s</string>
-    <string name="remote_warning">ඉදිරියට යාමෙන්, ඔබ Android සඳහා OpenVPN සම්පූර්ණයෙන්ම පාලනය කිරීමට සහ සියලු ජාල තදබදයට බාධා කිරීමට යෙදුමට අවසර ලබා දෙයි.<b>ඔබ යෙදුම විශ්වාස කරන්නේ නම් මිස පිළිගන්න එපා.</b> එසේ නොමැතිනම්, ඔබ ඔබේ දත්ත අනිෂ්ට මෘදුකාංග මගින් අවදානමට ලක්වීමේ අවදානමක් දරයි.\"</string>
-    <string name="remote_trust">මම මෙය විශ්වාස කරමි.</string>
-    <string name="no_external_app_allowed">බාහිර API භාවිතා කිරීමට කිසිදු යෙදුමකට අවසර නැත</string>
-    <string name="allowed_apps">ඉඩදුන් යෙදුම්: %s</string>
-    <string name="clearappsdialog">අවසර ලත් බාහිර යෙදුම් ලැයිස්තුව හිස් කරන්නද?\nදැනට අවසර දී ඇති යෙදුම් ලැයිස්තුව:\n\n%s</string>
     <string name="screenoff_summary">තිරය ක්‍රියාවිරහිත වූ විට සහ 60 ගණන්වලදී 64 kB ට වඩා අඩු දත්ත මාරු කළ විට VPN විරාම කරන්න. \"Persistent Tun\" විකල්පය සක්‍රීය කර ඇති විට VPN විරාම කිරීමෙන් ඔබගේ උපාංගයට ජාල සම්බන්ධතාවයක් නොමැත. \"Persistent Tun\" විකල්පය නොමැතිව උපාංගයට VPN සම්බන්ධතාවයක්/ආරක්ෂාවක් නොමැත.</string>
     <string name="screenoff_title">තිරය අක්‍රිය වූ පසු VPN සම්බන්ධතාව විරාම කරන්න</string>
     <string name="screenoff_pause">තිරය අක්‍රිය තත්වයේ සම්බන්ධතාවය විරාම කිරීම: තත්පර %2$sකින් %1$s ට අඩු</string>
@@ -279,7 +273,6 @@
     <string name="vpnbehaviour">VPN හැසිරීම</string>
     <string name="allow_vpn_changes">VPN පැතිකඩ වෙත වෙනස්කම් වලට ඉඩ දෙන්න</string>
     <string name="hwkeychain">දෘඪාංග යතුරුගඩාව:</string>
-    <string name="permission_icon_app">Android සඳහා OpenVPN භාවිතා කිරීමට උත්සාහ කරන යෙදුමේ නිරූපකය</string>
     <string name="thanks_for_donation">%s පරිත්‍යාග කිරීම ගැන ස්තුතියි!</string>
     <string name="logCleared">ලොගය හිස් කරන ලදී.</string>
     <string name="show_password">මුරපදය පෙන්වන්න</string>
@@ -308,7 +301,6 @@
     <string name="mssfix_checkbox">TCP ගෙවීමේ MSS අගය අභිබවා යන්න</string>
     <string name="mssfix_dialogtitle">TCP ගෙවීමේ MSS සකසන්න</string>
     <string name="client_behaviour">පාරිභෝගික හැසිරීම</string>
-    <string name="clear_external_apps">අවසර ලත් බාහිර යෙදුම් හිස් කරන්න</string>
     <string name="loading">පූරණයෙන්&#8230;</string>
     <string name="allowed_vpn_apps_info">ඉඩදුන් අ.පු.ජා. යෙදුම්: %1$s</string>
     <string name="disallowed_vpn_apps_info">අවසර නොදුන් VPN යෙදුම්: %1$s</string>
@@ -419,12 +411,7 @@
     <string name="channel_name_status">සම්බන්ධතා තත්ත්වය වෙනස් වීම</string>
     <string name="channel_description_status">OpenVPN සම්බන්ධතාවයේ තත්ව වෙනස්කම් (සම්බන්ධ කිරීම, සත්‍යාපනය කිරීම,&#8230;)</string>
     <string name="weakmd_title">සහතික අත්සනෙහි දුර්වල (MD5) හැෂ් (SSL_CTX_use_certificate md ඉතා දුර්වලයි)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL වේග පරීක්ෂණය</string>
     <string name="openssl_cipher_name">OpenSSL කේතාංක නම්</string>
-    <string name="osslspeedtest">OpenSSL Crypto වේග පරීක්ෂණය</string>
-    <string name="openssl_error">OpenSSL දෝෂයක් ලබා දුන්නේය</string>
-    <string name="running_test">අත්හදාබැලීම සිදුවෙමින්&#8230;</string>
-    <string name="test_algoirhtms">තෝරාගත් ඇල්ගොරිතම පරීක්ෂා කරන්න</string>
     <string name="all_app_prompt">බාහිර යෙදුමක් %sපාලනය කිරීමට උත්සාහ කරයි. ප්‍රවේශය ඉල්ලන යෙදුම නිර්ණය කළ නොහැක. මෙම යෙදුමට ඉඩ දීමෙන් සියලුම යෙදුම් වලට ප්‍රවේශය ලබා දේ.</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C++ ක්‍රියාත්මක කිරීම ස්ථිතික යතුරු සඳහා සහය නොදක්වයි. කරුණාකර සාමාන්‍ය සැකසුම් යටතේ OpenVPN 2.x වෙත වෙනස් කරන්න.</string>
     <string name="openvpn3_pkcs12">OpenVPN 3 C++ ක්‍රියාත්මක කිරීම සමඟ සෘජුවම PKCS12 ගොනු භාවිතා කිරීම සහය නොදක්වයි. කරුණාකර pkcs12 ගොනු Android යතුරු ගබඩාව වෙත ආයාත කරන්න හෝ සාමාන්‍ය සැකසුම් යටතේ OpenVPN 2.x වෙත වෙනස් කරන්න.</string>

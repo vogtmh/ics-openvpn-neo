@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- ============================================================
+     Single source of truth for the app color scheme (LIGHT mode).
+     Dark-mode values live in res/values-night/colors.xml.
+     The theme (styles.xml) only maps Material3 attributes to these
+     tokens, so there is no per-dialog / per-file hardcoded hex.
+     ============================================================ -->
 <resources>
+    <!-- Brand -->
+    <color name="accent">#9718EC</color>
+    <color name="on_accent">#FFFFFF</color>
+    <!-- Legacy names, referenced directly by layouts and the tab bar -->
     <color name="primary">#9718EC</color>
     <color name="primary_dark">#000000</color>
-    <color name="accent">#9718EC</color>
+
+    <!-- Text (legacy names, referenced by many layouts) -->
     <color name="text_primary">#000000</color>
     <color name="text_secondary">#8A000000</color>
+
+    <!-- Window / app background -->
+    <color name="app_background">#FAFAFA</color>
+
+    <!-- Material3 surface ramp -->
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#1B1B1B</color>
+    <color name="on_surface_variant">#5F5F5F</color>
+    <color name="surface_container_lowest">#FFFFFF</color>
+    <color name="surface_container_low">#F7F7F7</color>
+    <color name="surface_container">#F1F1F1</color>
+    <color name="surface_container_high">#ECECEC</color>
+    <color name="surface_container_highest">#E6E6E6</color>
+
+    <!-- Elevated containers -->
+    <color name="dialog_surface">#FFFFFF</color>
+    <color name="bottom_sheet_surface">#FFFFFF</color>
+
+    <!-- Server list card: slightly darker than the white page background in light mode -->
+    <color name="server_card_background">#ECECEC</color>
+
+    <!-- System + action bar: always black -->
+    <color name="bar_background">#000000</color>
+    <color name="on_bar">#FFFFFF</color>
 </resources>

@@ -294,12 +294,6 @@ Android 4.4以上はポリシールーティングを使用します。route/ifc
     <string name="rdn_prefix">相対識別名(RDN)プリフィクス</string>
     <string name="tls_remote_deprecated"> tls-remote (非推奨)</string>
     <string name="help_translate">次のURLにアクセスすると、翻訳作業を手伝うことができます http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s は %2$s を制御しようとしています。</string>
-    <string name="remote_warning">このまま進むと、あなたはOpenVPN for Androidの完全な制御とすべての通信を傍受する権限をアプリケーションに対し与えることになります。<b>アプリケーションが信頼できない限り、承諾しないでください。</b>さもないと、あなたのデータがマルウェアにより漏洩させられる危険があります。</string>
-    <string name="remote_trust">私はこのアプリケーションを信頼します</string>
-    <string name="no_external_app_allowed">外部APIの使用を許可されたアプリはありません</string>
-    <string name="allowed_apps">許可アプリ: %s</string>
-    <string name="clearappsdialog">許可アプリの一覧をクリアしますか?\n現在の許可アプリ一覧:\n\n%s</string>
     <string name="screenoff_summary">スクリーンがオフかつ60秒で64kB以下のデータ転送量の場合、VPN通信を中断します。「永続的なTUN」設定が有効な場合、VPN接続が中断されると通信ができなくなります。「永続的なTUN」を無効にすると、VPNによる接続保護は行われなくなります。</string>
     <string name="screenoff_title">画面オフ後にVPN接続を中断する</string>
     <string name="screenoff_pause">画面オフにより接続を中断しています: %2$s秒で%1$s 以下 </string>
@@ -315,7 +309,6 @@ Android 4.4以上はポリシールーティングを使用します。route/ifc
     <string name="vpnbehaviour">VPN の挙動</string>
     <string name="allow_vpn_changes">VPNプロファイルの変更を許可する</string>
     <string name="hwkeychain">ハードウェアのキーストア：</string>
-    <string name="permission_icon_app">OpenVPN for Androidを使用しようと試みるアプリのアイコン</string>
     <string name="thanks_for_donation">%s の寄付をお寄せいただきありがとうございます！</string>
     <string name="logCleared">ログがクリアされました。</string>
     <string name="show_password">パスワードを表示する</string>
@@ -346,7 +339,6 @@ Android 4.4以上はポリシールーティングを使用します。route/ifc
     <string name="mssfix_checkbox">TCPペイロードのMSSを指定する</string>
     <string name="mssfix_dialogtitle">TCPペイロードのMSSを設定</string>
     <string name="client_behaviour">クライアント動作</string>
-    <string name="clear_external_apps">許可された外部アプリをクリア</string>
     <string name="loading">読み込み中...</string>
     <string name="allowed_vpn_apps_info">許可されたVPNアプリケーション：%1$s</string>
     <string name="disallowed_vpn_apps_info">許可されていないVPNアプリ：%1$s</string>
@@ -451,12 +443,7 @@ Android 4.4以上はポリシールーティングを使用します。route/ifc
     <string name="channel_name_status">接続状態の変化</string>
     <string name="channel_description_status">OpenVPN接続の状態変化(接続、認証等)</string>
     <string name="weakmd_title">証明書の署名は脆弱なMD5です (SSL_CTX_use_certificate md は弱すぎます)</string>
-    <string name="title_activity_open_sslspeed">OpenSSLスピードテスト</string>
     <string name="openssl_cipher_name">OpenSSLの暗号名</string>
-    <string name="osslspeedtest">OpenSSLの暗号化スピードテスト</string>
-    <string name="openssl_error">OpenSSLがエラーを返しました</string>
-    <string name="running_test">テストを実行中...</string>
-    <string name="test_algoirhtms">選択したアルゴリズムをテストする</string>
     <string name="all_app_prompt">外部アプリが%sを制御しようとしています。アクセスをリクエストしているアプリは特定できません。このアプリを許可すると、すべてのアプリがアクセス許可されます。</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C ++実装は静的キーをサポートしていません。設定でOpenVPN 2.xに変更してください。</string>
     <string name="openvpn3_pkcs12">OpenVPN 3 C++実装ではPKCS12ファイルを直接使用することはサポートされていません。 PKCS12ファイルをAndroidキーストアにインポートするか、設定でOpenVPN 2.xに変更してください。</string>

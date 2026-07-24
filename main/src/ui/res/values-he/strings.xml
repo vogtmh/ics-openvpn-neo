@@ -262,12 +262,6 @@
     <string name="rdn_prefix">קידומת RDN</string>
     <string name="tls_remote_deprecated">tls-remote (לא בשימוש עוד)</string>
     <string name="help_translate">אתה יכול לעזור בתרגום על ידי ביקור בכתובת https://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s ניסיונות לשלוט ב %2$s</string>
-    <string name="remote_warning">אם תמשיך, אתה נותן לאפליקציה הרשאה לשלוט לחלוטין ב-OpenVPN עבור אנדרואיד וליירט את כל תעבורת הרשת.<b>אל תאשר אלא אם כן אתה סומך על הבקשה.</b> אחרת, אתה מסתכן שהנתונים שלך ייפגעו על ידי תוכנה זדונית.\"</string>
-    <string name="remote_trust">היישומון הזה מהימן.</string>
-    <string name="no_external_app_allowed">אין אפליקציה מורשית להשתמש ב-API חיצוני</string>
-    <string name="allowed_apps">יישומונים מורשים: %s</string>
-    <string name="clearappsdialog">לנקות רשימה של אפליקציות חיצוניות מותרות?\nרשימה נוכחית של אפליקציות מותרות:\n\n%s</string>
     <string name="screenoff_summary">השהה את ה-VPN כאשר המסך כבוי ופחות מ-64 קילובייט מועברים נתונים ב-60s. כאשר אפשרות ה-\"Persistent Tun\" מופעלת, השהיית ה-VPN תשאיר את המכשיר שלך ללא קישוריות רשת. ללא אפשרות \"Persistent Tun\" למכשיר לא יהיה חיבור/הגנה VPN.</string>
     <string name="screenoff_title">השהה את חיבור ה-VPN לאחר כיבוי המסך</string>
     <string name="screenoff_pause">השהיית חיבור במצב כבוי מסך: פחות מ %1$s בשנייה %2$s</string>
@@ -283,7 +277,6 @@
     <string name="vpnbehaviour">התנהגות VPN</string>
     <string name="allow_vpn_changes">אפשר שינויים בפרופילי VPN</string>
     <string name="hwkeychain">מאגר מפתחות חומרה:</string>
-    <string name="permission_icon_app">סמל של אפליקציה שמנסה להשתמש ב-OpenVPN עבור אנדרואיד</string>
     <string name="thanks_for_donation">תודה שתרמת %s!</string>
     <string name="logCleared">יומן נוקה.</string>
     <string name="show_password">הצגת סיסמה</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">עוקף את ערך MSS של מטען TCP</string>
     <string name="mssfix_dialogtitle">הגדר MSS של מטען TCP</string>
     <string name="client_behaviour">התנהגות הלקוח</string>
-    <string name="clear_external_apps">נקה אפליקציות חיצוניות מותרות</string>
     <string name="loading">טוען&#8230;</string>
     <string name="allowed_vpn_apps_info">אפליקציות VPN מותרות: %1$s</string>
     <string name="disallowed_vpn_apps_info">אפליקציות VPN אסורות: %1$s</string>
@@ -423,12 +415,7 @@
     <string name="channel_name_status">שינוי מצב חיבור</string>
     <string name="channel_description_status">שינויי סטטוס של חיבור OpenVPN (חיבור, אימות,&#8230;)</string>
     <string name="weakmd_title">Hash חלש (MD5) בחתימת אישור (SSL_CTX_use_certificate md חלש מדי)</string>
-    <string name="title_activity_open_sslspeed">בדיקת מהירות OpenSSL</string>
     <string name="openssl_cipher_name">שמות צופן OpenSSL</string>
-    <string name="osslspeedtest">בדיקת מהירות קריפטו של OpenSSL</string>
-    <string name="openssl_error">OpenSSL החזיר שגיאה</string>
-    <string name="running_test">מבחן ריצה&#8230;</string>
-    <string name="test_algoirhtms">בדוק אלגוריתמים נבחרים</string>
     <string name="all_app_prompt">אפליקציה חיצונית מנסה לשלוט ב %s. לא ניתן לקבוע את האפליקציה המבקשת גישה. מתן אישור לאפליקציה זו מעניק לכל האפליקציות גישה.</string>
     <string name="openvpn3_nostatickeys">היישום OpenVPN 3 C++ אינו תומך במפתחות סטטיים. אנא שנה ל-OpenVPN 2.x תחת הגדרות כלליות.</string>
     <string name="openvpn3_pkcs12">שימוש בקבצי PKCS12 ישירות עם יישום OpenVPN 3 C++ אינו נתמך. נא לייבא את קבצי pkcs12 למאגר המפתחות של אנדרואיד או שנה ל-OpenVPN 2.x תחת הגדרות כלליות.</string>

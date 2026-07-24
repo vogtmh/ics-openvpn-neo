@@ -261,12 +261,6 @@
     <string name="rdn_prefix">RDN префікс</string>
     <string name="tls_remote_deprecated">tls-remote (ЗАСТАРІЛЕ)</string>
     <string name="help_translate">Ви можете допомогти в перекладі, відвідавши http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s спроб контролювати %2$s</string>
-    <string name="remote_warning">Продовжуючи, ви даєте дозвіл на застосування повного контролю OpenVPN для Android і щоб перехоплювати весь мережевий трафік.<b>Не приймайте, якщо ви не довіряєте програмі.</b> В іншому випадку ви ризикуєте мати скомпрометовані шкідливим програмним забезпеченням дані.\"</string>
-    <string name="remote_trust">Я довіряю цьому додатку.</string>
-    <string name="no_external_app_allowed">Не дозволяється використовувати зовнішнє API</string>
-    <string name="allowed_apps">Дозволенi додатки: %s</string>
-    <string name="clearappsdialog">Очистити список дозволених зовнішніх програм \nПоточний список дозволених програм:\n\n%s</string>
     <string name="screenoff_summary">Призупинити VPN, коли екран вимкнений і менш ніж 64 кб були передані за 60 секунд. Якщо увімкнена опція \"Постійний tun\", то призупинення VPN залишить ваш пристрій БЕЗ підключення до мережі. Без опції \"Постійний tun\", пристрій не використовує підключення/захист VPN.</string>
     <string name="screenoff_title">Пауза VPN з\'єднання після вимкнення екрану</string>
     <string name="screenoff_pause">Призупинення зв\'язку в екрані вимкненого стану: менше %1$s у %2$sс.</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">Поведінка VPN</string>
     <string name="allow_vpn_changes">Дозволити зміни в профілі VPN</string>
     <string name="hwkeychain">Апаратне сховище ключів:</string>
-    <string name="permission_icon_app">Іконка програми, яка намагається використовувати \"OpenVPN for Android\"</string>
     <string name="thanks_for_donation">Дякуємо за пожертвування %s!</string>
     <string name="logCleared">Журнал очищено.</string>
     <string name="show_password">Показати пароль</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">Зміна значення MSS навантаження TCP</string>
     <string name="mssfix_dialogtitle">Встановка значення MSS навантаження TCP</string>
     <string name="client_behaviour">Поведінка VPN</string>
-    <string name="clear_external_apps">Відкликати права для управління OpenVPN</string>
     <string name="loading">Завантаження&#8230;</string>
     <string name="allowed_vpn_apps_info">Дозволенi VPN програми: %1$s</string>
     <string name="disallowed_vpn_apps_info">Заборонені VPN програми: %1$s</string>
@@ -423,12 +415,7 @@
     <string name="channel_name_status">Зміна статусу з\'єднання</string>
     <string name="channel_description_status">Зміни статусу з\'єднання OpenVPN (підключення, автентифікація,...)</string>
     <string name="weakmd_title">Слабкі (MD5) хеші в підписі сертифікату (SSL_CTX_use_certificate md надто слабкий)</string>
-    <string name="title_activity_open_sslspeed">Тест швидкості OpenSSL</string>
     <string name="openssl_cipher_name">Назви шифрів OpenSSL</string>
-    <string name="osslspeedtest">Тест швидкості OpenSSL Crypto</string>
-    <string name="openssl_error">OpenSSL повернув помилку</string>
-    <string name="running_test">Запуск тесту&#8230;</string>
-    <string name="test_algoirhtms">Тестування вибраних алгоритмів</string>
     <string name="all_app_prompt">Зовнішній застосунок намагається контролювати %s. Застосунок, що запитує про доступ, не може бути визначений. Дозвіл цьому застосунку надає доступ всім додаткам.</string>
     <string name="openvpn3_nostatickeys">Реалізація OpenVPN 3 C ++ не підтримує статичні ключи. Перейдіть в OpenVPN 2.x під загальними налаштуваннями.</string>
     <string name="openvpn3_pkcs12">Використання файлів PKCS12 напряму за допомогою OpenVPN 3 C ++ не підтримується. Імпортуйте файли pkcs12 в сховище ключів Android або замініть OpenVPN 2.x на загальні налаштування.</string>

@@ -261,12 +261,6 @@
     <string name="rdn_prefix">بادئة RDN</string>
     <string name="tls_remote_deprecated">tls-جهاز التحكم عن بعد (تم تجاهله)</string>
     <string name="help_translate">بإمكانكم المساعدة في الترجمة بزيارة http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s محاولات للسيطرة %2$s</string>
-    <string name="remote_warning">من خلال المتابعة ، فإنك تمنح التطبيق إذنًا بالتحكم الكامل في OpenVPN لنظام Android واعتراض جميع حركات مرور الشبكة.<b>لا تقبل إلا إذا كنت تثق في التطبيق.</b> وإلا فإنك تخاطر بتعرض بياناتك للاختراق بواسطة برامج ضارة. \"</string>
-    <string name="remote_trust">أنا أثق في هذا التطبيق.</string>
-    <string name="no_external_app_allowed">No app allowed to use external API</string>
-    <string name="allowed_apps">التطبيقات المسموح بها: %s</string>
-    <string name="clearappsdialog">Clear list of allowed external apps?\nCurrent list of allowed apps:\n\n%s</string>
     <string name="screenoff_summary">أوقف VPN مؤقتًا عند إيقاف تشغيل الشاشة ونقل بيانات أقل من 64 كيلو بايت في 60 ثانية. عند تمكين خيار \"ضبط مستمر\" ، فإن الإيقاف المؤقت للشبكة الافتراضية الخاصة (VPN) سيترك جهازك بدون اتصال بالشبكة. بدون خيار \"ضبط مستمر\" ، لن يكون للجهاز اتصال / حماية VPN.</string>
     <string name="screenoff_title">تعليق اتصال الشبكة الإفتراضية الخاصة عند إطفاء الشاشة</string>
     <string name="screenoff_pause">إيقاف الاتصال مؤقتا في حالة إيقاف الشاشة: أقل من %1$s في %2$ss</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">سلوك الشبكة الإفتراضية الخاصة</string>
     <string name="allow_vpn_changes">السماح بالتغييرات على ملفات تعريف الشبكة الإفتراضية الخاصة</string>
     <string name="hwkeychain">Hardware Keystore:</string>
-    <string name="permission_icon_app">أيقونة التطبيق الذي يحاول إستخدام أوبن في بي آن لأندرويد</string>
     <string name="thanks_for_donation">شكرا للتبرع ب %s!</string>
     <string name="logCleared">مُسِح السجل.</string>
     <string name="show_password">إظهار كلمة السر</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">تجاوز قيمة MSS لحمولة TCP</string>
     <string name="mssfix_dialogtitle">قم بتعيين MSS لحمولة TCP</string>
     <string name="client_behaviour">سلوك العميل</string>
-    <string name="clear_external_apps">محو التطبيقات الخارجية المسموح بها</string>
     <string name="loading">جار التحميل&#8230;</string>
     <string name="allowed_vpn_apps_info">التطبيقات المسموح بها: %s</string>
     <string name="disallowed_vpn_apps_info">تطبيقات الشبكة الإفتراضية الغير المسموح بها: %1$s</string>
@@ -423,12 +415,7 @@
     <string name="channel_name_status">تغيير حالة الاتصال</string>
     <string name="channel_description_status">تغييرات حالة اتصال OpenVPN (اتصال ، مصادقة ،&#8230;)</string>
     <string name="weakmd_title">تجزئة ضعيفة (MD5) في توقيع الشهادة (SSL_CTX_use_certificate md ضعيف جدًا)</string>
-    <string name="title_activity_open_sslspeed">اختبار سرعة OpenSSL</string>
     <string name="openssl_cipher_name">أسماء تشفير OpenSSL</string>
-    <string name="osslspeedtest">اختبار سرعة خوارزمية OpenSSL</string>
-    <string name="openssl_error">قام OpenSSL بإرجاع خطأ</string>
-    <string name="running_test">الإختبار جارٍ&#8230;</string>
-    <string name="test_algoirhtms">اختبار الخوارزميات التي تم اختيارها</string>
     <string name="all_app_prompt">يحاول تطبيق خارجي التحكم في %s. لا يمكن تحديد التطبيق الذي يطلب الوصول. السماح لهذا التطبيق يمنح الوصول إلى جميع التطبيقات.</string>
     <string name="openvpn3_nostatickeys">لا يدعم تطبيق OpenVPN 3 C ++ المفاتيح الثابتة. يرجى التغيير إلى OpenVPN 2.x ضمن الإعدادات العامة.</string>
     <string name="openvpn3_pkcs12">استخدام ملفات PKCS12 مباشرة مع تطبيق OpenVPN 3 C ++ غير مدعوم. يرجى استيراد ملفات pkcs12 إلى ملف تخزين مفاتيح Android أو التغيير إلى OpenVPN 2.x ضمن الإعدادات العامة.</string>

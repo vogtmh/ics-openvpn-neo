@@ -5,80 +5,191 @@
 
 <resources>
 
-    <style name="blinkt.baseTheme" parent="Theme.Material3.DayNight">
+    <!--
+      ~ App theme. Colors are defined ONCE as tokens in res/values/colors.xml
+      ~ (light) and res/values-night/colors.xml (dark); this theme only maps
+      ~ Material3 attributes to those tokens, so there is a single source of
+      ~ truth for the color scheme and no per-file/per-dialog hardcoded hex.
+      -->
+    <style name="Base.Theme.OpenVPNNeo" parent="Theme.Material3.DayNight">
         <!-- Brand accent drives buttons, switches, progress, etc. -->
         <item name="colorPrimary">@color/accent</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">@color/on_accent</item>
         <item name="colorSecondary">@color/accent</item>
-        <item name="colorOnSecondary">#FFFFFF</item>
-        <!-- Kept for any remaining AppCompat widgets -->
+        <item name="colorOnSecondary">@color/on_accent</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
 
-        <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
-        <item name="materialAlertDialogTheme">@style/blinkt.materialAlertDialog</item>
-        <item name="preferenceTheme">@style/blinkt.preferenceTheme</item>
-        <item name="bottomSheetDialogTheme">@style/blinkt.BottomSheet</item>
+        <!-- Surface ramp (near-black in dark mode) -->
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorSurfaceContainerLowest">@color/surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_container_highest</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="colorBackgroundFloating">@color/dialog_surface</item>
+        <item name="android:colorBackgroundFloating">@color/dialog_surface</item>
 
-        <item name="android:navigationBarColor">@android:color/black</item>
-        <item name="android:statusBarColor">@android:color/black</item>
+        <!-- Component themes -->
+        <item name="alertDialogTheme">@style/ThemeOverlay.OpenVPNNeo.AlertDialog</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.OpenVPNNeo.MaterialAlertDialog</item>
+        <item name="preferenceTheme">@style/ThemeOverlay.OpenVPNNeo.Preference</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.OpenVPNNeo.BottomSheet</item>
+
+        <!-- System bars stay black in both light and dark mode -->
+        <item name="android:navigationBarColor">@color/bar_background</item>
+        <item name="android:statusBarColor">@color/bar_background</item>
         <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Keep the action bar black with light content in both light and dark mode -->
-        <item name="actionBarStyle">@style/blinkt.actionBar</item>
+        <!-- Action bar stays black with light content in both modes -->
+        <item name="actionBarStyle">@style/Widget.OpenVPNNeo.ActionBar</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
     </style>
 
-    <style name="blinkt.actionBar" parent="Widget.Material3.ActionBar.Solid">
-        <item name="background">@android:color/black</item>
-        <item name="elevation">0dp</item>
-        <!-- The bar is always black, so force a light title in both light and dark mode.
-             (The Material3 title uses ?attr/colorOnSurface, which the Dark.ActionBar
-             overlay does not remap, leaving it dark on black in light mode.) -->
-        <item name="titleTextStyle">@style/blinkt.actionBar.Title</item>
-    </style>
+    <!-- Public theme name used by the manifest -->
+    <style name="Theme.OpenVPNNeo" parent="Base.Theme.OpenVPNNeo" />
 
-    <style name="blinkt.actionBar.Title" parent="TextAppearance.Material3.ActionBar.Title">
-        <item name="android:textColor">#FFFFFF</item>
-    </style>
-
-    <style name="blinkt.dialog" parent="Theme.AppCompat.DayNight.Dialog">
+    <!-- Dialog-styled activities (CredentialsPopup, ConfigConverter, CreateShortcuts, ...) -->
+    <style name="Theme.OpenVPNNeo.Dialog" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
-        
-        <!-- Force black status bar for dialog activities -->
-        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.OpenVPNNeo.AlertDialog</item>
+
+        <item name="android:colorBackground">@color/dialog_surface</item>
+        <item name="android:windowBackground">@color/dialog_surface</item>
+        <item name="colorBackgroundFloating">@color/dialog_surface</item>
+        <item name="android:colorBackgroundFloating">@color/dialog_surface</item>
+
+        <item name="android:statusBarColor">@color/bar_background</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
-    <style name="blinkt.alertDialog" parent="ThemeOverlay.Material3.Dialog.Alert">
+    <!-- Action bar: always black, forced light title in both modes -->
+    <style name="Widget.OpenVPNNeo.ActionBar" parent="Widget.Material3.ActionBar.Solid">
+        <item name="background">@color/bar_background</item>
+        <item name="elevation">0dp</item>
+        <!-- The M3 title uses ?attr/colorOnSurface, which the Dark.ActionBar overlay
+             does not remap, so force a light title explicitly. -->
+        <item name="titleTextStyle">@style/TextAppearance.OpenVPNNeo.ActionBarTitle</item>
+    </style>
+
+    <style name="TextAppearance.OpenVPNNeo.ActionBarTitle" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">@color/on_bar</item>
+    </style>
+
+    <!-- AppCompat alert dialogs (used by the preference framework dialogs) -->
+    <style name="ThemeOverlay.OpenVPNNeo.AlertDialog" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:colorBackground">@color/dialog_surface</item>
+        <item name="colorSurface">@color/dialog_surface</item>
+        <item name="colorBackgroundFloating">@color/dialog_surface</item>
+        <item name="android:colorBackgroundFloating">@color/dialog_surface</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
-    <!-- True Material3 alert dialog theme used by MaterialAlertDialogBuilder.
-         Surfaces/text/buttons are inherited from the app theme's M3 color scheme
-         (colorSurfaceContainerHigh, colorOnSurface, colorPrimary) so light and
-         dark dialogs stay consistent without per-dialog hardcoded colors. -->
-    <style name="blinkt.materialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+    <!-- Material dialogs created with MaterialAlertDialogBuilder.
+         Background/text/buttons come from the app's M3 scheme, so nothing is
+         hardcoded here beyond the accent and dialog width. -->
+    <style name="ThemeOverlay.OpenVPNNeo.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorPrimary">@color/accent</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
-    <style name="blinkt.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/blinkt.BottomSheetStyle</item>
+    <!-- Bottom sheets -->
+    <style name="ThemeOverlay.OpenVPNNeo.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.OpenVPNNeo.BottomSheet</item>
     </style>
 
-    <style name="blinkt.BottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal" />
+    <style name="Widget.OpenVPNNeo.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/bottom_sheet_surface</item>
+    </style>
+
+    <!-- Profile editor tab bar: sits on the (black) app bar so it reads as one header.
+         Tabs are icon-only; the selected tab's icon is tinted with the accent color
+         (no underline indicator). The current section name is shown as a heading above
+         the pager content (see vpn_preferences.xml / the fragments). -->
+    <style name="Widget.OpenVPNNeo.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="android:background">@color/bar_background</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabIconTint">@color/tab_icon_tint</item>
+        <item name="tabGravity">fill</item>
+    </style>
+
+    <!--
+      ~ Preferences. All preference types share ONE row layout (@layout/ovpn_preference)
+      ~ whose title uses @style/TextAppearance.OpenVPNNeo.Title. This makes the
+      ~ preference-based tabs (IP/Routing/Auth/Advanced) match the custom-layout tabs
+      ~ instead of the oversized framework default.
+      -->
+    <style name="ThemeOverlay.OpenVPNNeo.Preference" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="preferenceScreenStyle">@style/Widget.OpenVPNNeo.Preference.Screen</item>
+        <item name="preferenceCategoryStyle">@style/Widget.OpenVPNNeo.Preference.Category</item>
+        <item name="preferenceStyle">@style/Widget.OpenVPNNeo.Preference</item>
+        <item name="preferenceInformationStyle">@style/Widget.OpenVPNNeo.Preference</item>
+        <item name="checkBoxPreferenceStyle">@style/Widget.OpenVPNNeo.Preference.CheckBox</item>
+        <item name="switchPreferenceStyle">@style/Widget.OpenVPNNeo.Preference.Switch</item>
+        <item name="switchPreferenceCompatStyle">@style/Widget.OpenVPNNeo.Preference.Switch</item>
+        <item name="dialogPreferenceStyle">@style/Widget.OpenVPNNeo.Preference.Dialog</item>
+        <item name="editTextPreferenceStyle">@style/Widget.OpenVPNNeo.Preference.EditText</item>
+    </style>
+
+    <style name="Widget.OpenVPNNeo.Preference.Screen" parent="Preference.PreferenceScreen" />
+
+    <style name="Widget.OpenVPNNeo.Preference.Category" parent="Preference.Category">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/accent</item>
+    </style>
+
+    <style name="Widget.OpenVPNNeo.Preference" parent="Preference">
+        <item name="android:layout">@layout/ovpn_preference</item>
+    </style>
+
+    <style name="Widget.OpenVPNNeo.Preference.CheckBox" parent="Preference.CheckBoxPreference">
+        <item name="android:layout">@layout/ovpn_preference</item>
+    </style>
+
+    <style name="Widget.OpenVPNNeo.Preference.Switch" parent="Preference.SwitchPreference">
+        <item name="android:layout">@layout/ovpn_preference</item>
+    </style>
+
+    <style name="Widget.OpenVPNNeo.Preference.Dialog" parent="Preference.DialogPreference">
+        <item name="android:layout">@layout/ovpn_preference</item>
+    </style>
+
+    <style name="Widget.OpenVPNNeo.Preference.EditText" parent="Preference.DialogPreference.EditTextPreference">
+        <item name="android:layout">@layout/ovpn_preference</item>
+    </style>
+
+    <!-- Shared "setting title" appearance (18sp, matches the custom-layout tabs) -->
+    <style name="TextAppearance.OpenVPNNeo.Title" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- Section heading shown as the first (scrolling) line of each profile-editor page. -->
+    <style name="SectionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textAppearance">?attr/textAppearanceTitleLarge</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
 
 
-    <style name="blinkt" parent="blinkt.baseTheme" />
-
+    <!-- ============================================================
+         Legacy shared styles (still used by custom, non-preference layouts).
+         ============================================================ -->
 
     <style name="item">
         <item name="android:layout_width">match_parent</item>
@@ -98,7 +209,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
-        <!-- <item name="android:singleLine">true</item> -->
     </style>
 
     <style name="accountSetupButton">
@@ -107,8 +217,6 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
     </style>
-
-    <style name="Theme.CreateShortCut" parent="android:Theme.Holo.DialogWhenLarge" />
 
     <style name="logWindowStatusText">
         <item name="android:paddingLeft">@dimen/paddingItemsSidebarLog</item>
@@ -122,102 +230,10 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-
-    <style name="blinkt.translucent" parent="blinkt.dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="blinkt.tabLayout" parent="Widget.Material3.TabLayout">
-        <item name="tabIndicatorColor">?attr/colorPrimary</item>
-        <item name="tabIndicatorHeight">4dp</item>
-        <item name="android:background">@color/primary</item>
-
-
-        <item name="tabBackground">@color/primary</item>
-        <item name="tabTextAppearance">@style/AppTabTextAppearance</item>
-        <item name="tabSelectedTextColor">@android:color/white</item>
-
-        <item name="tabGravity">fill</item>
-        <item name="tabMaxWidth">0dp</item>
-
-    </style>
-
-    <!-- Custom preference theme to remove default padding -->
-    <style name="blinkt.preferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
-        <item name="preferenceScreenStyle">@style/blinkt.preferenceScreen</item>
-        <item name="preferenceCategoryStyle">@style/blinkt.preferenceCategory</item>
-        <item name="preferenceStyle">@style/blinkt.preference</item>
-        <item name="checkBoxPreferenceStyle">@style/blinkt.checkBoxPreference</item>
-        <item name="switchPreferenceStyle">@style/blinkt.switchPreference</item>
-        <item name="preferenceInformationStyle">@style/blinkt.preference</item>
-        <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
-        <item name="editTextPreferenceStyle">@style/blinkt.editTextPreference</item>
-        <!-- Preference titles render via ?android:attr/textAppearanceListItem (the
-             android:titleTextAppearance items below are not real Preference attrs).
-             Force a consistent size so these tabs match the custom-layout tabs
-             instead of the oversized framework default. -->
-        <item name="android:textAppearanceListItem">@style/blinkt.preferenceTitle</item>
-    </style>
-
-    <style name="blinkt.preferenceScreen" parent="Preference.PreferenceScreen">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
-    </style>
-    
-    <style name="blinkt.preferenceCategory" parent="Preference.Category">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/accent</item>
-    </style>
-    
-    <style name="blinkt.preference" parent="Preference">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:layout_marginStart">0dp</item>
-        <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
-    </style>
-    
-    <style name="blinkt.editTextPreference" parent="Preference.DialogPreference.EditTextPreference">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-    
-    <style name="blinkt.checkBoxPreference" parent="Preference.CheckBoxPreference">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:layout_marginStart">0dp</item>
-        <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
-    </style>
-
-    <style name="blinkt.switchPreference" parent="Preference.SwitchPreference">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:layout_marginStart">0dp</item>
-        <item name="android:titleTextAppearance">@style/blinkt.preferenceTitle</item>
-    </style>
-    
-    <style name="blinkt.preferenceTitle" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">18sp</item>
-    </style>
-
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/tab_text</item>
     </style>
-
 
 </resources>

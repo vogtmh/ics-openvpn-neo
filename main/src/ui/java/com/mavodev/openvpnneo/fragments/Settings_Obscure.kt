@@ -104,6 +104,8 @@ class Settings_Obscure : OpenVpnPreferencesFragment(), Preference.OnPreferenceCh
         mMssFixValue.onPreferenceChangeListener = this
         mTunMtu = findPreference("tunmtu")!!
         mTunMtu.onPreferenceChangeListener = this
+        mMssFixCheckBox.onPreferenceChangeListener = this
+        mUseCustomConfig.onPreferenceChangeListener = this
 
         onCreateBehaviour()
         loadSettings()
@@ -135,6 +137,10 @@ class Settings_Obscure : OpenVpnPreferencesFragment(), Preference.OnPreferenceCh
         setMtuSummary(tunmtu)
 
         loadSettingsBehaviour()
+
+        // Hide fields whose parent toggle is off; they appear when the toggle is enabled
+        mMssFixValue.isVisible = mMssFixCheckBox.isChecked
+        mCustomConfig.isVisible = mUseCustomConfig.isChecked
     }
 
     private fun setMssSummary(value: Int) {
@@ -165,6 +171,13 @@ class Settings_Obscure : OpenVpnPreferencesFragment(), Preference.OnPreferenceCh
     }
 
     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+        if (preference === mMssFixCheckBox) {
+            mMssFixValue.isVisible = newValue as Boolean
+            return true
+        } else if (preference === mUseCustomConfig) {
+            mCustomConfig.isVisible = newValue as Boolean
+            return true
+        }
         if (preference.key == "mssFixValue") {
             try {
                 val v = (newValue as String).toInt()

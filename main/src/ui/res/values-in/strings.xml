@@ -261,12 +261,6 @@
     <string name="rdn_prefix">RDN awalan</string>
     <string name="tls_remote_deprecated">TLS-remote (DEPRECATED)</string>
     <string name="help_translate">Anda dapat membantu menerjemahkan dengan mengunjungi http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s berusaha mengendalikan %2$s</string>
-    <string name="remote_warning">Dengan melanjutkan, Anda memberi izin aplikasi untuk sepenuhnya mengontrol OpenVPN untuk Android dan untuk mencegat semua lalu lintas jaringan. <b>Jangan terima kecuali Anda mempercayai aplikasi.</b> Jika tidak, data Anda beresiko diambil oleh perangkat lunak jahat.\"</string>
-    <string name="remote_trust">Saya percaya aplikasi ini.</string>
-    <string name="no_external_app_allowed">App tidak diizinkan untuk menggunakan API eksternal</string>
-    <string name="allowed_apps">apps yang diijinkan : %s</string>
-    <string name="clearappsdialog">Hapus daftar aplikasi eksternal yang dibolehkan? \nDaftar apps yang dibolehkan terkini:\n\n%s </string>
     <string name="screenoff_summary">\"Pause VPN ketika layar off dan data yang ditransfer dalam 60 detik kurang dari 64kB. Ketika opsi \"Persistent Tun\" diaktifkan, memberhentikan VPN akan membuat perangkat Anda tidak memiliki koneksi jaringan. Jika tidak memakai \"Persistent Tun\" maka perangkat akan menampilkan Tidak ada koneksi VPN.</string>
     <string name="screenoff_title">Sambungan VPN jeda setelah layar mati</string>
     <string name="screenoff_pause">Pausing connection in screen off state: less than %1$s in %2$ss</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">Prilaku VPN</string>
     <string name="allow_vpn_changes">Memungkinkan perubahan Profil VPN</string>
     <string name="hwkeychain">Hardware Keystore:</string>
-    <string name="permission_icon_app">Ikon aplikasi mencoba menggunakan OpenVPN untuk Android</string>
     <string name="thanks_for_donation">Terima kasih untuk menyumbangkan %s!</string>
     <string name="logCleared">Log dibersihkan.</string>
     <string name="show_password">Tampilkan sandi</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">Mengganti nilai MSS TCP muatan</string>
     <string name="mssfix_dialogtitle">Mengatur muatan MSS TCP</string>
     <string name="client_behaviour">Perilaku klien</string>
-    <string name="clear_external_apps">Menghapus aplikasi eksternal diizinkan</string>
     <string name="loading">Memuat&#8230;</string>
     <string name="allowed_vpn_apps_info">Yang diizinkan aplikasi VPN: %1$s</string>
     <string name="disallowed_vpn_apps_info">Batasan VPN apps: %1$s</string>
@@ -423,12 +415,7 @@
     <string name="channel_name_status">Perubahan status koneksi</string>
     <string name="channel_description_status">Perubahan status koneksi OpenVPN (Menghubungkan, mengautentikasi,...)</string>
     <string name="weakmd_title">Weak (MD5) hashes in certificate signature (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">Tes Kecepatan OpenSSL</string>
     <string name="openssl_cipher_name">OpenSSL cipher names</string>
-    <string name="osslspeedtest">OpenSSL Crypto Speed test</string>
-    <string name="openssl_error">OpenSSL returned an error</string>
-    <string name="running_test">Menjalankan tes&#8230;</string>
-    <string name="test_algoirhtms">Uji algoritma yang dipilih</string>
     <string name="all_app_prompt">Aplikasi eksternal berusaha mengendalikan %s. Aplikasi yang meminta akses tidak dapat ditentukan. Mengizinkan aplikasi ini memberi SEMUA akses aplikasi.</string>
     <string name="openvpn3_nostatickeys">Implementasi OpenVPN 3 C ++ tidak mendukung kunci statis. Silakan ubah ke OpenVPN 2.x di bagian pengaturan umum.</string>
     <string name="openvpn3_pkcs12">Penggunaan file PKCS12 secara langsung dengan implementasi OpenVPN 3 C ++ tidak didukung. Silakan impor file pkcs12 ke Android keystore atau ubah ke OpenVPN 2.x di bagian pengaturan umum.</string>

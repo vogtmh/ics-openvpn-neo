@@ -261,12 +261,6 @@
     <string name="rdn_prefix">RDN prefix</string>
     <string name="tls_remote_deprecated">TLS-remote (ej längre i bruk)</string>
     <string name="help_translate">Du kan hjälpa till med översättningen genom att besöka http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s försöker styra %2$s</string>
-    <string name="remote_warning">Genom att fortsätta ger du applikationen tilstånd att fullständigt styra OpenVPN för Android och att avlyssna all nätverkstrafik. <b>Acceptera INTE om du inte litar på applikationen.</b> Annars riskerar du att din data äventyras av skadlig programvara.\"</string>
-    <string name="remote_trust">Jag litar på denna applikation.</string>
-    <string name="no_external_app_allowed">Ingen app får använda externa API</string>
-    <string name="allowed_apps">Tillåtna apps: %s</string>
-    <string name="clearappsdialog">Rensa lista över tillåtna externa apps? \nNuvarande lista över tillåtna apps:\n\n%s</string>
     <string name="screenoff_summary">\"Pausa VPN när skärmen är avstängd och mindre än 64 kB överförda data i 60s. När \"Ihållande Tun\" är aktiverat kommer pausning av VPN att lämna enheten UTAN nätverksanslutning. Utan \"Ihållande Tun\" alternativet kommer enheten inte att ha någon VPN-anslutning/-skydd.</string>
     <string name="screenoff_title">Pausa VPN-anslutningen efter att skärmen stängts av</string>
     <string name="screenoff_pause">Pausa anslutning när skärmen är avstängd: mindre än %1$s i %2$ss</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">VPN beteende</string>
     <string name="allow_vpn_changes">Tillåta ändringar av VPN profiler</string>
     <string name="hwkeychain">Hårdvara Keystore:</string>
-    <string name="permission_icon_app">Ikonen för appen försöker använda OpenVPN för Android</string>
     <string name="thanks_for_donation">Tack för att du donerar %s!</string>
     <string name="logCleared">Log rensas.</string>
     <string name="show_password">Visa lösenord</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">Kringgå MSS-värdet för innehållet i TCP-paket</string>
     <string name="mssfix_dialogtitle">Ställ in MSS för innehållet i TCP-paket</string>
     <string name="client_behaviour">Klientens beteende</string>
-    <string name="clear_external_apps">Rensa tillåtna externa applikationer</string>
     <string name="loading">Laddar...</string>
     <string name="allowed_vpn_apps_info">Tillåtna VPN-applikationer: %1$s</string>
     <string name="disallowed_vpn_apps_info">Otillåtna VPN-applikationer: %1$s</string>
@@ -423,12 +415,7 @@
     <string name="channel_name_status">Ändring av anslutningsstatus</string>
     <string name="channel_description_status">Statusändringar för OpenVPN-anslutningen (Anslutning, autentisering,...)</string>
     <string name="weakmd_title">Svag (MD5) hashes i certifikat signatur (SSL_CTX_use_certificate md för svag)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL-hastighetstest</string>
     <string name="openssl_cipher_name">OpenSSL-ciffernamn</string>
-    <string name="osslspeedtest">OpenSSL Crypto-hastighetstest</string>
-    <string name="openssl_error">OpenSSL returnerade ett fel</string>
-    <string name="running_test">Kör test&#8230;</string>
-    <string name="test_algoirhtms">Testa valda algoritmer</string>
     <string name="all_app_prompt">En extern app försöker kontrollera %s. Appen som begär åtkomst kan inte bestämmas. Tillåtelse av den här appen ger åtkomst till ALLA program.</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C ++-implementeringen stöder inte statiska nycklar. Ändra till OpenVPN 2.x under allmänna inställningar.</string>
     <string name="openvpn3_pkcs12">Användning av PKCS12-filer direkt med OpenVPN 3 C++-implementering stöds inte. Vänligen importera pkcs12-filerna till Android-nyckelbutiken eller ändra till OpenVPN 2.x under allmänna inställningar.</string>

@@ -35,7 +35,6 @@ import android.widget.EditText;
 
 import java.io.IOException;
 
-import com.mavodev.openvpnneo.api.ExternalAppDatabase;
 import com.mavodev.openvpnneo.core.ConnectionStatus;
 import com.mavodev.openvpnneo.core.IServiceStatus;
 import com.mavodev.openvpnneo.core.OpenVPNStatusService;
@@ -73,7 +72,6 @@ import com.mavodev.openvpnneo.core.VpnStatus;
 public class LaunchVPN extends Activity {
 
     public static final String EXTRA_KEY = "com.mavodev.openvpnneo.shortcutProfileUUID";
-    public static final String EXTRA_NAME = "com.mavodev.openvpnneo.shortcutProfileName";
     public static final String EXTRA_HIDELOG = "com.mavodev.openvpnneo.showNoLogWindow";
 
     public static final String CLEARLOG = "clearlogconnect";
@@ -139,19 +137,10 @@ public class LaunchVPN extends Activity {
 
         // we got called to be the starting point, most likely a shortcut
         String shortcutUUID = intent.getStringExtra(EXTRA_KEY);
-        String shortcutName = intent.getStringExtra(EXTRA_NAME);
         String startReason = intent.getStringExtra(EXTRA_START_REASON);
         mhideLog = intent.getBooleanExtra(EXTRA_HIDELOG, false);
 
         VpnProfile profileToConnect = ProfileManager.get(this, shortcutUUID);
-        if (shortcutName != null && profileToConnect == null) {
-            profileToConnect = ProfileManager.getInstance(this).getProfileByName(shortcutName);
-            if (!(new ExternalAppDatabase(this).checkRemoteActionPermission(this, getCallingPackage()))) {
-                finish();
-                return;
-            }
-        }
-
 
         if (profileToConnect == null) {
             VpnStatus.logError(R.string.shortcut_profile_notfound);

@@ -258,12 +258,6 @@
     <string name="rdn_prefix">RDN voorvoegsel</string>
     <string name="tls_remote_deprecated">tls-remote (VEROUDERD)</string>
     <string name="help_translate">U kunt helpen met vertalen door naar https://crowdin.net/project/ics-openvpn/invite te gaan</string>
-    <string name="prompt">%1$s probeert %2$s te beheren</string>
-    <string name="remote_warning">Door verder te gaan, geeft u de toepassing toestemming om OpenVPN voor Android volledig te beheren en om alle netwerkverkeer te onderscheppen.<b>NIET accepteren, tenzij u de toepassing vertrouwt.</b> Anders loopt u het risico dat uw gegevens worden aangetast door kwaadaardige software.\"</string>
-    <string name="remote_trust">Ik vertrouw deze applicatie.</string>
-    <string name="no_external_app_allowed">Geen app toegestaan ​​om externe API te gebruiken</string>
-    <string name="allowed_apps">Toegestane apps: %s</string>
-    <string name="clearappsdialog">Lijst met toegestane externe apps wissen?\nHuidige lijst met toegestane apps:\n\n%s</string>
     <string name="screenoff_summary">Pauzeer VPN wanneer het scherm is uitgeschakeld en minder dan 64 kB gegevens overgedragen in 60s. Wanneer de \"Persistent Tun\" optie is ingeschakeld, pauzeert de VPN uw apparaat zonder netwerkverbinding. Zonder de \"Persistent Tun\" optie heeft het apparaat geen VPN-verbinding/bescherming.</string>
     <string name="screenoff_title">Pauzeer de VPN-verbinding na het uitschakelen van het scherm</string>
     <string name="screenoff_pause">Verbinding pauzeren als het scherm uit staat: minder dan %1$s in %2$ss</string>
@@ -279,7 +273,6 @@
     <string name="vpnbehaviour">VPN gedrag</string>
     <string name="allow_vpn_changes">Verandering aan VPN-profielen toestaan</string>
     <string name="hwkeychain">Hardware Keystore:</string>
-    <string name="permission_icon_app">Miniatuur van app die OpenVPN voor Android wilt gebruiken</string>
     <string name="thanks_for_donation">Bedankt voor het doneren van %s!</string>
     <string name="logCleared">Logboek gewist.</string>
     <string name="show_password">Toon wachtwoord</string>
@@ -309,7 +302,6 @@
     <string name="mssfix_checkbox">Overschrijf de MSS-waarde van de TCP-payload</string>
     <string name="mssfix_dialogtitle">MSS waarde van TCP-payload instellen</string>
     <string name="client_behaviour">Cliëntgedrag</string>
-    <string name="clear_external_apps">Verwijder toegestane externe apps</string>
     <string name="loading">Laden&#8230;</string>
     <string name="allowed_vpn_apps_info">Toegestane VPN apps: %1$s</string>
     <string name="disallowed_vpn_apps_info">Niet toegestane VPN apps: %1$s</string>
@@ -414,12 +406,7 @@
     <string name="channel_name_status">Verbindingsstatus wijzigen</string>
     <string name="channel_description_status">Statuswijzigingen van de OpenVPN-verbinding (Verbinden, authenticeren,&#8230;)</string>
     <string name="weakmd_title">Zwakke (MD5) hashes in certificaathandtekening (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL Snelheidstest</string>
     <string name="openssl_cipher_name">OpenSSL cipher namen</string>
-    <string name="osslspeedtest">OpenSSL Crypto snelheidstest</string>
-    <string name="openssl_error">OpenSSL heeft een fout geretourneerd</string>
-    <string name="running_test">Testen&#8230;</string>
-    <string name="test_algoirhtms">Test geselecteerde algoritmes</string>
     <string name="all_app_prompt">Een externe app probeert %s te besturen. De app die om toegang vraagt, kan niet worden vastgesteld. Als u deze app toestaat, krijgen ALLE apps toegang.</string>
     <string name="openvpn3_nostatickeys">De OpenVPN 3 C++ -implementatie ondersteunt geen statische sleutels. Verander naar OpenVPN 2.x onder algemene instellingen.</string>
     <string name="openvpn3_pkcs12">PKCS12-bestanden rechtstreeks gebruiken met OpenVPN 3 C++ -implementatie wordt niet ondersteund. Importeer de pkcs12-bestanden in de Android keystore of verander naar OpenVPN 2.x onder algemene instellingen.</string>

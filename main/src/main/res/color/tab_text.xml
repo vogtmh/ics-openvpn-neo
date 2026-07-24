@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Tab bar is always a dark-ish color (purple in light mode, black in dark mode),
+     so tab labels are white-based in both modes: full white when selected,
+     translucent white when inactive. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?attr/android:textColorPrimary" android:state_selected="true" />
-    <item android:color="?attr/android:textColorSecondaryInverseNoDisable" />
+    <item android:color="@android:color/white" android:state_selected="true" />
+    <item android:color="#B3FFFFFF" />
 </selector>

@@ -258,12 +258,6 @@
     <string name="rdn_prefix">Πρόθεμα RDN</string>
     <string name="tls_remote_deprecated">tls-remote (ΠΑΡΩΧΗΜΕΝΟ)</string>
     <string name="help_translate">Μπορείτε να βοηθήσετε τη μετάφραση επισκέπτοντας http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">Το %1$s προσπαθεί να ελέγξει το %2$s</string>
-    <string name="remote_warning">Συνεχίζοντας, δίνετε στην εφαρμογή την άδεια να ελέγχει πλήρως το OpenVPN για Android και να παρακολουθεί όλη την κίνηση του δικτύου.<b>Μην δέχεστε εάν δεν εμπιστεύεστε την εφαρμογή.</b> Διαφορετικά, διατρέχετε τον κίνδυνο να διακυβεύονται τα δεδομένα σας από κακόβουλο λογισμικό. \"</string>
-    <string name="remote_trust">Εμπιστεύομαι την εφαρμογή.</string>
-    <string name="no_external_app_allowed">Δεν υπάρχει εφαρμογή που να επιτρέπεται να χρησιμοποιήσει το εξωτερικό API</string>
-    <string name="allowed_apps">Επιτρεπόμενες εφαρμογές: %s</string>
-    <string name="clearappsdialog">Εκκαθάριση της λίστας των επιτρεπόμενων εξωτερικών εφαρμογών;\nΤρέχουσα λίστα των επιτρεπόμενων εφαρμογών:\n\n%s</string>
     <string name="screenoff_summary">Παύση VPN όταν η οθόνη είναι απενεργοποιημένη και λιγότερο από 64 kB δεδομένα που μεταφέρονται σε 60 δευτερόλεπτα. Όταν είναι ενεργοποιημένη η επιλογή \"Permanent Tun\", η παύση του VPN θα αφήσει τη συσκευή σας χωρίς σύνδεση δικτύου. Χωρίς την επιλογή \"Συνεχής μεταφορά\" η συσκευή δεν θα έχει σύνδεση VPN / προστασία.</string>
     <string name="screenoff_title">Παύση της σύνδεσης VPN μετά την απενεργοποίηση της οθόνης</string>
     <string name="screenoff_pause">Παύση σύνδεσης σε κατάσταση απενεργοποίησης οθόνης: λιγότερο από %1$s σε %2$sδευτερόλεπτα</string>
@@ -279,7 +273,6 @@
     <string name="vpnbehaviour">Συμπεριφορά VPN</string>
     <string name="allow_vpn_changes">Επέτρεξε αλλαγές στα προφίλ VPN</string>
     <string name="hwkeychain">Κλειδοθήκη υλικού:</string>
-    <string name="permission_icon_app">Το εικονίδιο της εφαρμογής που προσπαθεί να χρησιμοποιήσει το OpenVPN για Android</string>
     <string name="thanks_for_donation">Ευχαριστούμε για την δωρεά %s!</string>
     <string name="logCleared">Έγινε εκκαθάριση της καταγραφής.</string>
     <string name="show_password">Εμφάνιση κωδικού πρόσβασης</string>
@@ -309,7 +302,6 @@
     <string name="mssfix_checkbox">Αντικατάσταση τιμής MSS του ωφέλιμου φορτίου TCP</string>
     <string name="mssfix_dialogtitle">Ορίστε το MSS του φόρτου TCP</string>
     <string name="client_behaviour">Συμπεριφορά πελάτη</string>
-    <string name="clear_external_apps">Εκκαθάριση επιτρεπόμενων εξωτερικών εφαρμογών</string>
     <string name="loading">Φόρτωση&#8230;</string>
     <string name="allowed_vpn_apps_info">Επιτρεπόμενες εφαρμογές VPN: %1$s</string>
     <string name="disallowed_vpn_apps_info">Μη επιτρεπόμενες εφαρμογές VPN: %1$s</string>
@@ -414,12 +406,7 @@
     <string name="channel_name_status">Αλλαγή κατάστασης σύνδεσης</string>
     <string name="channel_description_status">Αλλαγές κατάστασης της σύνδεσης OpenVPN (Σύνδεση, πιστοποίηση,...)</string>
     <string name="weakmd_title">Αδύναμα (MD5) hashes στην υπογραφή πιστοποιητικού (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">Τέστ ταχύτητας OpenSSL</string>
     <string name="openssl_cipher_name">Ονόματα κρυπτογράφησης OpenSSL</string>
-    <string name="osslspeedtest">Δοκιμή ταχύτητας κρυπτογράφησης OpenSSL</string>
-    <string name="openssl_error">Το OpenSSL επέστρεψε σφάλμα</string>
-    <string name="running_test">Εκτέλεση δοκιμής&#8230;</string>
-    <string name="test_algoirhtms">Ελέγξτε τους επιλεγμένους αλγορίθμους</string>
     <string name="all_app_prompt">Μια εξωτερική εφαρμογή προσπαθεί να ελέγξει το %s. Η εφαρμογή που ζητά πρόσβαση δεν μπορεί να καθοριστεί. Επιτρέποντας σε αυτήν την εφαρμογή να παρέχει πρόσβαση σε ΟΛΕΣ τις εφαρμογές.</string>
     <string name="openvpn3_nostatickeys">Η εφαρμογή OpenVPN 3 C ++ δεν υποστηρίζει στατικά κλειδιά. Αλλάξτε στο OpenVPN 2.x κάτω από τις γενικές ρυθμίσεις.</string>
     <string name="openvpn3_pkcs12">Η χρήση των αρχείων PKCS12 απευθείας με την εφαρμογή OpenVPN 3 C ++ δεν υποστηρίζεται. Παρακαλώ εισαγάγετε τα αρχεία pkcs12 στην αποθήκη κλειδιών Android ή μεταβείτε στο OpenVPN 2.x κάτω από τις γενικές ρυθμίσεις.</string>

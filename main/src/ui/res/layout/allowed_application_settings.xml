@@ -9,6 +9,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:ignore="RtlCompat">
+    <TextView
+        style="@style/SectionTitle"
+        android:text="@string/vpn_allowed_apps" />
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

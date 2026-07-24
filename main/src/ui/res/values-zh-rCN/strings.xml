@@ -263,12 +263,6 @@
     <string name="rdn_prefix">RDN 前缀</string>
     <string name="tls_remote_deprecated">tls-remote(已废弃)</string>
     <string name="help_translate">你可以通过访问 http://crowdin.net/project/ics-openvpn/invite 来帮助翻译</string>
-    <string name="prompt">%1$s 试图控制 %2$s</string>
-    <string name="remote_warning">如果继续，你将允许该应用完全控制 OpenVPN for Android，并拦截所有网络流量。<b>除非你信任该应用，否则请不要继续。</b>否则，您将面临数据被恶意软件泄露的风险</string>
-    <string name="remote_trust">我信任此应用。</string>
-    <string name="no_external_app_allowed">没有应用程序被允许使用外部API</string>
-    <string name="allowed_apps">允许的应用程序： %s</string>
-    <string name="clearappsdialog">清除已允许的应用列表？\n当前已允许的应用：\n\n%s</string>
     <string name="screenoff_summary">当屏幕关闭且 60 秒内传输数据量小于 64kB 时暂停 VPN。当启用“持久性 Tun”选项时，暂停 VPN 将使设备处于无网络连接的状态。未启用“持久性 Tun”时，设备将没有 VPN 连接保护。</string>
     <string name="screenoff_title">屏幕关闭后暂停 VPN 连接</string>
     <string name="screenoff_pause">屏幕关闭时暂停连接：若在%2$s秒内少于%1$s</string>
@@ -284,7 +278,6 @@
     <string name="vpnbehaviour">VPN 行为</string>
     <string name="allow_vpn_changes">允许更改 VPN 配置</string>
     <string name="hwkeychain">硬件密钥库：</string>
-    <string name="permission_icon_app">试图使用安卓 OpenVPN 的应用的图标</string>
     <string name="thanks_for_donation">感谢捐赠 %s！</string>
     <string name="logCleared">日志已清除。</string>
     <string name="show_password">显示密码</string>
@@ -314,7 +307,6 @@
     <string name="mssfix_checkbox">覆盖TCP有效负载的MSS值</string>
     <string name="mssfix_dialogtitle">设置 TCP 载荷的 MSS值</string>
     <string name="client_behaviour">客户端行为</string>
-    <string name="clear_external_apps">清除允许的外部应用程序</string>
     <string name="loading">加载中&#8230;</string>
     <string name="allowed_vpn_apps_info">经 VPN 代理的应用程序： %1$s</string>
     <string name="disallowed_vpn_apps_info">不允许通过VPN的应用：%1$s</string>
@@ -427,12 +419,7 @@
     <string name="channel_name_status">连接状态改变</string>
     <string name="channel_description_status">OpenVPN连接的状态更改（连接，身份验证...）</string>
     <string name="weakmd_title">证书签名中的弱 (MD5) 哈希 (SSL_CTX_use_certificate md 太弱)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL 速度测试</string>
     <string name="openssl_cipher_name">OpenSSL Cipher名称</string>
-    <string name="osslspeedtest">OpenSSL Crypto速度测试</string>
-    <string name="openssl_error">OpenSSL 返回错误</string>
-    <string name="running_test">正在运行测试&#8230;</string>
-    <string name="test_algoirhtms">测试选定的算法</string>
     <string name="all_app_prompt">一个外部应用试图控制 %s。无法确定请求权限的应用程序是否安全。允许这个应用程序将授予所有应用程序权限。</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C ++实现不支持静态密钥。请在常规设置下更改为OpenVPN 2.x.</string>
     <string name="openvpn3_pkcs12">不支持OpenVPN 3 的C++ 实现直接使用pkcs 12 文件。请将 pkcs12 文件导入 Android 密钥库, 或在常规设置下更改为 OpenVPN 2.x。</string>

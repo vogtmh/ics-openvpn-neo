@@ -238,10 +238,6 @@
     <string name="rdn_prefix">Prefixo RDN</string>
     <string name="tls_remote_deprecated">TLS-remoto (obsoleto)</string>
     <string name="help_translate">Pode ajudar a traduzir, visite http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s tenta controlar %2$s</string>
-    <string name="remote_trust">Confio nesta aplicação.</string>
-    <string name="no_external_app_allowed">Nenhuma app pode usar a API externa</string>
-    <string name="allowed_apps">Aplicações permitidas:%s</string>
     <string name="screenoff_title">Pausar a ligação VPN após desligar o ecrã</string>
     <string name="screen_nopersistenttun">Aviso: Tun persistente não está ativado para esta VPN. Quando o ecrã estiver desligado o tráfego de internet usa a ligação normal.</string>
     <string name="save_password">Guardar senha</string>

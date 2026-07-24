@@ -5,11 +5,10 @@
 
 package com.mavodev.openvpnneo.core;
 
-/* This class is a data holder for the global preferences that are set when reading the app restrictions */
+/* This class is a data holder for global app preferences */
 public class GlobalPreferences {
     boolean forceConnected = false;
 
-    /* will be set by AppRestrictions */
     static GlobalPreferences instance = null;
 
     GlobalPreferences(boolean forceConnected)
@@ -30,7 +29,7 @@ public class GlobalPreferences {
     static GlobalPreferences getInstance()
     {
         if (instance == null)
-            throw new RuntimeException("Global preferences instance is not set");
+            instance = new GlobalPreferences(false);
 
         return instance;
     }

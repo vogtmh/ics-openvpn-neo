@@ -44,6 +44,10 @@ public class OpenVPNThreadv3 extends ClientAPI_OpenVPNClient implements Runnable
     /* The methods in OpenVPN3 can take a long time, so we do async messages to handle them
      * to avoid ANR on the service main thread */
     private final Handler mHandler;
+    /* Stable Runnable reference so it can be (re)scheduled and removed reliably. Unlike the
+     * OpenVPN 2 management protocol, the OpenVPN 3 core does not push a BYTECOUNT stream, so we
+     * have to poll transport_stats() periodically to feed the traffic graph / mini graph. */
+    private final Runnable mPollStatus = this::pollStatus;
 
     public OpenVPNThreadv3(OpenVPNService openVpnService, VpnProfile vp) {
         mVp = vp;
@@ -63,7 +67,7 @@ public class OpenVPNThreadv3 extends ClientAPI_OpenVPNClient implements Runnable
         VpnStatus.logInfo(ClientAPI_OpenVPNClientHelper.platform());
         VpnStatus.logInfo(ClientAPI_OpenVPNClientHelper.copyright());
 
-        mHandler.postDelayed(this::pollStatus, OpenVPNManagement.mBytecountInterval * 1000);
+        mHandler.postDelayed(mPollStatus, OpenVPNManagement.mBytecountInterval * 1000);
 
         ClientAPI_Status status = connect();
         if (status.getError()) {
@@ -71,7 +75,7 @@ public class OpenVPNThreadv3 extends ClientAPI_OpenVPNClient implements Runnable
             VpnStatus.addExtraHints(status.getMessage());
         }
         VpnStatus.updateStateString("NOPROCESS", "OpenVPN3 thread finished", R.string.state_noprocess, ConnectionStatus.LEVEL_NOTCONNECTED);
-        mHandler.removeCallbacks(this::pollStatus);
+        mHandler.removeCallbacks(mPollStatus);
     }
 
     @Override
@@ -402,6 +406,7 @@ public class OpenVPNThreadv3 extends ClientAPI_OpenVPNClient implements Runnable
 
     @Override
     public void stop() {
+        mHandler.removeCallbacks(mPollStatus);
         super.stop();
         mService.openvpnStopped();
     }
@@ -425,5 +430,8 @@ public class OpenVPNThreadv3 extends ClientAPI_OpenVPNClient implements Runnable
         long in = t.getBytesIn();
         long out = t.getBytesOut();
         VpnStatus.updateByteCount(in, out);
+        // Reschedule: the OpenVPN 3 core has no BYTECOUNT push, so keep polling while connected
+        // to keep feeding the traffic graph / mini graph.
+        mHandler.postDelayed(mPollStatus, OpenVPNManagement.mBytecountInterval * 1000);
     }
 }

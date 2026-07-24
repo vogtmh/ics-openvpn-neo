@@ -11,12 +11,11 @@
 
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
-            style="@style/blinkt.tabLayout"
+            style="@style/Widget.OpenVPNNeo.TabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            app:tabMaxWidth="0dp"
-            app:tabMode="scrollable" />
+            app:tabMode="fixed" />
 
     <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"

@@ -262,12 +262,6 @@
     <string name="rdn_prefix">RDN öneki</string>
     <string name="tls_remote_deprecated">tls-remote (KULLANIM DIŞI)</string>
     <string name="help_translate">http://crowdin.net/project/ics-openvpn/invite ziyaret ederek çevirilere yardımcı olabilirsiniz</string>
-    <string name="prompt">%1$s, %2$s kontrolünü almaya çalışıyor</string>
-    <string name="remote_warning">Devam ederek, uygulamaya tamamen Android için OpenVPN üzerinde denetleme ve tüm ağ trafiğini izleme yetkisini veriyorsunuz. <b>Uygulamaya güvenmiyorsanız kabul ETMEYİN.</b> Aksi takdirde, verilerinizin zararlı bir yazılım tarafından ele geçirilme riskini taşıyorsunuz.\"</string>
-    <string name="remote_trust">Bu uygulamaya güveniyorum.</string>
-    <string name="no_external_app_allowed">Hiçbir uygulamanın harici API\'yi kullanma izni yok</string>
-    <string name="allowed_apps">İzin verilen uygulamalar: %s</string>
-    <string name="clearappsdialog">İzin verilen harici uygulama listesi temizlensin mi?\nİzin verilen uygulamaların geçerli listesi:\n\n%s</string>
     <string name="screenoff_summary">Ekran kapalıyken ve 60 sn.\'de 64 kB\'dan daha az veri aktarılmışsa VPN\'i duraklat. \"Kalıcı Tun\" seçeneği etkin iken, VPN\'i duraklatmak cihazınızı SIFIR ağ bağlanabilirliğiyle bırakacak. \"Kalıcı Tun\" seçeneği olmadığında, cihaz VPN bağlantısı/koruması almayacak.</string>
     <string name="screenoff_title">Ekran kapandıktan sonra VPN bağlantısını duraklat</string>
     <string name="screenoff_pause">Ekran kapalı durumunda bağlantıyı duraklatıyor: %2$s sn. içinde %1$s\'den daha az veri</string>
@@ -283,7 +277,6 @@
     <string name="vpnbehaviour">VPN davranışı</string>
     <string name="allow_vpn_changes">VPN Profillerinin değiştirilmesine izin ver</string>
     <string name="hwkeychain">Donanım Anahtar Deposu:</string>
-    <string name="permission_icon_app">Uygulama simgesi Android için OpenVPN kullanmaya çalışıyor</string>
     <string name="thanks_for_donation">%s bağış için teşekkürler!</string>
     <string name="logCleared">Günlük temizlendi.</string>
     <string name="show_password">Parolayı göster</string>
@@ -313,7 +306,6 @@
     <string name="mssfix_checkbox">TCP yükünün MSS değerini geçersiz kıl</string>
     <string name="mssfix_dialogtitle">TCP yükünün MSS değerini ayarla</string>
     <string name="client_behaviour">İstemci davranışı</string>
-    <string name="clear_external_apps">İzin verilmiş harici uygulamaları temizle</string>
     <string name="loading">Yükleniyor&#8230;</string>
     <string name="allowed_vpn_apps_info">Izin verilen VPN uygulamaları: %1$s</string>
     <string name="disallowed_vpn_apps_info">İzin verilmeyen VPN uygulamaları: %1$s</string>
@@ -426,12 +418,7 @@
     </string>
     <string name="weakmd_title">Sertifika imzasında zayıf (MD5) karması (SSL_CTX_use_certificate md çok zayıf)
     </string>
-    <string name="title_activity_open_sslspeed">OpenSSL Hız Testi</string>
     <string name="openssl_cipher_name">OpenSSL şifre isimleri</string>
-    <string name="osslspeedtest">OpenSSL Kripto Hız testi</string>
-    <string name="openssl_error">OpenSSL bir hata döndürdü</string>
-    <string name="running_test">Test çalışıyor&#8230;</string>
-    <string name="test_algoirhtms">Seçilen algoritmaları test edin</string>
     <string name="all_app_prompt">Harici bir uygulama, %s denetlemeyi deniyor. Erişim isteyen uygulama belirlenemedi. Uygulamaya TÜM uygulamalara erişim izni veriliyor.</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C++ uygulaması statik anahtarları desteklemez. Lütfen genel ayarlar altında 
         OpenVPN 2.x\'e geçin.

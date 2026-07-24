@@ -158,12 +158,6 @@
     <string name="send_config">Envia arxiu de configuració</string>
     <string name="complete_dn">DN complet</string>
     <string name="help_translate">Podeu ajudar a trsduïr visitant https://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s intenta controlar %2$s</string>
-    <string name="remote_warning">Al continuar, esteu donant la aplicació permisos per controlar completameny OpenVPN per Android i interceptar tot el transit de xarxa.<b>NO acceptis si no confies en la aplicació.</b> Si no, correu el risc que les vostres dades siguin compromeses per programari maliciós</string>
-    <string name="remote_trust">Confio en aquesta aplicació</string>
-    <string name="no_external_app_allowed">No s\'ha permes cap aplicació fer servir la API externa</string>
-    <string name="allowed_apps">Aplicacions permeses: %s</string>
-    <string name="clearappsdialog">Esborrar llista de aplicacions externes autoritzades?\nLlista de aplicacions permeses\n\n%s</string>
     <string name="save_password">Guardar contrasenya</string>
     <string name="pauseVPN">Pausa la VPN</string>
     <string name="resumevpn">Continua la VPN</string>
@@ -173,7 +167,6 @@
     <string name="appbehaviour">Comportament de l\'aplicació</string>
     <string name="vpnbehaviour">Comportament del la VPN</string>
     <string name="allow_vpn_changes">Permet canvis als perfils de VPN</string>
-    <string name="permission_icon_app">Icona de la aplicació intentant fer servir OpenVPN per a Android</string>
     <string name="thanks_for_donation">Gràcies per donar %s!</string>
     <string name="show_password">Mostra contrassenya</string>
     <string name="timestamp_short">Curt</string>

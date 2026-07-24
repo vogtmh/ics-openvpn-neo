@@ -19,14 +19,12 @@ import com.mavodev.openvpnneo.R
  */
 class MainMenuBottomSheet : BottomSheetDialogFragment() {
 
-    override fun getTheme(): Int = R.style.blinkt_BottomSheet
+    override fun getTheme(): Int = R.style.ThemeOverlay_OpenVPNNeo_BottomSheet
 
     interface Listener {
-        fun onMenuChangeSorting()
         fun onMenuSettings()
         fun onMenuShowLog()
         fun onMenuGraph()
-        fun onMenuOpenSSLSpeed()
         fun onMenuFAQ()
         fun onMenuAbout()
     }
@@ -51,10 +49,6 @@ class MainMenuBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<LinearLayout>(R.id.menu_change_sorting).setOnClickListener {
-            dismissWithAction { listener?.onMenuChangeSorting() }
-        }
-
         view.findViewById<LinearLayout>(R.id.menu_settings).setOnClickListener {
             dismissWithAction { listener?.onMenuSettings() }
         }
@@ -65,10 +59,6 @@ class MainMenuBottomSheet : BottomSheetDialogFragment() {
 
         view.findViewById<LinearLayout>(R.id.menu_graph).setOnClickListener {
             dismissWithAction { listener?.onMenuGraph() }
-        }
-
-        view.findViewById<LinearLayout>(R.id.menu_openssl_speed).setOnClickListener {
-            dismissWithAction { listener?.onMenuOpenSSLSpeed() }
         }
 
         view.findViewById<LinearLayout>(R.id.menu_faq).setOnClickListener {

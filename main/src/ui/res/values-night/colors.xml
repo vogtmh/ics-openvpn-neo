@@ -4,15 +4,40 @@
   ~ Distributed under the GNU GPL v2 with additional terms. For full terms see the file doc/LICENSE.txt
   -->
 
+<!-- Dark-mode overrides for the color tokens defined in res/values/colors.xml -->
 <resources>
-    <!-- Night mode colors - force pure black backgrounds -->
-    <color name="primary">#000000</color>      <!-- Pure black for night mode -->
-    <color name="primary_dark">#000000</color> <!-- Pure black -->
-    <color name="accent">#9718EC</color>       <!-- Purple accent -->
+    <!-- Brand -->
+    <color name="accent">#9718EC</color>
+    <color name="on_accent">#FFFFFF</color>
+    <!-- Legacy names: primary drives the tab bar (black in dark mode) -->
+    <color name="primary">#000000</color>
+    <color name="primary_dark">#000000</color>
+
+    <!-- Text -->
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#B3FFFFFF</color>
-    
-    <!-- Override any other background colors that might be causing the dark gray -->
-    <color name="background_material_dark">@android:color/black</color>
-    <color name="background_dark">@android:color/black</color>
+
+    <!-- Window / app background -->
+    <color name="app_background">#111111</color>
+
+    <!-- Material3 surface ramp (near-black) -->
+    <color name="surface">#1A1A1A</color>
+    <color name="on_surface">#FFFFFF</color>
+    <color name="on_surface_variant">#B3FFFFFF</color>
+    <color name="surface_container_lowest">#111111</color>
+    <color name="surface_container_low">#1A1A1A</color>
+    <color name="surface_container">#252525</color>
+    <color name="surface_container_high">#2E2E2E</color>
+    <color name="surface_container_highest">#333333</color>
+
+    <!-- Elevated containers -->
+    <color name="dialog_surface">#2E2E2E</color>
+    <color name="bottom_sheet_surface">#333333</color>
+
+    <!-- Server list card: keep the existing elevated container look in dark mode -->
+    <color name="server_card_background">#252525</color>
+
+    <!-- System + action bar: always black -->
+    <color name="bar_background">#000000</color>
+    <color name="on_bar">#FFFFFF</color>
 </resources>

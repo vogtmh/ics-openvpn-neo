@@ -260,12 +260,6 @@
     <string name="rdn_prefix">Prefix RDN</string>
     <string name="tls_remote_deprecated">tls-remote (ÎNVECHIT)</string>
     <string name="help_translate">Puteţi ajuta la traducere vizitând http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s încercări de a controla %2$s</string>
-    <string name="remote_warning">Continuând, daţi permisiunea aplicaţiei de a controla complet OpenVPN pentru Android și de a intercepta tot traficul de rețea. <b>Nu acceptaţi decât dacă aveți încredere în aplicație</b> În caz contrar, riscaţi să aveţi datele compromise de software maliţios.\"</string>
-    <string name="remote_trust">Am încredere în această aplicaţie.</string>
-    <string name="no_external_app_allowed">Nici o aplicaţie nu are permisiunea de a folosi API-ul extern</string>
-    <string name="allowed_apps">Aplicaţii permise: %s</string>
-    <string name="clearappsdialog">Şterge lista aplicaţilor permise?\nLista curentă a aplicaţilor ce au permisiune:\n\n%s</string>
     <string name="screenoff_summary">\"Suspendă VPN atunci când ecranul este oprit şi au fost transferaţi mai puţin de 64 kB în 60s. Când \"Tun persistent\" este activat suspendarea conexiunii VPN va lăsa aparatul dvs. FĂRĂ conexiune la reţea. Fără opţiunea \"Tun persistent\" aparatul nu va beneficia de conexiune/protecţie VPN.</string>
     <string name="screenoff_title">Suspendă conexiunea VPN după închiderea ecranului</string>
     <string name="screenoff_pause">Se suspendă conexiunea în starea ecran oprit: mai puţin de %1$s în %2$s</string>
@@ -281,7 +275,6 @@
     <string name="vpnbehaviour">Comportamentul VPN</string>
     <string name="allow_vpn_changes">Permite modificări la Profilurile VPN</string>
     <string name="hwkeychain">Hardware Keystore:</string>
-    <string name="permission_icon_app">Iconița aplicației care încearcă să utilizeze OpenVPN pentru Android</string>
     <string name="thanks_for_donation">Vă mulțumim că ați donat %s!</string>
     <string name="logCleared">Jurnal șters.</string>
     <string name="show_password">Arată parola</string>
@@ -311,7 +304,6 @@
     <string name="mssfix_checkbox">Suprascrie valoarea MSS a datelor utile TCP</string>
     <string name="mssfix_dialogtitle">Setați MSS a datelor utile TCP</string>
     <string name="client_behaviour">Comportamentul clientului</string>
-    <string name="clear_external_apps">Ștergeți aplicațiile externe permise</string>
     <string name="loading">Se încarcă&#8230;</string>
     <string name="allowed_vpn_apps_info">Aplicaţii VPN permise: %1$s</string>
     <string name="disallowed_vpn_apps_info">Aplicaţii VPN nepermise: %1$s</string>

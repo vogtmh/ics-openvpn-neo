@@ -261,12 +261,6 @@
     <string name="rdn_prefix">Prefixo RDN</string>
     <string name="tls_remote_deprecated">tLS-remoto (obsoleto)</string>
     <string name="help_translate">Pode ajudar a traduzir, visite http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s tenta controlar %2$s</string>
-    <string name="remote_warning">Por meio de processo, você está dando a permissão de aplicativo para controlar completamente OpenVPN para Android e para interceptar todos traffic.<b>Do rede não aceitar menos que confie no application.</b> Caso contrário, você corre o risco de ter seus dados comprometidos por software malicioso. \"</string>
-    <string name="remote_trust">Confio nesta aplicação.</string>
-    <string name="no_external_app_allowed">Nenhuma app pode usar a API externa</string>
-    <string name="allowed_apps">Aplicações permitidas:%s</string>
-    <string name="clearappsdialog">Limpar lista de aplicativos externos permitidos?\nLista atual de aplicativos permitidos:\n\n%s</string>
     <string name="screenoff_summary">Pausar a VPN quando a tela estiver desligada e menos de 64kB transferidos em 60s. Quando a opção \"Tun Persistente\" estiver habilitada, pausando a VPN irá deixar seu dispositivo SEM conexão de rede. Sem a opção \"Tun Persistente\" o dispositivo ficará sem a conexão/proteção VPN.</string>
     <string name="screenoff_title">Pausar a conexão VPN após desligar a tela</string>
     <string name="screenoff_pause">Pausando conexão ao desligar a tela: menos que %1$s em %2$ss</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">Comportamento VPN</string>
     <string name="allow_vpn_changes">Permitir alterações aos perfis de VPN</string>
     <string name="hwkeychain">Armazenamento de chaves de hardware:</string>
-    <string name="permission_icon_app">Ícone do app, tentando usar o OpenVPN para Android</string>
     <string name="thanks_for_donation">Obrigado por doar %s!</string>
     <string name="logCleared">Log apagada.</string>
     <string name="show_password">Mostrar a senha</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">Substituir o valor MSS de payload TCP</string>
     <string name="mssfix_dialogtitle">Definir MSS do TCP payload</string>
     <string name="client_behaviour">Comportamento cliente</string>
-    <string name="clear_external_apps">Limpar lista de aplicativos externos permitidos</string>
     <string name="loading">Carregando&#8230;</string>
     <string name="allowed_vpn_apps_info">Aplicativos permitidos na VPN: %1$s</string>
     <string name="disallowed_vpn_apps_info">Aplicativos não-permitidos na VPN: %1$s</string>
@@ -423,12 +415,7 @@
     <string name="channel_name_status">Folkzaza</string>
     <string name="channel_description_status">Folkzaza</string>
     <string name="weakmd_title">Hashes fracos (MD5) na assinatura do certificado (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">Teste de velocidade do OpenSSL</string>
     <string name="openssl_cipher_name">Nomes de cifra OpenSSL</string>
-    <string name="osslspeedtest">Teste de velocidade do OpenSSL Crypto</string>
-    <string name="openssl_error">OpenSSL retornou um erro</string>
-    <string name="running_test">Executando teste&#8230;</string>
-    <string name="test_algoirhtms">Testar os algoritmos selecionados</string>
     <string name="all_app_prompt">Um aplicativo externo tenta controlar %s. O aplicativo que solicita o acesso não pode ser determinado. Permitir que este aplicativo concede TODOS os aplicativos de acesso.a.3 </string>
     <string name="openvpn3_nostatickeys">A implementação OpenVPN 3 C++ não suporta chaves estáticas. Altere para OpenVPN 2.x nas configurações gerais.</string>
     <string name="openvpn3_pkcs12">Usar diretamente arquivos PKCS12 com a implementação do OpenVPN 3 C++ não é suportado. Importe os arquivos PKCS12 para o armazenamento de chaves do Android ou mude para OpenVPN 2.x nas configurações gerais.</string>

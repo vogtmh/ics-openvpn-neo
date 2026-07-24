@@ -22,37 +22,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Change sorting -->
-        <LinearLayout
-            android:id="@+id/menu_change_sorting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_sort"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="16dp"
-                android:text="@string/change_sorting"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp" />
-        </LinearLayout>
-
         <!-- Settings -->
         <LinearLayout
             android:id="@+id/menu_settings"
@@ -142,37 +111,6 @@
                 android:layout_weight="1"
                 android:paddingStart="16dp"
                 android:text="@string/graph"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <!-- OpenSSL speed test -->
-        <LinearLayout
-            android:id="@+id/menu_openssl_speed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_speed"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="16dp"
-                android:text="@string/openssl_speed_test"
                 android:textColor="@color/text_primary"
                 android:textSize="18sp" />
         </LinearLayout>

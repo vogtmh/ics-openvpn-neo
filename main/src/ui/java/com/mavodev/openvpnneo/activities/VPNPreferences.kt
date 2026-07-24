@@ -110,27 +110,28 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         mPagerAdapter.setFragmentArgs(fragmentArguments)
 
         if (mProfile!!.mUserEditable) {
-            mPagerAdapter.addTab(R.string.basic, Settings_Overview::class.java)
-            mPagerAdapter.addTab(R.string.connection_tab, Settings_Basic::class.java)
-            mPagerAdapter.addTab(R.string.server_list, Settings_Connections::class.java)
-            mPagerAdapter.addTab(R.string.ipdns, Settings_IP::class.java)
-            mPagerAdapter.addTab(R.string.routing, Settings_Routing::class.java)
-            mPagerAdapter.addTab(R.string.settings_auth, Settings_Authentication::class.java)
+            mPagerAdapter.addTab(R.string.basic, R.drawable.ic_tab_basic, Settings_Overview::class.java)
+            mPagerAdapter.addTab(R.string.connection_tab, R.drawable.ic_tab_connection, Settings_Basic::class.java)
+            mPagerAdapter.addTab(R.string.server_list, R.drawable.ic_tab_server, Settings_Connections::class.java)
+            mPagerAdapter.addTab(R.string.ipdns, R.drawable.ic_tab_ipdns, Settings_IP::class.java)
+            mPagerAdapter.addTab(R.string.routing, R.drawable.ic_tab_routing, Settings_Routing::class.java)
+            mPagerAdapter.addTab(R.string.settings_auth, R.drawable.ic_tab_auth, Settings_Authentication::class.java)
 
-            mPagerAdapter.addTab(R.string.advanced, Settings_Obscure::class.java)
+            mPagerAdapter.addTab(R.string.advanced, R.drawable.ic_tab_advanced, Settings_Obscure::class.java)
         } else {
-            mPagerAdapter.addTab(R.string.basic, Settings_UserEditable::class.java)
+            mPagerAdapter.addTab(R.string.basic, R.drawable.ic_tab_basic, Settings_UserEditable::class.java)
         }
-        mPagerAdapter.addTab(R.string.vpn_allowed_apps, Settings_Allowed_Apps::class.java)
-        mPagerAdapter.addTab(R.string.generated_config, ShowConfigFragment::class.java)
+        mPagerAdapter.addTab(R.string.vpn_allowed_apps, R.drawable.ic_tab_apps, Settings_Allowed_Apps::class.java)
+        mPagerAdapter.addTab(R.string.generated_config, R.drawable.ic_tab_config, ShowConfigFragment::class.java)
 
 
         mPager.setAdapter(mPagerAdapter)
 
-        // Show tabs in VPN preferences
+        // Icon-only tabs; each page shows its section title as the first (scrolling) line.
         val tabLayout: com.google.android.material.tabs.TabLayout = rootview.findViewById(R.id.tab_layout)
         com.google.android.material.tabs.TabLayoutMediator(tabLayout, mPager) { tab, position ->
-            tab.text = mPagerAdapter.getPageTitle(position)
+            tab.setIcon(mPagerAdapter.getPageIcon(position))
+            tab.contentDescription = mPagerAdapter.getPageTitle(position)
         }.attach()
 
         setContentView(rootview)

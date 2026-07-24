@@ -259,12 +259,6 @@
     <string name="rdn_prefix">РДН префикс</string>
     <string name="tls_remote_deprecated">тлс-даљински (ДЕПРЕЦАТЕД)</string>
     <string name="help_translate">Можете помоћи преводу ако посетите хттп://цровдин.нет/пројецт/ицс-опенвпн/инвите</string>
-    <string name="prompt">%1$s покушаја контроле %2$s</string>
-    <string name="remote_warning">Настављајући, апликацији дајете дозволу за потпуну контролу ОпенВПН-а за Андроид и пресретање целог мрежног саобраћаја.<b>НЕ прихватајте ако не верујете апликацији.</b> У супротном, ризикујете да ваши подаци буду угрожени злонамјерним софтвером. \"</string>
-    <string name="remote_trust">Верујем овој апликацији.</string>
-    <string name="no_external_app_allowed">Ниједној апликацији није дозвољено коришћење екстерног АПИ-ја</string>
-    <string name="allowed_apps">Дозвољене апликације: %s</string>
-    <string name="clearappsdialog">Избришите листу дозвољених спољних апликација?\nТренутна листа дозвољених апликација:\n\n%s</string>
     <string name="screenoff_summary">Паузирајте ВПН кад је екран искључен и мање од 64 кБ пренесених података у 60-има. Када је омогућена опција „Упорни Тун“ паузирање ВПН-а оставиће ваш уређај без НО мреже. Без опције \"Трајни Тун\" уређај неће имати ВПН везу / заштиту.</string>
     <string name="screenoff_title">Паузирајте ВПН везу након искључивања екрана</string>
     <string name="screenoff_pause">Паузирање везе у стању искљученог екрана: мање од %1$s у %2$sс</string>
@@ -280,7 +274,6 @@
     <string name="vpnbehaviour">ВПН понашање</string>
     <string name="allow_vpn_changes">Допусти промене ВПН профила</string>
     <string name="hwkeychain">Хардваре Кеисторе:</string>
-    <string name="permission_icon_app">Икона апликације која покушава да користи ОпенВПН за Андроид</string>
     <string name="thanks_for_donation">Хвала на донацији %s!</string>
     <string name="logCleared">Дневник је обрисан.</string>
     <string name="show_password">Покажи лозинку</string>
@@ -310,7 +303,6 @@
     <string name="mssfix_checkbox">Превазилазите МСС вредност ТЦП корисног оптерећења</string>
     <string name="mssfix_dialogtitle">Подесите МСС ТЦП корисног оптерећења</string>
     <string name="client_behaviour">Клијентско понашање</string>
-    <string name="clear_external_apps">Очистите дозвољене спољне апликације</string>
     <string name="loading">Учитавање&#8230;</string>
     <string name="allowed_vpn_apps_info">Дозвољене ВПН апликације: %1$s</string>
     <string name="disallowed_vpn_apps_info">Забрањене ВПН апликације: %1$s</string>
@@ -415,12 +407,7 @@
     <string name="channel_name_status">Промјена статуса везе</string>
     <string name="channel_description_status">Промјене статуса ОпенВПН везе (Повезивање, аутентификација,&#8230;)</string>
     <string name="weakmd_title">Слаби (МД5) сложени су у потпису сертификата (ССЛ_ЦТКС_усе_цертифицате мд сувише слаб)</string>
-    <string name="title_activity_open_sslspeed">ОпенССЛ тест брзине</string>
     <string name="openssl_cipher_name">ОпенССЛ имена шифре</string>
-    <string name="osslspeedtest">ОпенССЛ тест крипто брзине</string>
-    <string name="openssl_error">ОпенССЛ је вратио грешку</string>
-    <string name="running_test">Тестирање&#8230;</string>
-    <string name="test_algoirhtms">Испитајте одабране алгоритме</string>
     <string name="all_app_prompt">Спољна апликација покушава да контролише %s. Апликација која захтева приступ не може се утврдити. Омогућавање ове апликације дозвољава СВИМ апликацијама приступ.</string>
     <string name="openvpn3_nostatickeys">Имплементација ОпенВПН 3 Ц ++ не подржава статичке кључеве. Промените на ОпенВПН 2.к под општим подешавањима.</string>
     <string name="openvpn3_pkcs12">Коришћење датотека ПКЦС12 директно са ОпенВПН 3 Ц ++ имплементацијом није подржано. Увезите пкцс12 датотеке у Андроид кеисторе или промените у ОпенВПН 2.к под општим подешавањима.</string>

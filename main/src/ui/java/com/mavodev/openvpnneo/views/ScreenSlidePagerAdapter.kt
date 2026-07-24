@@ -9,6 +9,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -35,7 +36,7 @@ class ScreenSlidePagerAdapter(fm: FragmentManager, lc: Lifecycle, c: Context) :
         mFragmentArguments = fragmentArguments
     }
 
-    internal class Tab(var fragmentClass: Class<out Fragment>, var mName: String)
+    internal class Tab(var fragmentClass: Class<out Fragment>, var mName: String, var iconRes: Int)
 
     private val mTabs = Vector<Tab>()
     private var mBottomPadding= 0
@@ -56,6 +57,11 @@ class ScreenSlidePagerAdapter(fm: FragmentManager, lc: Lifecycle, c: Context) :
         return mTabs[position].mName
     }
 
+    @DrawableRes
+    fun getPageIcon(position: Int): Int {
+        return mTabs[position].iconRes
+    }
+
     fun indexOfTitle(title: CharSequence): Int {
         return mTabs.indexOfFirst { it.mName == title }
     }
@@ -64,8 +70,8 @@ class ScreenSlidePagerAdapter(fm: FragmentManager, lc: Lifecycle, c: Context) :
         return mTabs.size
     }
 
-    fun addTab(@StringRes name: Int, fragmentClass: Class<out Fragment>) {
-        mTabs.add(Tab(fragmentClass, res.getString(name)))
+    fun addTab(@StringRes name: Int, @DrawableRes icon: Int, fragmentClass: Class<out Fragment>) {
+        mTabs.add(Tab(fragmentClass, res.getString(name), icon))
     }
 
     fun setBottomPadding(bottom: Int) {

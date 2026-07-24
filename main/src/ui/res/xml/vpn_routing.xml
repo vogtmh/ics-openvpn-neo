@@ -7,6 +7,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
+    <Preference
+        android:layout="@layout/ovpn_preference_header"
+        android:selectable="false"
+        android:title="@string/routing"
+        app:iconSpaceReserved="false" />
+
     <SwitchPreference
         android:key="routenopull"
         android:summary="@string/ignore_routes_summary"
@@ -38,13 +44,15 @@
             android:dependency="useDefaultRoute"
             android:dialogMessage="@string/custom_route_message"
             android:key="customRoutes"
-            android:title="@string/custom_routes_title" />
+            android:title="@string/custom_routes_title"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
         <EditTextPreference
             android:dependency="useDefaultRoute"
             android:dialogMessage="@string/custom_route_message_excluded"
             android:key="excludedRoutes"
-            android:title="@string/custom_routes_title_excluded" />
+            android:title="@string/custom_routes_title_excluded"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/ipv6" >
         <SwitchPreference
@@ -58,7 +66,8 @@
             android:dependency="useDefaultRoutev6"
             android:dialogMessage="@string/custom_route_message"
             android:key="customRoutesv6"
-            android:title="@string/custom_routes_title" />
+            android:title="@string/custom_routes_title"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
         <!-- disable for now. Not supported by OpenVPN itself -->
         <EditTextPreference

@@ -17,7 +17,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.adapters.SettingsAdapter
-import com.mavodev.openvpnneo.activities.OpenSSLSpeed
 import com.mavodev.openvpnneo.core.Preferences
 import com.mavodev.openvpnneo.core.ProfileManager
 import com.mavodev.openvpnneo.model.SettingItem
@@ -126,27 +125,6 @@ class SettingsActivity : BaseActivity() {
             description = getString(R.string.encrypt_profiles_summary),
             type = SettingType.TOGGLE_SLIDER,
             value = sharedPreferences.getBoolean("preferencryption", true)
-        ))
-
-        // Add "Clear allowed external apps" with conditional logic
-        val allowedApps = sharedPreferences.getStringSet("allowed_apps", emptySet()) ?: emptySet()
-        val clearApiDescription = if (allowedApps.isEmpty()) {
-            getString(R.string.no_external_app_allowed)
-        } else {
-            "${allowedApps.size} app(s) allowed"
-        }
-        
-        settings.add(SettingItem(
-            key = "clearapi",
-            title = getString(R.string.clear_external_apps),
-            description = clearApiDescription,
-            type = SettingType.ACTION,
-            action = { 
-                if (allowedApps.isNotEmpty()) {
-                    showClearExternalAppsDialog()
-                }
-                // If no apps, action does nothing (item is effectively disabled)
-            }
         ))
 
         // VPN Behaviour Category
@@ -333,48 +311,6 @@ class SettingsActivity : BaseActivity() {
                 val selectedUuid = profileUuids[which]
                 sharedPreferences.edit().putString("alwaysOnVpn", selectedUuid).apply()
                 dialog.dismiss()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            
-        // Set background color only in dark mode
-        dialog.setOnShowListener {
-            if (isInDarkMode()) {
-                val colorDrawable = android.graphics.drawable.ColorDrawable(android.graphics.Color.parseColor("#111111"))
-                dialog.window?.setBackgroundDrawable(colorDrawable)
-            }
-        }
-        dialog.show()
-    }
-
-    private fun showClearExternalAppsDialog() {
-        val allowedApps = sharedPreferences.getStringSet("allowed_apps", emptySet()) ?: emptySet()
-        
-        if (allowedApps.isEmpty()) {
-            val dialog = MaterialAlertDialogBuilder(this)
-                .setTitle(getString(R.string.clear_external_apps))
-                .setMessage(getString(R.string.no_external_app_allowed))
-                .setPositiveButton(android.R.string.ok, null)
-                .create()
-                
-            // Set background color only in dark mode
-            dialog.setOnShowListener {
-                if (isInDarkMode()) {
-                    val colorDrawable = android.graphics.drawable.ColorDrawable(android.graphics.Color.parseColor("#111111"))
-                    dialog.window?.setBackgroundDrawable(colorDrawable)
-                }
-            }
-            dialog.show()
-            return
-        }
-
-        val appsList = allowedApps.joinToString("\n")
-        
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.clear_external_apps))
-            .setMessage(getString(R.string.clearappsdialog, appsList))
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                sharedPreferences.edit().remove("allowed_apps").apply()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create()

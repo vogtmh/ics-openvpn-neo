@@ -1,8 +1,6 @@
 package com.mavodev.openvpnneo.adapters
 
 import android.content.Context
-import android.util.TypedValue
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,45 +105,13 @@ class SettingsAdapter(
                 titleView.setTextAppearance(android.R.style.TextAppearance_Small)
                 titleView.setTypeface(null, android.graphics.Typeface.BOLD)
                 
-                // Special handling for "clearapi" - disable if no apps allowed
-                if (setting.key == "clearapi") {
-                    val allowedApps = context.getSharedPreferences("com.mavodev.openvpnneo_preferences", Context.MODE_PRIVATE)
-                        .getStringSet("allowed_apps", emptySet()) ?: emptySet()
-                    
-                    if (allowedApps.isEmpty()) {
-                        // Disable the item visually
-                        titleView.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
-                        actionButton.alpha = 0.5f // Make button semi-transparent
-                        leftContainer.isClickable = false
-                        leftContainer.isFocusable = false
-                        leftContainer.background = null
-                        actionButton.isClickable = false
-                        actionButton.isFocusable = false
-                        actionButton.isEnabled = false
-                    } else {
-                        // Enable the item
-                        val tv = TypedValue()
-                        context.theme.resolveAttribute(android.R.attr.textColorPrimary, tv, true)
-                        val enabledColor = if (tv.resourceId != 0)
-                            ContextCompat.getColor(context, tv.resourceId) else tv.data
-                        titleView.setTextColor(enabledColor)
-                        actionButton.alpha = 1.0f
-                        leftContainer.isClickable = false
-                        leftContainer.isFocusable = false
-                        leftContainer.background = null
-                        actionButton.isClickable = true
-                        actionButton.isFocusable = true
-                        actionButton.isEnabled = true
-                    }
-                } else {
-                    // For other action items, disable title click, enable button click
-                    leftContainer.isClickable = false
-                    leftContainer.isFocusable = false
-                    leftContainer.background = null
-                    actionButton.isClickable = true
-                    actionButton.isFocusable = true
-                    actionButton.isEnabled = true
-                }
+                // Action items: disable title click, enable button click
+                leftContainer.isClickable = false
+                leftContainer.isFocusable = false
+                leftContainer.background = null
+                actionButton.isClickable = true
+                actionButton.isFocusable = true
+                actionButton.isEnabled = true
                 
                 // Use layout padding and margins
                 // No manual padding override needed

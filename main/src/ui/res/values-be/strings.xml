@@ -258,12 +258,6 @@
     <string name="rdn_prefix">Прэфікс RDN</string>
     <string name="tls_remote_deprecated">tls-remote (САСТАРЭЛЫ)</string>
     <string name="help_translate">Вы можаце дапамагчы з перакладам праграмы на беларускую мову, наведаўшы https://crowdin.com/project/ics-openvpn/be#</string>
-    <string name="prompt">%1$s спрабуе кантраляваць %2$s</string>
-    <string name="remote_warning">Калі вы працягніце, то праграма атрымае поўны кантроль над  у тым ліку, магчымасць перахопу ўсяго сеткавага трафіку.<b>НЕ ДАВАЙЦЕ дазвол, калі вы не давяраеце гэтай праграме.</b> У адваротным выпадку вы рызыкуеце, што ўсе вашы даныя могуць быць перахопленыя злачынцамі</string>
-    <string name="remote_trust">Я давяраю гэтай праграме.</string>
-    <string name="no_external_app_allowed">Няма праграм, якім дазволена выкарыстоўваць знешнія API</string>
-    <string name="allowed_apps">Дазволеныя праграмы: %s</string>
-    <string name="clearappsdialog">Ачысціць спіс дазволеных знешніх праграм?\nБягучы спіс дазволеных праграм:\n\n%s</string>
     <string name="screenoff_summary">Прыпыняць VPN, калі экран адключаны і перададзена менш за 64 КБ даных за 60 секунд. Калі параметр \"Пастаянны TUN\" уключаны, прыпыненне VPN пакіне вашу прыладу БЕЗ злучэння з сецівам. У адваротным выпадку, сеціва застанецца, але прылада не будзе выкарыстоўваць абарону злучэння з дапамогай VPN.</string>
     <string name="screenoff_title">Прыпыняць злучэнне з VPN пасля адключэння экрана</string>
     <string name="screenoff_pause">Прыпыненне злучэння ў стане выключанага экрана: менш за %1$s у %2$s сек.</string>
@@ -279,7 +273,6 @@
     <string name="vpnbehaviour">Паводзіны VPN</string>
     <string name="allow_vpn_changes">Дазваляць змяненні профіляў VPN</string>
     <string name="hwkeychain">Апаратнае сховішча ключоў:</string>
-    <string name="permission_icon_app">Значок праграмы спрабуе выкарыстоўваць </string>
     <string name="thanks_for_donation">Дзякуй за ахвяраванне, %s!</string>
     <string name="logCleared">Журнал ачышчаны.</string>
     <string name="show_password">Паказаць пароль</string>
@@ -309,7 +302,6 @@
     <string name="mssfix_checkbox">Перавызначэнне значэння MSS карыснага змесціва TCP</string>
     <string name="mssfix_dialogtitle">Усталяваць MSS для карыснага змесціва TCP</string>
     <string name="client_behaviour">Паводзіны кліента</string>
-    <string name="clear_external_apps">Ачысціць дазволеныя знешнія праграмы</string>
     <string name="loading">Запампаванне&#8230;</string>
     <string name="allowed_vpn_apps_info">Дазволеныя праграмы VPN: %1$s</string>
     <string name="disallowed_vpn_apps_info">Забароненыя праграмы VPN: %1$s</string>
@@ -414,12 +406,7 @@
     <string name="channel_name_status">Змяненне статусу падлучэння</string>
     <string name="channel_description_status">Статус змянення злучэння OpenVPN (злучэнне, праверка сапраўднасці...)</string>
     <string name="weakmd_title">Слабыя хэшы (MD5) у подпісе сертыфікату (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">Тэст хуткасці OpenSSL</string>
     <string name="openssl_cipher_name">Назвы шыфраў OpenSSL</string>
-    <string name="osslspeedtest">Тэст хуткасці OpenSSL Crypto</string>
-    <string name="openssl_error">OpenSSL вярнуў памылку</string>
-    <string name="running_test">Тэставанне&#8230;</string>
-    <string name="test_algoirhtms">Тэставанне выбраных алгарытмаў</string>
     <string name="all_app_prompt">Знешняя праграма спрабуе кантраляваць %s. Праграма, якая запытала доступ не вызначана. УСЕ астатнія праграмы атрымаюць доступ, калі вы ўхваліце доступ гэтай праграме.</string>
     <string name="openvpn3_nostatickeys">Рэалізацыя OpenVPN 3 на C++ не падтрымлівае статычныя ключы. Калі ласка, змяніце на OpenVPN 2.x у агульных наладах.</string>
     <string name="openvpn3_pkcs12">Выкарыстанне файлаў PKCS12 напрамую з дапамогай рэалізацыі OpenVPN 3 на С++ не падтрымліваецца. Імпартуйце файлы PKCS12 у сховішча ключоў Android або змяніце на OpenVPN 2.x у агульных наладах.</string>

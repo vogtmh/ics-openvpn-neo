@@ -263,12 +263,6 @@
     <string name="rdn_prefix">پیشوند RDN</string>
     <string name="tls_remote_deprecated">tls-remote (DEPRECATED)</string>
     <string name="help_translate">شما می توانید از طریق http://crowdin.net/project/ics-openvpn/invite به ترجمه کمک کنید</string>
-    <string name="prompt">%1$s تلاش برای کنترل %2$s است</string>
-    <string name="remote_warning">با ادامه، شما به مجوز برنامه برای کنترل کامل OpenVPN برای آندروید و برای تله ترافیک شبکه بروید. <b> قبول نمی کنید مگر اینکه به برنامه اطمینان داشته باشید.</b> در غیر این صورت، شما خطر داده شدن اطلاعات خود را از طریق نرم افزارهای مضر به خطر می اندازید. \"</string>
-    <string name="remote_trust">من به این برنامه اعتماد دارم.</string>
-    <string name="no_external_app_allowed">هیچ برنامه اجازه استفاده از API خارجی را نداشت</string>
-    <string name="allowed_apps">برنامه های مجاز: %s</string>
-    <string name="clearappsdialog">لیست برنامه های مجاز خارجی را پاک کنید؟ \n لیست برنامه های مجاز فعلی: \n\n%s</string>
     <string name="screenoff_summary">مکث VPN زمانی که صفحه خاموش است و داده های کمتر از 64 کیلوبایت در 60 ثانیه منتقل شده است. هنگامی که گزینه \"Permanent Tun\" فعال می شود و توقف VPN، دستگاه شما با NO اتصال به شبکه را ترک می کند. بدون گزینه \"Standing Tun\" دستگاه هیچ اتصال / حفاظت از VPN ندارد.</string>
     <string name="screenoff_title">توقف اتصال VPN بعد از خاموش کردن</string>
     <string name="screenoff_pause">اتصال متوقف شده در حالت خاموش روی صفحه نمایش: کمتر از %1$s در %2$ss</string>
@@ -284,7 +278,6 @@
     <string name="vpnbehaviour">رفتار VPN</string>
     <string name="allow_vpn_changes">اجازه تغییرات در پروفایل VPN</string>
     <string name="hwkeychain">سخت افزار Keystore:</string>
-    <string name="permission_icon_app">نماد برنامه تلاش برای استفاده از OpenVPN برای آندروید</string>
     <string name="thanks_for_donation">متشکرم برای اهدای %s!</string>
     <string name="logCleared">لاگ پاک شد.</string>
     <string name="show_password">نمایش گذرواژه</string>
@@ -314,7 +307,6 @@
     <string name="mssfix_checkbox">ارزش MSS از مزیت TCP را غیرفعال کنید</string>
     <string name="mssfix_dialogtitle">تنظیم MSS از بارنامه TCP</string>
     <string name="client_behaviour">رفتار مشتری</string>
-    <string name="clear_external_apps">پاک کردن مجاز برنامه های خارجی</string>
     <string name="loading">بارگذاری&#8230;</string>
     <string name="allowed_vpn_apps_info">مجاز برنامه های وی پی ان: %1$s</string>
     <string name="disallowed_vpn_apps_info">نرم افزارهای مجاز VPN: %1$s</string>
@@ -425,12 +417,7 @@
     <string name="channel_name_status">تغییر وضعیت اتصال</string>
     <string name="channel_description_status">تغییر وضعیت اتصالات OpenVPN (اتصال، تأیید اعتبار، ...)</string>
     <string name="weakmd_title">ضعیف (MD5) هش در امضای گواهی (SSL _CTX _use _certificate md خیلی ضعیف)</string>
-    <string name="title_activity_open_sslspeed">باز نمودن سرعت SSL</string>
     <string name="openssl_cipher_name">باز کردن اسامی رمزنگاشته های SSL </string>
-    <string name="osslspeedtest">آزمون سریع رمز عبور OpenSSL</string>
-    <string name="openssl_error">رمزنگاشته های SSL دچار خطا شده است.</string>
-    <string name="running_test">در حال تست کردن</string>
-    <string name="test_algoirhtms">الگوریتم های انتخاب شده آزمایش</string>
     <string name="all_app_prompt">یک برنامه بیگانه در حال تلاش برای دسترسی به %s است. درخواست دسترسی برنامه لغو شد ، مجاز نمودن این برنامه موجب دسترسی کلی به تمام برنامه هاست .</string>
     <string name="openvpn3_nostatickeys">کلیدهای وضعیت  را پشتیبانی کنید .لطفا در زیر قسمت تنظیمات عمومی به OpenVPN 2.x تغییر یابد .</string>
     <string name="openvpn3_pkcs12">استفاده از فایلهای PKCS12 مستقیما با اجرا   VPN 3 سی پلاس (++) پشتیبانی نمی شود. لطفا فایل های pkcs12 را به کلیدهای ذخیره اندروید افزوده یا در قسمت زیر تنظیمات عمومی به OpenVPN 2.x تغییر دهید.</string>

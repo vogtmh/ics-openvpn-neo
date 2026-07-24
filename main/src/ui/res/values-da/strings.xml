@@ -261,12 +261,6 @@
     <string name="rdn_prefix">RDN-præfiks</string>
     <string name="tls_remote_deprecated">TLS-REMOTE (forældet)</string>
     <string name="help_translate">Du kan hjælpe med at oversætte ved at gå ind på http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s forsøger at styre %2$s</string>
-    <string name="remote_warning">Ved at fortsætte giver du programmet rettighed til at tage komplet kontrol over OpenVPN til Android og til at opsnappe al netværkstrafik.<b>Accepter IKKE medmindre du har tillid til programmet.</b> Ellers løber du risikoen for at få din data kompromiteret af ondsindet software.</string>
-    <string name="remote_trust">Jeg har tillid til dette program.</string>
-    <string name="no_external_app_allowed">Ingen app har lov til at anvende ekstern API</string>
-    <string name="allowed_apps">Tilladte apps: %s</string>
-    <string name="clearappsdialog">Ryd liste over tilladte eksterne apps?\nNuværende liste over tilladte apps:\n\n%s</string>
     <string name="screenoff_summary">Sæt VPN-forbindelsen på pause når skærmen er slukket og mindre end 64 kB data er blevet overført de sidste 60 sekunder. Når \"Vedvarende Tun\" indstillingen er slået til, vil din enhed ikke have forbindelse til netværket når VPN\'en er sat på pause. Uden \"Vedvarende Tun\" indstillingen til enheden ikke have nogen VPN forbindelse/beskyttelse.</string>
     <string name="screenoff_title">Sæt VPN-forbindelsen på pause efter skærmen slukkes</string>
     <string name="screenoff_pause">Sæt VPN-forbindelsen på pause i slukket-skræm tilstand: Mindre end %1$s på %2$ss</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">VPN opførsel</string>
     <string name="allow_vpn_changes">Tillad ændringer til VPN-profiler</string>
     <string name="hwkeychain">Hardware keystore:</string>
-    <string name="permission_icon_app">En app prøver at bruge OpenVPN til Androids ikon</string>
     <string name="thanks_for_donation">Tak for donationen %s!</string>
     <string name="logCleared">Log ryddet.</string>
     <string name="show_password">Vis adgangskode</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">Tilsidesæt MSS-værdi af ​​TCP-nyttelast</string>
     <string name="mssfix_dialogtitle">Opsæt MSSfor TCP-dataindhold</string>
     <string name="client_behaviour">Klientadfærd</string>
-    <string name="clear_external_apps">Ryd tilladte eksterne apps</string>
     <string name="loading">Indlæser&#8230;</string>
     <string name="allowed_vpn_apps_info">Tilladte VPN-apps: %1$s</string>
     <string name="disallowed_vpn_apps_info">Ikke-tilladte VPN apps: %1$s</string>
@@ -422,12 +414,7 @@
     <string name="channel_name_status">Forbindelses status ændring</string>
     <string name="channel_description_status">Status ændringer i OpenVPN-forbindelsen (Tilslutning, godkendelse, etc)</string>
     <string name="weakmd_title">Svag (MD5) hashes i certifikat signatur (SSL_CTX_use_certificate md for svag)</string>
-    <string name="title_activity_open_sslspeed">OpenSSL Speed ​​Test</string>
     <string name="openssl_cipher_name">OpenSSL cipher navne</string>
-    <string name="osslspeedtest">OpenSSL Crypto Speed ​​test</string>
-    <string name="openssl_error">OpenSSL returnerede en fejl</string>
-    <string name="running_test">Tester ...</string>
-    <string name="test_algoirhtms">Test valgte algoritmer</string>
     <string name="all_app_prompt">En ekstern app forsøger at styre %s. Appen, der anmoder om adgang, kan ikke bestemmes. Tillad, at denne app giver ALLE apps adgang.</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C ++ implementeringen understøtter ikke statiske nøgler. Venligst skift til OpenVPN 2.x under generelle indstillinger.</string>
     <string name="openvpn3_pkcs12">Brug af PKCS12 filer direkte med OpenVPN 3 C ++ implementering understøttes ikke. Indtast venligst pkcs12-filerne i Android-keystore eller skift til OpenVPN 2.x under generelle indstillinger.</string>

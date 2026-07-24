@@ -261,12 +261,6 @@
     <string name="rdn_prefix">RDN előtag</string>
     <string name="tls_remote_deprecated">tls-remote (elavult)</string>
     <string name="help_translate">Segíthetsz fordítani: http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s próbálkozás %2$s vezérlésre</string>
-    <string name="remote_warning">A folytatással engedélyt ad az alkalmazásnak, hogy teljes mértékben vezérelhesse az OpenVPN for Android-ot és lehallgathassa a teljes hálózati forgalmat.<b>NE fogadja el, ha nem bízik meg az alkalmazásban.</b> Különben azt kockáztatja, hogy az adatait rosszindulatú szoftver veszélyeztetheti.</string>
-    <string name="remote_trust">Megbízom ebben az alkalmazásban.</string>
-    <string name="no_external_app_allowed">Egy alkalmazás sem használhat külső API-t</string>
-    <string name="allowed_apps">Engedélyezett alkalmazások: %s</string>
-    <string name="clearappsdialog">Engedélyezett külső alkalmazások listájának törlése?\nAz engedélyezett alkalmazások aktuális listája:\n\n%s</string>
     <string name="screenoff_summary">A VPN szünetel ha kikapcsolt képernyőnél 60 másodpercen belül kevesebb mint 64 kB az adatforgalom. Ha a \"Tartós Tun\" opció engedélyezve van, akkor a VPN szüneteltetése esetén az eszköznek nem lesz hálózati kapcsolata. \"Tartós Tun\" opció nélkül az eszköznek nem lesz VPN kapcsolata/védelme.</string>
     <string name="screenoff_title">VPN kapcsolat szüneteltetése a képernyő lekapcsolása után</string>
     <string name="screenoff_pause">Kapcsolat szüneteltetése a képernyő kikapcsolt állapotában: kevesebb mint %1$s %2$ss alatt</string>
@@ -282,7 +276,6 @@
     <string name="vpnbehaviour">VPN viselkedés</string>
     <string name="allow_vpn_changes">VPN Profilok megváltoztatásának engedélyezése</string>
     <string name="hwkeychain">Hardver Kulcstár:</string>
-    <string name="permission_icon_app">Az alkalmazás ikonja megpróbálja használni az OpenVPN for Android-ot</string>
     <string name="thanks_for_donation">Köszönöm az adományt %s!</string>
     <string name="logCleared">Napló törölve.</string>
     <string name="show_password">Jelszó mutatása</string>
@@ -312,7 +305,6 @@
     <string name="mssfix_checkbox">TCP payload MSS felülbírálati érték</string>
     <string name="mssfix_dialogtitle">MSS beállítás a TCP payload-hoz</string>
     <string name="client_behaviour">Kliens viselkedés</string>
-    <string name="clear_external_apps">Engedélyezett külső alkalmazások törlése</string>
     <string name="loading">Betöltés&#8230;</string>
     <string name="allowed_vpn_apps_info">Engedélyezett VPN alkalmazások: %1$s</string>
     <string name="disallowed_vpn_apps_info">Letiltott VPN alkalmazások: %1$s</string>
@@ -425,12 +417,7 @@
     </string>
     <string name="weakmd_title">Gyenge (MD5) hash-ek a tanúsítvány aláírásban (SSL_CTX_use_certificate md túl gyenge)
     </string>
-    <string name="title_activity_open_sslspeed">OpenSSL Sebesség Teszt</string>
     <string name="openssl_cipher_name">OpenSSL titkosítások</string>
-    <string name="osslspeedtest">OpenSSL Titkosítás Sebesség teszt</string>
-    <string name="openssl_error">Az OpenSSL hibával tért vissza</string>
-    <string name="running_test">A teszt fut&#8230;</string>
-    <string name="test_algoirhtms">Kijelölt algoritmusok tesztelése</string>
     <string name="all_app_prompt">Egy külső alkalmazás megpróbálja vezérelni a(z) %s-t. Az alkalmazást nem lehet felismerni, a hozzáférés megadása
         MINDEN alkalmazás számára elérhetőséget biztosít.
     </string>

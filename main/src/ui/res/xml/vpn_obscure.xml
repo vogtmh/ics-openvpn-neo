@@ -6,6 +6,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/advanced_settings">
+    <Preference
+        android:layout="@layout/ovpn_preference_header"
+        android:selectable="false"
+        android:title="@string/advanced"
+        app:iconSpaceReserved="false" />
     <PreferenceCategory android:title="@string/client_behaviour">
 
         <SwitchPreference
@@ -46,11 +51,13 @@
             android:dialogMessage="@string/mssfix_value_dialog"
             android:key="mssFixValue"
             android:persistent="false"
-            android:title="@string/mssfix_dialogtitle" />
+            android:title="@string/mssfix_dialogtitle"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
         <EditTextPreference
             android:key="tunmtu"
             android:persistent="false"
-            android:title="Tunnel MTU (tun-mtu)"/>
+            android:title="Tunnel MTU (tun-mtu)"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/custom_config_title">
         <SwitchPreference
@@ -65,7 +72,8 @@
             android:dialogMessage="@string/custom_option_warning"
             android:key="customOptions"
             android:persistent="false"
-            android:title="@string/custom_options_title" />
+            android:title="@string/custom_options_title"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/reconnection_settings">
         <ListPreference
@@ -73,19 +81,22 @@
             android:entryValues="@array/crm_values"
             android:key="connectretrymax"
             android:persistent="false"
-            android:title="@string/connection_retries" />
+            android:title="@string/connection_retries"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
         <EditTextPreference
             android:dialogMessage="@string/connectretrymessage"
             android:key="connectretry"
             android:persistent="false"
-            android:title="@string/connectretrywait" />
+            android:title="@string/connectretrywait"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
         <EditTextPreference
             android:dialogMessage="@string/connectretrymaxmessage"
             android:key="connectretrymaxtime"
             android:persistent="false"
-            android:title="@string/connectretrymaxtitle" />
+            android:title="@string/connectretrymaxtitle"
+            android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
     </PreferenceCategory>
 
 </PreferenceScreen>

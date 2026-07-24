@@ -262,12 +262,6 @@ Usa il tasto hardware Menù se non è visibile nella GUI.</string>
     <string name="rdn_prefix">Prefisso RDN</string>
     <string name="tls_remote_deprecated">TLS-remote (obsoleto)</string>
     <string name="help_translate">Puoi aiutare nella traduzione visitando http://crowdin.net/project/ics-openvpn/invite</string>
-    <string name="prompt">%1$s tenta di controllare %2$s</string>
-    <string name="remote_warning">Se procedi, concedi all\'applicazione l\'autorizzazione per intercettare tutto il traffico di rete.<b> NON accettare se non consideri l\'applicazione attendibile</b>, altrimenti corri il rischio che i tuoi dati vengano compromessi da programmi software dannosi</string>
-    <string name="remote_trust">Considero questa applicazione attendibile.</string>
-    <string name="no_external_app_allowed">Nessuna app ha il permesso di usare l\'API esterna</string>
-    <string name="allowed_apps">Apps abilitate;%s</string>
-    <string name="clearappsdialog">Cancellare la lista delle apps esterne autorizzate?\nLista corrente di applicazioni autorizzate:\n\n%s</string>
     <string name="screenoff_summary">Sospende la VPN quando lo schermo è spento e meno di 64Kb di dati sono trasferiti in 60s.  Quando l\'opzione \"Tun persistente\" è abilitata, la sospensione della VPN lascerà il tuo dispositivo con NESSUNA connettività di rete. Senza l\'opzione \"Tun persistente\" il dispositivo non avrà alcuna connessione/protezione VPN.</string>
     <string name="screenoff_title">Sospende la connessione VPN dopo lo spegnimento dello schermo</string>
     <string name="screenoff_pause">Sospensione della connessione nello stato di schermo spento: meno di %1$s in %2$ss</string>
@@ -283,7 +277,6 @@ Usa il tasto hardware Menù se non è visibile nella GUI.</string>
     <string name="vpnbehaviour">Comportamento della VPN</string>
     <string name="allow_vpn_changes">Abilita modifiche ai profili VPN</string>
     <string name="hwkeychain">Raccoglitore chiavi hardware:</string>
-    <string name="permission_icon_app">Un\'icona di applicazione sta tentando di usare OpenVPN per Android</string>
     <string name="thanks_for_donation">Grazie per la donazione di %s!</string>
     <string name="logCleared">Registrazioni log cancellate.</string>
     <string name="show_password">Mostra password</string>
@@ -313,7 +306,6 @@ Usa il tasto hardware Menù se non è visibile nella GUI.</string>
     <string name="mssfix_checkbox">Sovrascrivi il valore del MSS nel payload TCP</string>
     <string name="mssfix_dialogtitle">Setta il valore del MSS nel payload TCP</string>
     <string name="client_behaviour">Comportamento Client</string>
-    <string name="clear_external_apps">Svuota la lista delle applicazioni consentite</string>
     <string name="loading">Caricando&#8230;</string>
     <string name="allowed_vpn_apps_info">Applicazioni VPN consentite: %1$s</string>
     <string name="disallowed_vpn_apps_info">Applicazioni VPN non consentite: %1$s</string>
@@ -424,12 +416,7 @@ Usa il tasto hardware Menù se non è visibile nella GUI.</string>
     <string name="channel_name_status">Cambio dello stato della connessione</string>
     <string name="channel_description_status">Cambiamenti di stato della connessione OpenVPN (Connessione, autenticazione, ...)</string>
     <string name="weakmd_title">Hash (MD5) troppo deboli nella firma del certificato (SSL_CTX_use_certificate md too weak)</string>
-    <string name="title_activity_open_sslspeed">Test di velocità OpenSSL</string>
     <string name="openssl_cipher_name">Nomi di cifratura OpenSSL</string>
-    <string name="osslspeedtest">OpenSSL Crypto Speed ​​test</string>
-    <string name="openssl_error">OpenSSL ha restituito un errore</string>
-    <string name="running_test">Esecuzione di test&#8230;</string>
-    <string name="test_algoirhtms">Testa gli algoritmi selezionati</string>
     <string name="all_app_prompt">Un\'app esterna tenta di controllare %s. L\'app che richiede l\'accesso non può essere determinata. Consentendo questa app garantisce l\'accesso a TUTTE le app.</string>
     <string name="openvpn3_nostatickeys">L\'implementazione di OpenVPN 3 C ++ non supporta le chiavi statiche. Passare a OpenVPN 2.x nelle impostazioni generali.</string>
     <string name="openvpn3_pkcs12">L\'utilizzo di file PKCS12 direttamente con l\'implementazione di OpenVPN 3 C++ non è supportato. Importare i file pkcs12 nel keystore Android o passare a OpenVPN 2.x nelle impostazioni generali.</string>

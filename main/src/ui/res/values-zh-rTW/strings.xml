@@ -259,12 +259,6 @@
     <string name="rdn_prefix">RDN 前綴</string>
     <string name="tls_remote_deprecated">tls-remote（不建議使用）</string>
     <string name="help_translate">您可以至 http://crowdin.net/project/ics-openvpn/invite 來協助翻譯</string>
-    <string name="prompt">%1$s 嘗試控制 %2$s</string>
-    <string name="remote_warning">如果繼續，您將給予這個應用程式完全控制 OpenVPN for Android 並擷取所有網路流量的權限。<b>除非你信任該應用程式，否則請勿接受。</b>否則，您的資料將有遭惡意軟體洩漏的風險。</string>
-    <string name="remote_trust">我信任此應用程式</string>
-    <string name="no_external_app_allowed">不允許應用程式使用外部 API </string>
-    <string name="allowed_apps">允許的應用程式：%s</string>
-    <string name="clearappsdialog">清空已允許外部應用程式的清單？\n目前已允許應用程式的清單：\n\n%s</string>
     <string name="screenoff_summary">VPN 將在螢幕關閉且在 60 秒內傳輸的資料少於 64 kB 時暫停。若啟用「保持 TUN 通道」選項，暫停 VPN 將使您的設備無法連接網路。如果啟用「保持 TUN 通道」選項，則設備將沒有 VPN 連線/保護。</string>
     <string name="screenoff_title">當螢幕關閉時暫停 VPN 連線</string>
     <string name="screenoff_pause">螢幕在關閉狀態時暫停連線：%2$s 秒內少於 %1$s </string>
@@ -280,7 +274,6 @@
     <string name="vpnbehaviour">VPN 行為</string>
     <string name="allow_vpn_changes">允許更改 VPN 設定檔</string>
     <string name="hwkeychain">硬體金鑰庫︰</string>
-    <string name="permission_icon_app">嘗試使用 OpenVPN for Android 的應用程式的圖示</string>
     <string name="thanks_for_donation">感謝捐款給 %s！</string>
     <string name="logCleared">紀錄已清除。</string>
     <string name="show_password">顯示密碼</string>
@@ -310,7 +303,6 @@
     <string name="mssfix_checkbox">覆寫 TCP payload 的最大分段大小（MSS）值</string>
     <string name="mssfix_dialogtitle">設定 TCP payload 的最大分段大小（MSS）值</string>
     <string name="client_behaviour">用戶端行為</string>
-    <string name="clear_external_apps">清空允許的外部應用程式</string>
     <string name="loading">載入中...</string>
     <string name="allowed_vpn_apps_info">允許的 VPN 應用程式：%1$s</string>
     <string name="disallowed_vpn_apps_info">不允許的 VPN 應用程式：%1$s</string>
@@ -415,12 +407,7 @@
     <string name="channel_name_status">連線狀態改變</string>
     <string name="channel_description_status">OpenVPN 連線狀態改變（正在連線、正在驗證、&#8230;）</string>
     <string name="weakmd_title">在憑證簽章中的脆弱（MD5）雜湊（SSL_CTX_use_certificate md 太脆弱）</string>
-    <string name="title_activity_open_sslspeed">OpenSSL 速度測試</string>
     <string name="openssl_cipher_name">OpenSSL cipher 名稱</string>
-    <string name="osslspeedtest">OpenSSL Crypto 速度測試</string>
-    <string name="openssl_error">OpenSSL 回傳了錯誤</string>
-    <string name="running_test">正在執行測試...</string>
-    <string name="test_algoirhtms">測試已選擇的演算法</string>
     <string name="all_app_prompt">一個外部應用程式嘗試控制 %s。無法確認提出請求的應用程式。允許該應用程式將授予所有應用程式權限。</string>
     <string name="openvpn3_nostatickeys">OpenVPN 3 C ++ 實作不支援靜態金鑰。請在「一般設定」下將其更改為 OpenVPN 2.x。</string>
     <string name="openvpn3_pkcs12">OpenVPN 3 C ++ 實作不支援直接使用 PKCS12 檔。請將 PKCS12 檔匯入 Android 金鑰庫，或在「一般設定」下將其更改為 OpenVPN 2.x。</string>
