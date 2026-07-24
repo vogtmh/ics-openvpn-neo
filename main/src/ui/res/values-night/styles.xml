@@ -14,6 +14,7 @@
         <item name="colorPrimaryDark">#000000</item>
 
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
+        <item name="materialAlertDialogTheme">@style/blinkt.materialAlertDialog</item>
         <item name="preferenceTheme">@style/blinkt.preferenceTheme</item>
         <item name="bottomSheetDialogTheme">@style/blinkt.BottomSheet</item>
 
@@ -35,10 +36,14 @@
         <item name="colorSurfaceContainerHighest">#333333</item>
         <item name="colorBackgroundFloating">#252525</item>
         <item name="android:colorBackgroundFloating">#252525</item>
+
+        <!-- Crisp light-on-dark content color for surfaces (switch bars, dialogs, cards) -->
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="colorOnSurfaceVariant">#B3FFFFFF</item>
     </style>
 
     <style name="blinkt.dialog" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/accent</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
@@ -55,14 +60,14 @@
     </style>
 
     <style name="blinkt.alertDialog" parent="ThemeOverlay.Material3.Dialog.Alert">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/accent</item>
         <item name="colorAccent">@color/accent</item>
-        <!-- Force #333333 background for all dialogs -->
-        <item name="android:colorBackground">#333333</item>
-        <item name="colorSurface">#333333</item>
-        <item name="colorSurfaceContainerHigh">#333333</item>
-        <item name="colorBackgroundFloating">#333333</item>
-        <item name="android:colorBackgroundFloating">#333333</item>
+        <!-- Elevated dialog surface, matches MaterialAlertDialog (colorSurfaceContainerHigh) -->
+        <item name="android:colorBackground">#2E2E2E</item>
+        <item name="colorSurface">#2E2E2E</item>
+        <item name="colorSurfaceContainerHigh">#2E2E2E</item>
+        <item name="colorBackgroundFloating">#2E2E2E</item>
+        <item name="android:colorBackgroundFloating">#2E2E2E</item>
 
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
@@ -88,6 +93,11 @@
         <item name="preferenceInformationStyle">@style/blinkt.preference</item>
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
         <item name="editTextPreferenceStyle">@style/blinkt.editTextPreference</item>
+        <!-- Preference titles render via ?android:attr/textAppearanceListItem (the
+             android:titleTextAppearance items below are not real Preference attrs).
+             Force a consistent size so these tabs match the custom-layout tabs
+             instead of the oversized framework default. -->
+        <item name="android:textAppearanceListItem">@style/blinkt.preferenceTitle</item>
     </style>
 
     <style name="blinkt.preferenceScreen" parent="Preference.PreferenceScreen">
@@ -128,7 +138,7 @@
     </style>
     
     <style name="blinkt.preferenceTitle" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>

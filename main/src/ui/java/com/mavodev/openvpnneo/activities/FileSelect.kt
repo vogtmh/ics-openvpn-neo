@@ -12,7 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.mavodev.openvpnneo.R
@@ -147,7 +147,7 @@ class FileSelect : BaseActivity() {
             fe = e
         }
         if (fe != null) {
-            val ab = AlertDialog.Builder(this)
+            val ab = MaterialAlertDialogBuilder(this)
             ab.setTitle(R.string.error_importing_file)
             ab.setMessage(getString(R.string.import_error_message) + "\n" + fe.localizedMessage)
             ab.setPositiveButton(android.R.string.ok, null)

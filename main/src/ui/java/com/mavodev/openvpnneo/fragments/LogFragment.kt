@@ -33,7 +33,7 @@ import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.fragment.app.ListFragment
 import androidx.lifecycle.lifecycleScope
 import com.mavodev.openvpnneo.LaunchVPN
@@ -378,7 +378,7 @@ class LogFragment : ListFragment(), StateListener, SeekBar.OnSeekBarChangeListen
             ProfileManager.saveProfile(activity, profile)
             // Name could be modified, reset List adapter
 
-            val dialog = AlertDialog.Builder(requireActivity())
+            val dialog = MaterialAlertDialogBuilder(requireActivity())
             dialog.setTitle(R.string.configuration_changed)
             dialog.setMessage(R.string.restart_vpn_after_change)
 

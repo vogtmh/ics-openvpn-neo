@@ -6,7 +6,7 @@ package com.mavodev.openvpnneo.fragments
 
 import android.Manifest
 import android.app.Activity
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -569,7 +569,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
             entry.setSingleLine()
             entry.setContentDescription(getString(R.string.name_of_the_vpn_profile))
 
-            val dialog = AlertDialog.Builder(context)
+            val dialog = MaterialAlertDialogBuilder(context)
             if (mCopyProfile == null) dialog.setTitle(R.string.menu_add_profile)
             else {
                 dialog.setTitle(

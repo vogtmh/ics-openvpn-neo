@@ -6,6 +6,7 @@
 package com.mavodev.openvpnneo.fragments
 
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -241,7 +242,7 @@ class ImportRemoteConfig : DialogFragment() {
         val inflater = requireActivity().layoutInflater
         dialogView = inflater.inflate(R.layout.import_remote_config, null);
 
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = MaterialAlertDialogBuilder(requireContext())
 
         builder.setView(dialogView)
         builder.setTitle(R.string.import_from_as)
@@ -320,7 +321,7 @@ class ImportRemoteConfig : DialogFragment() {
 
             withContext(Dispatchers.Main)
             {
-                val ab = AlertDialog.Builder(requireContext())
+                val ab = MaterialAlertDialogBuilder(requireContext())
                 ab.setTitle(R.string.downloading_profile)
                 ab.setMessage(R.string.please_wait)
                 pleaseWait = ab.show()
@@ -379,7 +380,7 @@ class ImportRemoteConfig : DialogFragment() {
 
                                 pleaseWait?.dismiss()
 
-                                AlertDialog.Builder(requireContext())
+                                MaterialAlertDialogBuilder(requireContext())
                                         .setTitle("Untrusted certificate found")
                                         .setMessage(firstCert.toString())
                                         .setPositiveButton("Trust") { _, _ -> addPinnedCert(requireContext(),
@@ -393,7 +394,7 @@ class ImportRemoteConfig : DialogFragment() {
                         withContext(Dispatchers.Main) {
                             pleaseWait?.dismiss()
 
-                            AlertDialog.Builder(requireContext())
+                            MaterialAlertDialogBuilder(requireContext())
                                     .setTitle("Different certificate than trusted certificate from server")
                                     .setMessage(ce.message)
                                     .setNegativeButton(android.R.string.ok, null)
@@ -412,7 +413,7 @@ class ImportRemoteConfig : DialogFragment() {
             if (e != null) {
                 withContext(Dispatchers.Main) {
                     pleaseWait?.dismiss()
-                    AlertDialog.Builder(requireContext())
+                    MaterialAlertDialogBuilder(requireContext())
                             .setTitle("Import failed")
                             .setMessage("Error: " + e.localizedMessage)
                             .setPositiveButton(android.R.string.ok, null)
@@ -438,7 +439,7 @@ class ImportRemoteConfig : DialogFragment() {
         val entry = EditText(context)
         entry.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
 
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Server request challenge/response authentication")
                 .setMessage("Challenge: " + message)
                 .setView(entry)

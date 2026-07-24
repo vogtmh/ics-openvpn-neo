@@ -16,6 +16,7 @@
         <item name="colorPrimaryDark">#000000</item>
 
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
+        <item name="materialAlertDialogTheme">@style/blinkt.materialAlertDialog</item>
         <item name="preferenceTheme">@style/blinkt.preferenceTheme</item>
         <item name="bottomSheetDialogTheme">@style/blinkt.BottomSheet</item>
 
@@ -31,10 +32,18 @@
     <style name="blinkt.actionBar" parent="Widget.Material3.ActionBar.Solid">
         <item name="background">@android:color/black</item>
         <item name="elevation">0dp</item>
+        <!-- The bar is always black, so force a light title in both light and dark mode.
+             (The Material3 title uses ?attr/colorOnSurface, which the Dark.ActionBar
+             overlay does not remap, leaving it dark on black in light mode.) -->
+        <item name="titleTextStyle">@style/blinkt.actionBar.Title</item>
+    </style>
+
+    <style name="blinkt.actionBar.Title" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <style name="blinkt.dialog" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/accent</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="alertDialogTheme">@style/blinkt.alertDialog</item>
@@ -45,8 +54,18 @@
     </style>
 
     <style name="blinkt.alertDialog" parent="ThemeOverlay.Material3.Dialog.Alert">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/accent</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
+    <!-- True Material3 alert dialog theme used by MaterialAlertDialogBuilder.
+         Surfaces/text/buttons are inherited from the app theme's M3 color scheme
+         (colorSurfaceContainerHigh, colorOnSurface, colorPrimary) so light and
+         dark dialogs stay consistent without per-dialog hardcoded colors. -->
+    <style name="blinkt.materialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/accent</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
@@ -136,6 +155,11 @@
         <item name="preferenceInformationStyle">@style/blinkt.preference</item>
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
         <item name="editTextPreferenceStyle">@style/blinkt.editTextPreference</item>
+        <!-- Preference titles render via ?android:attr/textAppearanceListItem (the
+             android:titleTextAppearance items below are not real Preference attrs).
+             Force a consistent size so these tabs match the custom-layout tabs
+             instead of the oversized framework default. -->
+        <item name="android:textAppearanceListItem">@style/blinkt.preferenceTitle</item>
     </style>
 
     <style name="blinkt.preferenceScreen" parent="Preference.PreferenceScreen">
@@ -186,7 +210,7 @@
     </style>
     
     <style name="blinkt.preferenceTitle" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">

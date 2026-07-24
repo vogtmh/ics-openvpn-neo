@@ -1,6 +1,6 @@
 package com.mavodev.openvpnneo.fragments
 
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -289,7 +289,7 @@ class CustomSettingsFragment : ListFragment() {
         val profiles = profileManager.getProfiles()
         
         if (profiles.isEmpty()) {
-            val dialog = AlertDialog.Builder(requireContext())
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.defaultvpn))
                 .setMessage(getString(R.string.novpn_selected))
                 .setPositiveButton(android.R.string.ok, null)
@@ -312,7 +312,7 @@ class CustomSettingsFragment : ListFragment() {
         val currentDefaultVpn = sharedPreferences.getString("alwaysOnVpn", null)
         val currentIndex = profileUuids.indexOf(currentDefaultVpn)
         
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.defaultvpn))
             .setSingleChoiceItems(profileNames, currentIndex) { dialog, which ->
                 val selectedUuid = profileUuids[which]
@@ -336,7 +336,7 @@ class CustomSettingsFragment : ListFragment() {
         val allowedApps = sharedPreferences.getStringSet("allowed_apps", emptySet()) ?: emptySet()
         
         if (allowedApps.isEmpty()) {
-            val dialog = AlertDialog.Builder(requireContext())
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.clear_external_apps))
                 .setMessage(getString(R.string.no_external_app_allowed))
                 .setPositiveButton(android.R.string.ok, null)
@@ -355,7 +355,7 @@ class CustomSettingsFragment : ListFragment() {
 
         val appsList = allowedApps.joinToString("\n")
         
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.clear_external_apps))
             .setMessage(getString(R.string.clearappsdialog, appsList))
             .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -374,11 +374,7 @@ class CustomSettingsFragment : ListFragment() {
         dialog.show()
     }
 
-    private fun isInDarkMode(): Boolean {
-        return when (requireContext().resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) {
-            android.content.res.Configuration.UI_MODE_NIGHT_YES -> true
-            android.content.res.Configuration.UI_MODE_NIGHT_NO -> false
-            else -> false
-        }
-    }
+    // Dialog surfaces follow the app's Material3 color scheme (colorSurfaceContainerHigh),
+    // so no manual dark-mode window-background override is applied.
+    private fun isInDarkMode(): Boolean = false
 }

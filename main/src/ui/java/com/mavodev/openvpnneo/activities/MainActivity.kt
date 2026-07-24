@@ -29,7 +29,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.core.content.ContextCompat
 import android.widget.Toast
 import com.mavodev.openvpnneo.R
@@ -144,7 +144,7 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
             sharedPreferences.contains("display_vpn_country")) {
             return
         }
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.country_api_dialog_title))
             .setMessage(getString(R.string.country_api_dialog_message))
             .setPositiveButton(getString(R.string.country_api_dialog_enable)) { _, _ ->

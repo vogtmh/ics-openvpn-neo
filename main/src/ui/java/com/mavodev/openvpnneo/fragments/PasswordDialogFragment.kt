@@ -4,7 +4,7 @@
  */
 package com.mavodev.openvpnneo.core
 
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.app.Dialog
 import android.content.ComponentName
 import android.content.DialogInterface
@@ -52,7 +52,7 @@ class PasswordDialogFragment : DialogFragment() {
         if (!echo)
             input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
 
-        return AlertDialog.Builder(requireActivity())
+        return MaterialAlertDialogBuilder(requireActivity())
                 .setTitle("Challenge/Response Authentification")
                 .setMessage(title)
                 .setView(input)

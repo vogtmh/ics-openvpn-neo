@@ -4,7 +4,7 @@
  */
 package com.mavodev.openvpnneo.activities
 
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -174,7 +174,7 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
     }
 
     private fun askProfileRemoval() {
-        val dialog = AlertDialog.Builder(this)
+        val dialog = MaterialAlertDialogBuilder(this)
         dialog.setTitle("Confirm deletion")
         dialog.setMessage(getString(R.string.remove_vpn_query, mProfile!!.mName))
 

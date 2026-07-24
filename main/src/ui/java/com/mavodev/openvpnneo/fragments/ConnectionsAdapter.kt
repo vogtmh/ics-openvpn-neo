@@ -15,7 +15,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RadioGroup
 import android.widget.SeekBar
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.recyclerview.widget.RecyclerView
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
@@ -134,30 +134,54 @@ class ConnectionsAdapter internal constructor(
         private val mConnectionsAdapter: ConnectionsAdapter,
         viewType: Int
     ) : RecyclerView.ViewHolder(card) {
-        val mServerNameView: EditText = card.findViewById(R.id.servername)
-        val mPortNumberView: EditText = card.findViewById(R.id.portnumber)
-        val mRemoteSwitch: CompoundButton = card.findViewById(R.id.remoteSwitch)
-        val mProtoGroup: RadioGroup = card.findViewById(R.id.udptcpradiogroup)
-        val mCustomOptionText: EditText = card.findViewById(R.id.customoptions)
-        val mCustomOptionCB: CompoundButton = card.findViewById(R.id.use_customoptions)
-        val mCustomOptionsLayout: View = card.findViewById(R.id.custom_options_layout)
-        private val mDeleteButton: ImageButton = card.findViewById(R.id.remove_connection)
-        val mConnectText: EditText = card.findViewById(R.id.connect_timeout)
-        val mConnectSlider: SeekBar = card.findViewById(R.id.connect_silder)
-        val mProxyGroup: RadioGroup = card.findViewById(R.id.proxyradiogroup)
-        val mProxyNameView: EditText = card.findViewById(R.id.proxyname)
-        val mProxyPortNumberView: EditText = card.findViewById(R.id.proxyport)
-        val mProxyPortNameView: View = card.findViewById(R.id.proxyport_layout)
-        val mProxyNameLabel: View = card.findViewById(R.id.proxyname_layout)
-        val mProxyAuthLayout: View = card.findViewById(R.id.proxyauthlayout)
-        val mProxyAuthUser: EditText = card.findViewById(R.id.proxyuser)
-        val mProxyAuthPassword: EditText = card.findViewById(R.id.proxypassword)
-        val mProxyAuthCb: CompoundButton = card.findViewById(R.id.enable_proxy_auth)
+        // These views only exist in the server_card (TYPE_NORMAL) layout, not in the
+        // server_footer layout, so they are only looked up for normal rows. Looking them
+        // up unconditionally would NPE when the footer view holder is created.
+        lateinit var mServerNameView: EditText
+        lateinit var mPortNumberView: EditText
+        lateinit var mRemoteSwitch: CompoundButton
+        lateinit var mProtoGroup: RadioGroup
+        lateinit var mCustomOptionText: EditText
+        lateinit var mCustomOptionCB: CompoundButton
+        lateinit var mCustomOptionsLayout: View
+        private lateinit var mDeleteButton: ImageButton
+        lateinit var mConnectText: EditText
+        lateinit var mConnectSlider: SeekBar
+        lateinit var mProxyGroup: RadioGroup
+        lateinit var mProxyNameView: EditText
+        lateinit var mProxyPortNumberView: EditText
+        lateinit var mProxyPortNameView: View
+        lateinit var mProxyNameLabel: View
+        lateinit var mProxyAuthLayout: View
+        lateinit var mProxyAuthUser: EditText
+        lateinit var mProxyAuthPassword: EditText
+        lateinit var mProxyAuthCb: CompoundButton
 
         var mConnection: Connection? = null // Set to null on update
 
         init {
-            if (viewType == TYPE_NORMAL) addListeners()
+            if (viewType == TYPE_NORMAL) {
+                mServerNameView = card.findViewById(R.id.servername)
+                mPortNumberView = card.findViewById(R.id.portnumber)
+                mRemoteSwitch = card.findViewById(R.id.remoteSwitch)
+                mProtoGroup = card.findViewById(R.id.udptcpradiogroup)
+                mCustomOptionText = card.findViewById(R.id.customoptions)
+                mCustomOptionCB = card.findViewById(R.id.use_customoptions)
+                mCustomOptionsLayout = card.findViewById(R.id.custom_options_layout)
+                mDeleteButton = card.findViewById(R.id.remove_connection)
+                mConnectText = card.findViewById(R.id.connect_timeout)
+                mConnectSlider = card.findViewById(R.id.connect_silder)
+                mProxyGroup = card.findViewById(R.id.proxyradiogroup)
+                mProxyNameView = card.findViewById(R.id.proxyname)
+                mProxyPortNumberView = card.findViewById(R.id.proxyport)
+                mProxyPortNameView = card.findViewById(R.id.proxyport_layout)
+                mProxyNameLabel = card.findViewById(R.id.proxyname_layout)
+                mProxyAuthLayout = card.findViewById(R.id.proxyauthlayout)
+                mProxyAuthUser = card.findViewById(R.id.proxyuser)
+                mProxyAuthPassword = card.findViewById(R.id.proxypassword)
+                mProxyAuthCb = card.findViewById(R.id.enable_proxy_auth)
+                addListeners()
+            }
         }
 
         private fun addListeners() {
@@ -277,7 +301,7 @@ class ConnectionsAdapter internal constructor(
             })
 
             mDeleteButton.setOnClickListener {
-                val ab = AlertDialog.Builder(mContext)
+                val ab = MaterialAlertDialogBuilder(mContext)
                 ab.setTitle(R.string.query_delete_remote)
                 ab.setPositiveButton(R.string.keep, null)
                 ab.setNegativeButton(R.string.delete) { _, _ ->

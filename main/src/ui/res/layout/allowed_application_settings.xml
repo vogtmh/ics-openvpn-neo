@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
-            android:background="@drawable/bg_switchbar"
+            android:background="?attr/colorSurfaceContainer"
             android:paddingStart="@dimen/switchbar_pad"
             android:paddingTop="8dp"
             android:elevation="1dp"
@@ -29,8 +29,8 @@
         />
         <TextView
                 android:id="@+id/default_allow_text"
-                style="@android:style/TextAppearance.Medium.Inverse"
-                android:textColor="@android:color/white"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textColor="?android:attr/textColorPrimary"
                 tools:text="@string/vpn_disallow_radio"
                 android:layout_toStartOf="@id/default_allow"
                 android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
-            android:background="@drawable/bg_switchbar"
+            android:background="?attr/colorSurfaceContainer"
             android:paddingStart="@dimen/switchbar_pad"
             android:elevation="1dp"
             android:paddingEnd="@dimen/switchbar_pad"
@@ -57,9 +57,9 @@
 
         />
         <TextView
-                style="@android:style/TextAppearance.Medium.Inverse"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:text="@string/vpn_allow_bypass"
-                android:textColor="@android:color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_toStartOf="@id/allow_bypass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

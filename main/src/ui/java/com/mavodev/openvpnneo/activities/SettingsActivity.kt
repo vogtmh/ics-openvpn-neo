@@ -4,7 +4,7 @@
  */
 package com.mavodev.openvpnneo.activities
 
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -304,7 +304,7 @@ class SettingsActivity : BaseActivity() {
         val profiles = profileManager.getProfiles()
         
         if (profiles.isEmpty()) {
-            val dialog = AlertDialog.Builder(this)
+            val dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.defaultvpn))
                 .setMessage(getString(R.string.novpn_selected))
                 .setPositiveButton(android.R.string.ok, null)
@@ -327,7 +327,7 @@ class SettingsActivity : BaseActivity() {
         val currentDefaultVpn = sharedPreferences.getString("alwaysOnVpn", null)
         val currentIndex = profileUuids.indexOf(currentDefaultVpn)
         
-        val dialog = AlertDialog.Builder(this)
+        val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.defaultvpn))
             .setSingleChoiceItems(profileNames, currentIndex) { dialog, which ->
                 val selectedUuid = profileUuids[which]
@@ -351,7 +351,7 @@ class SettingsActivity : BaseActivity() {
         val allowedApps = sharedPreferences.getStringSet("allowed_apps", emptySet()) ?: emptySet()
         
         if (allowedApps.isEmpty()) {
-            val dialog = AlertDialog.Builder(this)
+            val dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.clear_external_apps))
                 .setMessage(getString(R.string.no_external_app_allowed))
                 .setPositiveButton(android.R.string.ok, null)
@@ -370,7 +370,7 @@ class SettingsActivity : BaseActivity() {
 
         val appsList = allowedApps.joinToString("\n")
         
-        val dialog = AlertDialog.Builder(this)
+        val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.clear_external_apps))
             .setMessage(getString(R.string.clearappsdialog, appsList))
             .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -389,13 +389,9 @@ class SettingsActivity : BaseActivity() {
         dialog.show()
     }
 
-    private fun isInDarkMode(): Boolean {
-        return when (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) {
-            android.content.res.Configuration.UI_MODE_NIGHT_YES -> true
-            android.content.res.Configuration.UI_MODE_NIGHT_NO -> false
-            else -> false
-        }
-    }
+    // Dialog surfaces follow the app's Material3 color scheme (colorSurfaceContainerHigh),
+    // so no manual dark-mode window-background override is applied.
+    private fun isInDarkMode(): Boolean = false
 
     private fun showThemeSelectionDialog() {
         val themeEntries = resources.getStringArray(R.array.theme_entries)
@@ -404,7 +400,7 @@ class SettingsActivity : BaseActivity() {
         val currentTheme = sharedPreferences.getString("theme", "system")
         val currentIndex = themeValues.indexOf(currentTheme).takeIf { it >= 0 } ?: 0
         
-        val dialog = AlertDialog.Builder(this)
+        val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.theme))
             .setSingleChoiceItems(themeEntries, currentIndex) { dialog, which ->
                 val selectedValue = themeValues[which]

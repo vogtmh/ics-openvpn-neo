@@ -16,7 +16,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.preference.*
 import com.mavodev.openvpnneo.BuildConfig
 import com.mavodev.openvpnneo.R
@@ -103,7 +103,7 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && newValue == true)
                 {
-                    val builder = AlertDialog.Builder(
+                    val builder = MaterialAlertDialogBuilder(
                         requireContext()
                     )
                     builder.setMessage(R.string.use_alwayson_vpn)
@@ -198,7 +198,7 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
             return false;
         }
         if (preference.key == "clearapi") {
-            val builder = AlertDialog.Builder(
+            val builder = MaterialAlertDialogBuilder(
                 requireContext()
             )
             builder.setPositiveButton(R.string.clear, this)
