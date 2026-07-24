@@ -75,8 +75,9 @@ class SendDumpFragment : Fragment() {
             return
         }
 
-        uris.add(Uri.parse("content://com.mavodev.openvpnneo.FileProvider/" + ldump.first.name))
-        uris.add(Uri.parse("content://com.mavodev.openvpnneo.FileProvider/" + ldump.first.name + ".log"))
+        val authority = requireContext().packageName + ".FileProvider"
+        uris.add(Uri.parse("content://$authority/" + ldump.first.name))
+        uris.add(Uri.parse("content://$authority/" + ldump.first.name + ".log"))
 
         emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)

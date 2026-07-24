@@ -11,7 +11,6 @@ import javax.inject.Inject
 
 plugins {
     alias(libs.plugins.android.application)
-    id("checkstyle")
 }
 
 android {
@@ -105,6 +104,12 @@ android {
     buildTypes {
         getByName("release") {
             isDefault = true
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             val hasReleaseKeystore = project.findProperty("keystoreFile")
                 .let { it is String && it.isNotEmpty() }
             // Set by Android Studio's "Generate Signed Bundle / APK" wizard for a single build.
@@ -119,7 +124,7 @@ android {
                 logger.warn("keystoreFile not set (~/.gradle/gradle.properties), falling back to debug signing for release")
                 signingConfig = android.signingConfigs.getByName("debug")
             } else {
-                productFlavors["ovpn23"].signingConfig = signingConfigs.getByName("release")
+                signingConfig = signingConfigs.getByName("release")
             }
         }
     }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Country flags are looked up at runtime by name via
+  Resources.getIdentifier("flag_<cc>", "drawable", ...) in CountryInfoRepository,
+  so resource shrinking cannot see the references. Keep them all.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/flag_*" />

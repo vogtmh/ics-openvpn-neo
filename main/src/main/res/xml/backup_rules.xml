@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Backup rules for Android 11 and below (API <= 30).
+  See data_extraction_rules.xml for the rationale: the files directory holds
+  VPN profiles (plaintext .vp with secrets / Keystore-encrypted .cp that cannot
+  be restored on another device), so it is excluded entirely.
+-->
+<full-backup-content>
+    <exclude domain="file" path="." />
+</full-backup-content>

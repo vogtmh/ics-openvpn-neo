@@ -7,10 +7,15 @@ package com.mavodev.openvpnneo.core;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,10 +31,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 
+import com.mavodev.openvpnneo.R;
 import com.mavodev.openvpnneo.VpnProfile;
 
 public class ProfileManager {
     private static final String PREFS_NAME = "VPNList";
+
+    private static final String TAG = "ProfileManager";
 
     private static final String LAST_CONNECTED_PROFILE = "lastConnectedProfile";
     private static final String TEMPORARY_PROFILE_FILENAME = "temporary-vpn-profile";
@@ -155,9 +163,10 @@ public class ProfileManager {
                     }
                 } catch (IOException | GeneralSecurityException ioe)
                 {
-                    VpnStatus.logException(VpnStatus.LogLevel.INFO, "Error trying to write an encrypted VPN profile, disabling " +
-                            "encryption", ioe);
+                    VpnStatus.logException(VpnStatus.LogLevel.ERROR, "Error trying to write an encrypted VPN profile, falling " +
+                            "back to unencrypted profile storage until app restart", ioe);
                     encryptionBroken = true;
+                    notifyEncryptionBroken(context);
                     saveProfile(context, profile);
                     return;
                 }
@@ -183,6 +192,34 @@ public class ProfileManager {
         } catch (IOException e) {
             VpnStatus.logException("saving VPN profile", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Profile encryption failed and we fell back to storing profiles in plaintext.
+     * This must not stay silent: post a notification so the user knows their
+     * saved credentials are no longer encrypted at rest. Encryption is retried
+     * automatically on the next app start (the broken flag is process-scoped).
+     */
+    private static void notifyEncryptionBroken(Context context) {
+        try {
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification.Builder nbuilder = new Notification.Builder(context, OpenVPNService.NOTIFICATION_CHANNEL_USERREQ_ID);
+            nbuilder.setContentTitle(context.getString(R.string.profile_encryption_failed_title));
+            nbuilder.setContentText(context.getString(R.string.profile_encryption_failed_message));
+            nbuilder.setStyle(new Notification.BigTextStyle().bigText(context.getString(R.string.profile_encryption_failed_message)));
+            nbuilder.setSmallIcon(android.R.drawable.ic_dialog_alert);
+            nbuilder.setAutoCancel(true);
+
+            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+            if (launchIntent != null) {
+                nbuilder.setContentIntent(PendingIntent.getActivity(context, 0, launchIntent, PendingIntent.FLAG_IMMUTABLE));
+            }
+
+            nm.notify("profile_encryption_broken".hashCode(), nbuilder.build());
+        } catch (RuntimeException e) {
+            /* Never let the warning notification break profile saving itself */
+            VpnStatus.logException(VpnStatus.LogLevel.WARNING, "Cannot show encryption warning notification", e);
         }
     }
 
@@ -310,12 +347,14 @@ public class ProfileManager {
         if (vlist == null) {
             vlist = new HashSet<>();
         }
+        Log.i(TAG, "loadVPNList: 'vpnlist' pref holds " + vlist.size() + " profile UUID(s): " + vlist);
         // Always try to load the temporary profile
         vlist.add(TEMPORARY_PROFILE_FILENAME);
 
         for (String vpnentry : vlist) {
             loadVpnEntry(context, vpnentry);
         }
+        Log.i(TAG, "loadVPNList: loaded " + profiles.size() + " of " + (vlist.size() - 1) + " listed profile(s) into memory");
     }
 
     private synchronized void loadVpnEntry(Context context, String vpnentry) {
@@ -326,28 +365,43 @@ public class ProfileManager {
             File encryptedPathOld = context.getFileStreamPath(vpnentry + ".cpold");
 
             if (encryptedPath.exists()) {
+                Log.i(TAG, "loadVpnEntry: " + vpnentry + " -> reading encrypted .cp");
                 vpInput = ProfileEncryption.getEncryptedVpInput(context, encryptedPath);
             } else if (encryptedPathOld.exists()) {
+                Log.i(TAG, "loadVpnEntry: " + vpnentry + " -> reading encrypted .cpold");
                 vpInput = ProfileEncryption.getEncryptedVpInput(context, encryptedPathOld);
             } else {
+                File plainPath = context.getFileStreamPath(vpnentry + ".vp");
+                if (!plainPath.exists()) {
+                    if (!vpnentry.equals(TEMPORARY_PROFILE_FILENAME))
+                        Log.w(TAG, "loadVpnEntry: " + vpnentry + " -> NO .cp/.cpold/.vp file on disk");
+                    return;
+                }
+                Log.i(TAG, "loadVpnEntry: " + vpnentry + " -> reading plaintext .vp");
                 vpInput = context.openFileInput(vpnentry + ".vp");
             }
             vpnfile = new ObjectInputStream(vpInput);
             VpnProfile vp = ((VpnProfile) vpnfile.readObject());
 
             // Sanity check
-            if (vp == null || vp.mName == null || vp.getUUID() == null)
+            if (vp == null || vp.mName == null || vp.getUUID() == null) {
+                Log.w(TAG, "loadVpnEntry: " + vpnentry + " -> deserialized but failed sanity check (null name/uuid)");
                 return;
+            }
 
             vp.upgradeProfile();
             if (vpnentry.equals(TEMPORARY_PROFILE_FILENAME)) {
                 tmpprofile = vp;
             } else {
                 profiles.put(vp.getUUID().toString(), vp);
+                Log.i(TAG, "loadVpnEntry: " + vpnentry + " -> loaded profile '" + vp.mName + "'");
             }
         } catch (IOException | ClassNotFoundException | GeneralSecurityException e) {
-            if (!vpnentry.equals(TEMPORARY_PROFILE_FILENAME))
+            if (!vpnentry.equals(TEMPORARY_PROFILE_FILENAME)) {
+                Log.e(TAG, "loadVpnEntry: FAILED to load " + vpnentry + ": "
+                        + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
                 VpnStatus.logException("Loading VPN List", e);
+            }
         } finally {
             if (vpnfile != null) {
                 try {

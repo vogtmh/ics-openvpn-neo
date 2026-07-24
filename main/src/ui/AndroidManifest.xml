@@ -208,11 +208,13 @@
         </activity>
 
 
+        <!-- Serves crash minidumps from the cache dir to the email app chosen by the
+             user. Not exported: access is granted per-URI via FLAG_GRANT_READ_URI_PERMISSION
+             on the share intent (see SendDumpFragment). -->
         <provider
                 android:name=".FileProvider"
                 android:authorities="${applicationId}.FileProvider"
-                android:exported="true"
-                android:grantUriPermissions="true"
-                tools:ignore="ExportedContentProvider" />
+                android:exported="false"
+                android:grantUriPermissions="true" />
     </application>
 </manifest>
