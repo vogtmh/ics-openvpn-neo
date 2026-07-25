@@ -198,6 +198,28 @@
 
         <activity
                 android:exported="false"
+                android:name=".servers.ServerBrowserActivity"
+                android:label="@string/free_servers_title"
+                android:enableOnBackInvokedCallback="false"
+                android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.mavodev.openvpnneo.activities.MainActivity" />
+        </activity>
+
+        <activity
+                android:exported="false"
+                android:name=".servers.ServerTestActivity"
+                android:label="@string/free_servers_test_title"
+                android:enableOnBackInvokedCallback="false"
+                android:parentActivityName=".servers.ServerBrowserActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.mavodev.openvpnneo.servers.ServerBrowserActivity" />
+        </activity>
+
+        <activity
+                android:exported="false"
                 android:name=".activities.GraphActivity"
                 android:label="@string/graph"
                 android:enableOnBackInvokedCallback="false"

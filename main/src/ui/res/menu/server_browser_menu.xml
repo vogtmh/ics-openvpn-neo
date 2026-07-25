@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort"
+        android:title="@string/free_servers_sort_by"
+        app:showAsAction="always">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_score"
+                    android:checked="true"
+                    android:title="@string/free_servers_sort_score" />
+                <item
+                    android:id="@+id/sort_speed"
+                    android:title="@string/free_servers_sort_speed" />
+                <item
+                    android:id="@+id/sort_uptime"
+                    android:title="@string/free_servers_sort_uptime" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/free_servers_refresh"
+        app:showAsAction="always" />
+
+</menu>

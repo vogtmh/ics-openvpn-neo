@@ -175,7 +175,7 @@
     <string name="owner_fix_summary">Tries to set the owner of /dev/tun to system. Some CM9 images need this to make the VPNService API work. Requires root.</string>
     <string name="owner_fix">Fix ownership of /dev/tun</string>
     <string name="generated_config_summary">Shows the generated OpenVPN Configuration File</string>
-    <string name="edit_profile_title">Editing \"%s\"</string>
+    <string name="edit_profile_title">%s</string>
     <string name="building_configration">Building configuration…</string>
     <string name="netchange_summary">Turning this option on will force a reconnect if the network state is changed (e.g. WiFi to/from mobile)</string>
     <string name="netchange">Reconnect on network change</string>
@@ -510,6 +510,49 @@
     <string name="country_api_dialog_message">CentVPN can show the country and IP address of your VPN server in the title bar.\n\nTo do this, it sends a small request to api.country.is — a public, privacy-respecting lookup service. This request reveals your VPN server\'s IP address to that service, but not your identity or the contents of your traffic.\n\nYou can turn this on or off anytime in Settings.</string>
     <string name="country_api_dialog_enable">Enable</string>
     <string name="country_api_dialog_decline">No thanks</string>
+
+    <!-- Free servers (VPNGate) feature -->
+    <string name="free_servers_setting_title">Free public servers</string>
+    <string name="free_servers_setting_summary">Browse and import free community VPN servers from VPNGate</string>
+    <string name="free_servers_consent_title">Free public servers</string>
+    <string name="free_servers_consent_message">This feature lets you browse and import free, community-run OpenVPN servers provided by the VPNGate project (University of Tsukuba, Japan).\n\nPlease understand:\n\n• These servers are operated by unknown third-party volunteers. They can potentially see, log, or interfere with any traffic you send through them.\n\n• Do not use them for sensitive or private data. There is no warranty, uptime guarantee, or support.\n\n• Enabling this sends a network request to vpngate.net to download the server list.\n\n• VPN use may be restricted or illegal in some countries — you are responsible for complying with local law.\n\nYou can turn this off again anytime in Settings.</string>
+    <string name="free_servers_consent_enable">I understand, enable</string>
+    <string name="free_servers_consent_decline">Cancel</string>
+
+    <string name="add_profile_free_servers">Browse free servers</string>
+    <string name="add_profile_free_servers_desc">Pick a country and import a free VPNGate server</string>
+
+    <string name="free_servers_title">Free public servers</string>
+    <string name="free_servers_all_countries">All countries</string>
+    <string name="free_servers_sort_by">Sort by</string>
+    <string name="free_servers_sort_score">Score</string>
+    <string name="free_servers_sort_speed">Speed</string>
+    <string name="free_servers_sort_uptime">Uptime</string>
+    <string name="free_servers_refresh">Refresh</string>
+    <string name="free_servers_updated">Server list updated</string>
+    <plurals name="free_servers_count">
+        <item quantity="one">%1$d server</item>
+        <item quantity="other">%1$d servers</item>
+    </plurals>
+    <string name="free_servers_error">Could not load the server list. Check your connection and try again.</string>
+    <string name="free_servers_empty">No servers found.</string>
+    <string name="free_servers_stat_score">Score %1$s</string>
+    <string name="free_servers_stat_speed">%1$s Mbps</string>
+    <string name="free_servers_stat_ping">%1$d ms</string>
+    <string name="free_servers_stat_uptime">up %1$s</string>
+    <string name="free_servers_import_confirm">Import a free VPN profile for this server?\n\n%1$s\n\nRemember: this server is run by an unknown third party. Avoid sensitive traffic.</string>
+    <string name="free_servers_import">Import</string>
+    <string name="free_servers_test">Test</string>
+    <string name="free_servers_test_title">Testing server</string>
+    <string name="free_servers_test_stop">Stop</string>
+    <string name="free_servers_test_connecting">Connecting…</string>
+    <string name="free_servers_test_connected">Connected — this server works</string>
+    <string name="free_servers_test_failed">Authentication failed</string>
+    <string name="free_servers_test_not_connected">Not connected</string>
+    <string name="free_servers_profile_name">VPNGate %1$s (%2$s)</string>
+    <string name="free_servers_imported">Imported \"%1$s\"</string>
+    <string name="free_servers_import_failed_title">Import failed</string>
+    <string name="free_servers_import_failed">The server configuration could not be imported.\n\n%1$s</string>
 
     <string name="country_flag">Country flag</string>
     <string name="default_profile">Default profile</string>

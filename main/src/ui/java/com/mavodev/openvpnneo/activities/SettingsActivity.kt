@@ -80,6 +80,14 @@ class SettingsActivity : BaseActivity() {
         ))
 
         settings.add(SettingItem(
+            key = "free_servers_enabled",
+            title = getString(R.string.free_servers_setting_title),
+            description = getString(R.string.free_servers_setting_summary),
+            type = SettingType.TOGGLE_SLIDER,
+            value = sharedPreferences.getBoolean("free_servers_enabled", false)
+        ))
+
+        settings.add(SettingItem(
             key = "showlogwindow",
             title = getString(R.string.show_log_window),
             description = getString(R.string.show_log_summary),
@@ -243,6 +251,12 @@ class SettingsActivity : BaseActivity() {
                     "keep_vpn_connected" -> {
                         // Handle Always-On VPN logic
                     }
+                    "free_servers_enabled" -> {
+                        // Gate enabling behind an explicit risk-consent dialog.
+                        if (value && !sharedPreferences.getBoolean("free_servers_consent_shown", false)) {
+                            showFreeServersConsentDialog()
+                        }
+                    }
                     // Add other special cases as needed
                 }
             }
@@ -267,6 +281,33 @@ class SettingsActivity : BaseActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showFreeServersConsentDialog() {
+        var accepted = false
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.free_servers_consent_title))
+            .setMessage(getString(R.string.free_servers_consent_message))
+            .setPositiveButton(getString(R.string.free_servers_consent_enable)) { _, _ ->
+                accepted = true
+                sharedPreferences.edit()
+                    .putBoolean("free_servers_enabled", true)
+                    .putBoolean("free_servers_consent_shown", true)
+                    .apply()
+            }
+            .setNegativeButton(getString(R.string.free_servers_consent_decline)) { d, _ ->
+                d.cancel()
+            }
+            .setOnCancelListener {
+                // Treat cancel / outside-tap as decline: keep the feature off and
+                // flip the toggle back so the UI reflects reality.
+                if (!accepted) {
+                    sharedPreferences.edit().putBoolean("free_servers_enabled", false).apply()
+                    settingsAdapter.updateSettingValue("free_servers_enabled", false)
+                }
+            }
+            .create()
+        dialog.show()
     }
 
     private fun showDefaultVpnSelectionDialog() {

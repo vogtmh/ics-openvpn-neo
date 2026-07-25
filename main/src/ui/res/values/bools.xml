@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Phones: lock the UI to portrait. Overridden to false for large screens
+         (see values-sw600dp/bools.xml) so tablets/foldables keep free rotation. -->
+    <bool name="lock_portrait">true</bool>
+</resources>

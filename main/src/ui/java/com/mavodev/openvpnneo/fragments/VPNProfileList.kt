@@ -56,6 +56,7 @@ import com.mavodev.openvpnneo.activities.AboutActivity
 import com.mavodev.openvpnneo.activities.FAQActivity
 import com.mavodev.openvpnneo.activities.SettingsActivity
 import com.mavodev.openvpnneo.activities.GraphActivity
+import com.mavodev.openvpnneo.servers.ServerBrowserActivity
 import com.mavodev.openvpnneo.core.ConnectionStatus
 import com.mavodev.openvpnneo.core.OpenVPNService
 import com.mavodev.openvpnneo.core.PasswordDialogFragment.Companion.newInstance
@@ -383,6 +384,8 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         fabAddProfile.setOnClickListener {
             val sheet = AddProfileBottomSheet()
             sheet.listener = this
+            sheet.freeServersEnabled = Preferences.getDefaultSharedPreferences(requireContext())
+                .getBoolean("free_servers_enabled", false)
             sheet.show(parentFragmentManager, AddProfileBottomSheet.TAG)
         }
 
@@ -504,6 +507,10 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
 
     override fun onImportFromRemote() {
         startASProfileImport()
+    }
+
+    override fun onBrowseFreeServers() {
+        startActivity(Intent(getActivity(), ServerBrowserActivity::class.java))
     }
 
     fun changeSorting(): Boolean {

@@ -4,6 +4,7 @@
  */
 package com.mavodev.openvpnneo.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,13 @@ abstract class BaseActivity : AppCompatActivity() {
             navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK)
         )
         super.onCreate(savedInstanceState)
+
+        // Lock phones to portrait; large screens (sw600dp) keep free rotation.
+        // On Android 16+ large screens the system ignores orientation restrictions
+        // anyway, so this only ever takes effect on phones.
+        if (resources.getBoolean(R.bool.lock_portrait)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
 
         // Single source of truth for the opaque black status bar: draw a black strip
         // behind the transparent (edge-to-edge) status bar, sized to the status bar inset.

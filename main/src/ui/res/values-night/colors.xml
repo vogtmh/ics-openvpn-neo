@@ -40,4 +40,10 @@
     <!-- System + action bar: always black -->
     <color name="bar_background">#000000</color>
     <color name="on_bar">#FFFFFF</color>
+
+    <!-- Free-server test result header -->
+    <color name="test_result_success_bg">#1B4620</color>
+    <color name="test_result_success_text">#A5D6A7</color>
+    <color name="test_result_error_bg">#4E1414</color>
+    <color name="test_result_error_text">#EF9A9A</color>
 </resources>
