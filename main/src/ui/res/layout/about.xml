@@ -160,10 +160,12 @@
                         android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                 <TextView
+                        android:id="@+id/privacy_policy_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:autoLink="all"
+                        android:lineSpacingMultiplier="1.15"
                         android:text="@string/privacy_policy" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

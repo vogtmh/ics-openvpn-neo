@@ -196,9 +196,9 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         actionBarCountryInfo.setOnClickListener(manualRefresh)
 
         // Change-sorting button on the right side of the header
-        customView.findViewById<ImageButton>(R.id.action_bar_change_sorting).setOnClickListener {
+        customView.findViewById<ImageButton>(R.id.action_bar_change_sorting).setOnClickListener { anchor ->
             (supportFragmentManager.findFragmentById(R.id.fragment_container) as? VPNProfileList)
-                ?.changeSorting()
+                ?.showSortMenu(anchor)
         }
 
         supportActionBar?.setCustomView(

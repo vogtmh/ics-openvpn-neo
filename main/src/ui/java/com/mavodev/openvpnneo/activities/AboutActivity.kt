@@ -69,6 +69,12 @@ class AboutActivity : BaseActivity() {
         
         osslVer.text = String.format(Locale.US, "OpenSSL version: %s", NativeUtils.getOpenSSLVersion())
         
+        // Render the privacy policy with paragraphs + bold keywords. autoLink="all" on the
+        // TextView still linkifies the domains/e-mails in the resulting text.
+        val privacyPolicy = findViewById<TextView>(R.id.privacy_policy_text)
+        privacyPolicy.text =
+            HtmlCompat.fromHtml(getString(R.string.privacy_policy), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        
         // Setup full licenses - same as AboutFragment
         val fullLicenses = findViewById<TextView>(R.id.full_licenses)
         fullLicenses.text = HtmlCompat.fromHtml(readHtmlFromAssets(), HtmlCompat.FROM_HTML_MODE_LEGACY)

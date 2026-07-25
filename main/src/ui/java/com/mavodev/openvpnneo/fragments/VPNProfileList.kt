@@ -32,6 +32,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
@@ -90,6 +91,8 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     private var connectingState: String? = null // Latest OpenVPN state string while connecting
     private var highlightedUuids: Set<String> = emptySet()
     private lateinit var countryInfoRepository: CountryInfoRepository
+    /** True while the list is grouped by country, so per-row flags are hidden (shown on headers). */
+    private var groupedByCountry: Boolean = false
 
     override fun updateState(
         state: String?,
@@ -356,7 +359,9 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         if (oldUuid == newUuid) return
         val adapter = mAdapter ?: return
         for (uuid in listOfNotNull(oldUuid, newUuid)) {
-            val idx = adapter.currentList.indexOfFirst { it.getUUIDString() == uuid }
+            val idx = adapter.currentList.indexOfFirst {
+                it is ListRow.ProfileItem && it.profile.getUUIDString() == uuid
+            }
             if (idx >= 0) adapter.notifyItemChanged(idx)
         }
     }
@@ -435,18 +440,95 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     }
 
     private fun populateVpnList() {
-        val sortByLRU = Preferences.getDefaultSharedPreferences(requireActivity()).getBoolean(
-            PREF_SORT_BY_LRU, false
-        )
+        val prefs = Preferences.getDefaultSharedPreferences(requireActivity())
+        val mode = prefs.getString(PREF_SORT_MODE, SORT_AZ) ?: SORT_AZ
         this.pM.refreshVPNList(requireContext())
-        val allvpn: MutableCollection<VpnProfile?>? = this.pM.getProfiles()
-        val sortedset: TreeSet<VpnProfile?> =
-            if (sortByLRU) TreeSet(VpnProfileLRUComparator())
-            else TreeSet(VpnProfileNameComparator())
+        val allvpn = this.pM.getProfiles().filterNotNull()
 
-        sortedset.addAll(allvpn!!)
-        val list = sortedset.filterNotNull().toList()
-        mAdapter?.submitList(list) { updateEmptyView(list.isEmpty()) }
+        val rows: List<ListRow> = when (mode) {
+            SORT_COUNTRY -> buildCountryRows(allvpn)
+            SORT_LRU -> allvpn.sortedWith(VpnProfileLRUComparator()).map { ListRow.ProfileItem(it) }
+            else -> allvpn.sortedWith(VpnProfileNameComparator()).map { ListRow.ProfileItem(it) }
+        }
+        groupedByCountry = mode == SORT_COUNTRY
+        mAdapter?.submitList(rows) { updateEmptyView(rows.isEmpty()) }
+    }
+
+    /** Groups profiles by their (flag) country, honouring the collapsed/expanded state. */
+    private fun buildCountryRows(profiles: List<VpnProfile>): List<ListRow> {
+        val nameComparator = VpnProfileNameComparator()
+        val groups = HashMap<String, MutableList<VpnProfile>>()
+        for (p in profiles) {
+            groups.getOrPut(countryCodeForProfile(p)) { ArrayList() }.add(p)
+        }
+        val collapsed = collapsedCountries()
+        // Sort by country name; the "Unknown" bucket (empty code) always last.
+        val orderedKeys = groups.keys.sortedWith(
+            compareBy({ it.isEmpty() }, { countryTitle(it).lowercase() })
+        )
+        val rows = ArrayList<ListRow>()
+        for (key in orderedKeys) {
+            val groupProfiles = groups.getValue(key).sortedWith(nameComparator)
+            val isCollapsed = collapsed.contains(collapseKey(key))
+            rows.add(ListRow.GroupHeader(key, countryTitle(key), groupProfiles.size, isCollapsed))
+            if (!isCollapsed) groupProfiles.forEach { rows.add(ListRow.ProfileItem(it)) }
+        }
+        return rows
+    }
+
+    /** Country code used for grouping; empty string means "Unknown" (no code or no flag). */
+    private fun countryCodeForProfile(profile: VpnProfile): String {
+        val code = countryInfoRepository.getProfileCountry(profile.getUUIDString())
+        if (code.isNullOrBlank()) return ""
+        return if (countryInfoRepository.flagResourceId(code) != 0) code else ""
+    }
+
+    private fun countryTitle(code: String): String =
+        if (code.isEmpty()) getString(R.string.country_unknown)
+        else countryInfoRepository.countryName(code)
+
+    private fun collapseKey(code: String): String = if (code.isEmpty()) UNKNOWN_COUNTRY_KEY else code
+
+    private fun collapsedCountries(): MutableSet<String> {
+        val prefs = Preferences.getDefaultSharedPreferences(requireActivity())
+        return HashSet(prefs.getStringSet(PREF_COLLAPSED_COUNTRIES, emptySet()) ?: emptySet())
+    }
+
+    private fun toggleCountryCollapsed(code: String) {
+        val set = collapsedCountries()
+        val key = collapseKey(code)
+        if (!set.remove(key)) set.add(key)
+        Preferences.getDefaultSharedPreferences(requireActivity()).edit()
+            .putStringSet(PREF_COLLAPSED_COUNTRIES, set).apply()
+        populateVpnList()
+    }
+
+    /** Shows the sort/grouping dropdown anchored to the header button. */
+    fun showSortMenu(anchor: View) {
+        val prefs = Preferences.getDefaultSharedPreferences(requireActivity())
+        val current = prefs.getString(PREF_SORT_MODE, SORT_AZ) ?: SORT_AZ
+        val popup = PopupMenu(requireContext(), anchor)
+        popup.menu.add(Menu.NONE, MENU_SORT_AZ, Menu.NONE, getString(R.string.sort_menu_az))
+        popup.menu.add(Menu.NONE, MENU_SORT_LRU, Menu.NONE, getString(R.string.sort_menu_lru))
+        popup.menu.add(Menu.NONE, MENU_SORT_COUNTRY, Menu.NONE, getString(R.string.group_by_country))
+        popup.menu.setGroupCheckable(Menu.NONE, true, true)
+        val checkedId = when (current) {
+            SORT_LRU -> MENU_SORT_LRU
+            SORT_COUNTRY -> MENU_SORT_COUNTRY
+            else -> MENU_SORT_AZ
+        }
+        popup.menu.findItem(checkedId)?.isChecked = true
+        popup.setOnMenuItemClickListener { item ->
+            val mode = when (item.itemId) {
+                MENU_SORT_LRU -> SORT_LRU
+                MENU_SORT_COUNTRY -> SORT_COUNTRY
+                else -> SORT_AZ
+            }
+            prefs.edit().putString(PREF_SORT_MODE, mode).apply()
+            populateVpnList()
+            true
+        }
+        popup.show()
     }
 
     private fun updateEmptyView(isEmpty: Boolean) {
@@ -464,7 +546,9 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         val toRefresh = highlightedUuids + newHighlights
         highlightedUuids = newHighlights
         for (uuid in toRefresh) {
-            val idx = adapter.currentList.indexOfFirst { it.getUUIDString() == uuid }
+            val idx = adapter.currentList.indexOfFirst {
+                it is ListRow.ProfileItem && it.profile.getUUIDString() == uuid
+            }
             if (idx >= 0) adapter.notifyItemChanged(idx)
         }
     }
@@ -511,22 +595,6 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
 
     override fun onBrowseFreeServers() {
         startActivity(Intent(getActivity(), ServerBrowserActivity::class.java))
-    }
-
-    fun changeSorting(): Boolean {
-        val prefs = Preferences.getDefaultSharedPreferences(requireActivity())
-        val oldValue = prefs.getBoolean(PREF_SORT_BY_LRU, false)
-        val prefsedit = prefs.edit()
-        if (oldValue) {
-            Toast.makeText(getActivity(), R.string.sorted_az, Toast.LENGTH_SHORT).show()
-            prefsedit.putBoolean(PREF_SORT_BY_LRU, false)
-        } else {
-            prefsedit.putBoolean(PREF_SORT_BY_LRU, true)
-            Toast.makeText(getActivity(), R.string.sorted_lru, Toast.LENGTH_SHORT).show()
-        }
-        prefsedit.apply()
-        populateVpnList()
-        return true
     }
 
     override fun onClick(v: View) {
@@ -715,23 +783,65 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         val progress: LinearProgressIndicator = view.findViewById(R.id.vpn_item_progress)
     }
 
-    private inner class ProfileAdapter :
-        ListAdapter<VpnProfile, ProfileViewHolder>(PROFILE_DIFF) {
+    private inner class GroupHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val root: View = view.findViewById(R.id.group_header_root)
+        val flag: ImageView = view.findViewById(R.id.group_flag)
+        val title: TextView = view.findViewById(R.id.group_title)
+        val count: TextView = view.findViewById(R.id.group_count)
+        val chevron: ImageView = view.findViewById(R.id.group_chevron)
+    }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
-            val v = layoutInflater.inflate(R.layout.vpn_list_item, parent, false)
-            return ProfileViewHolder(v)
+    private inner class ProfileAdapter :
+        ListAdapter<ListRow, RecyclerView.ViewHolder>(ROW_DIFF) {
+
+        override fun getItemViewType(position: Int): Int = when (getItem(position)) {
+            is ListRow.GroupHeader -> VIEW_TYPE_HEADER
+            is ListRow.ProfileItem -> VIEW_TYPE_PROFILE
         }
 
-        override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
-            val profile = getItem(position)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            return if (viewType == VIEW_TYPE_HEADER) {
+                GroupHeaderViewHolder(
+                    layoutInflater.inflate(R.layout.vpn_list_group_header, parent, false)
+                )
+            } else {
+                ProfileViewHolder(layoutInflater.inflate(R.layout.vpn_list_item, parent, false))
+            }
+        }
 
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            when (val row = getItem(position)) {
+                is ListRow.GroupHeader -> bindHeader(holder as GroupHeaderViewHolder, row)
+                is ListRow.ProfileItem -> bindProfile(holder as ProfileViewHolder, row.profile)
+            }
+        }
+
+        private fun bindHeader(holder: GroupHeaderViewHolder, row: ListRow.GroupHeader) {
+            holder.title.text = row.title
+            holder.count.text = row.count.toString()
+            val flagRes = if (row.countryCode.isEmpty()) R.drawable.flag_unknown
+            else countryInfoRepository.flagResourceId(row.countryCode)
+                .takeIf { it != 0 } ?: R.drawable.flag_unknown
+            holder.flag.setImageResource(flagRes)
+            // Chevron points down when expanded, up when collapsed.
+            holder.chevron.rotation = if (row.collapsed) 180f else 0f
+            holder.root.setOnClickListener { toggleCountryCollapsed(row.countryCode) }
+        }
+
+        private fun bindProfile(holder: ProfileViewHolder, profile: VpnProfile) {
             holder.title.text = profile.getName()
             holder.row.setOnClickListener { startOrStopVPN(profile) }
             holder.settings.setOnClickListener { editVPN(profile) }
 
-            // Load country flag for this profile
-            loadProfileCountryFlag(profile, holder.flag)
+            // Load country flag for this profile. While grouped by country the flag is
+            // shown once on the group header; keep the row's flag slot INVISIBLE (not GONE)
+            // so each profile title stays aligned with the country name after the flag.
+            if (groupedByCountry) {
+                holder.flag.visibility = View.INVISIBLE
+            } else {
+                holder.flag.visibility = View.VISIBLE
+                loadProfileCountryFlag(profile, holder.flag)
+            }
 
             val uuid = profile.getUUIDString()
             // Show/hide default profile star
@@ -805,16 +915,38 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         private val MENU_ADD_PROFILE = Menu.FIRST
         private val MENU_IMPORT_PROFILE = Menu.FIRST + 1
         private val MENU_IMPORT_AS = Menu.FIRST + 3
-        private const val PREF_SORT_BY_LRU = "sortProfilesByLRU"
+        private const val PREF_SORT_MODE = "profileSortMode"
+        private const val PREF_COLLAPSED_COUNTRIES = "collapsedCountries"
+        private const val SORT_AZ = "az"
+        private const val SORT_LRU = "lru"
+        private const val SORT_COUNTRY = "country"
+        private const val UNKNOWN_COUNTRY_KEY = "__unknown__"
 
-        private val PROFILE_DIFF = object : DiffUtil.ItemCallback<VpnProfile>() {
-            override fun areItemsTheSame(oldItem: VpnProfile, newItem: VpnProfile): Boolean =
-                oldItem.getUUIDString() == newItem.getUUIDString()
+        private const val VIEW_TYPE_HEADER = 0
+        private const val VIEW_TYPE_PROFILE = 1
 
-            override fun areContentsTheSame(oldItem: VpnProfile, newItem: VpnProfile): Boolean =
-                oldItem.getUUIDString() == newItem.getUUIDString() &&
-                    oldItem.getName() == newItem.getName() &&
-                    oldItem.mVersion == newItem.mVersion
+        private const val MENU_SORT_AZ = 1
+        private const val MENU_SORT_LRU = 2
+        private const val MENU_SORT_COUNTRY = 3
+
+        private val ROW_DIFF = object : DiffUtil.ItemCallback<ListRow>() {
+            override fun areItemsTheSame(oldItem: ListRow, newItem: ListRow): Boolean = when {
+                oldItem is ListRow.GroupHeader && newItem is ListRow.GroupHeader ->
+                    oldItem.countryCode == newItem.countryCode
+                oldItem is ListRow.ProfileItem && newItem is ListRow.ProfileItem ->
+                    oldItem.profile.getUUIDString() == newItem.profile.getUUIDString()
+                else -> false
+            }
+
+            override fun areContentsTheSame(oldItem: ListRow, newItem: ListRow): Boolean = when {
+                oldItem is ListRow.GroupHeader && newItem is ListRow.GroupHeader ->
+                    oldItem == newItem
+                oldItem is ListRow.ProfileItem && newItem is ListRow.ProfileItem ->
+                    oldItem.profile.getUUIDString() == newItem.profile.getUUIDString() &&
+                        oldItem.profile.getName() == newItem.profile.getName() &&
+                        oldItem.profile.mVersion == newItem.profile.mVersion
+                else -> false
+            }
         }
     }
     
@@ -852,4 +984,16 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         Log.d("VPNProfileList", "refreshFlags() called - updating all profile flags")
         mAdapter?.notifyDataSetChanged()
     }
+}
+
+/** A row in the profile list: either a country group header or a profile entry. */
+private sealed class ListRow {
+    data class GroupHeader(
+        val countryCode: String,
+        val title: String,
+        val count: Int,
+        val collapsed: Boolean,
+    ) : ListRow()
+
+    data class ProfileItem(val profile: VpnProfile) : ListRow()
 }
