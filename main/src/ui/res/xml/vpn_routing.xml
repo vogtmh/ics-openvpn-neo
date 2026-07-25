@@ -40,14 +40,14 @@
             android:title="@string/use_default_title"
             app:iconSpaceReserved="false" />
 
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
             android:dependency="useDefaultRoute"
             android:dialogMessage="@string/custom_route_message"
             android:key="customRoutes"
             android:title="@string/custom_routes_title"
             android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
             android:dependency="useDefaultRoute"
             android:dialogMessage="@string/custom_route_message_excluded"
             android:key="excludedRoutes"
@@ -62,7 +62,7 @@
             android:title="@string/use_default_title"
             app:iconSpaceReserved="false" />
 
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
             android:dependency="useDefaultRoutev6"
             android:dialogMessage="@string/custom_route_message"
             android:key="customRoutesv6"

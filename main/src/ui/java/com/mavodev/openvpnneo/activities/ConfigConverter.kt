@@ -59,13 +59,20 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     private val mLogEntries = Vector<String>()
     private var mSourceUri: Uri? = null
     private lateinit var mProfilename: EditText
-    private lateinit var mCompatmode: Spinner
-    private lateinit var mCompatmodeLabel: TextView
-    private lateinit var mTLSProfile: Spinner
-    private lateinit var mTLSProfileLabel: TextView
     private lateinit var mLogLayout: LinearLayout
+    private lateinit var mLogContainer: LinearLayout
+    private lateinit var mShowLogButton: View
     private lateinit var mProfilenameLabel: TextView
     private lateinit var mMakeDefaultProfile: CompoundButton
+    private lateinit var mMakeDefaultProfileRow: View
+    private lateinit var mMakeFavoriteProfile: CompoundButton
+    private lateinit var mMakeFavoriteProfileRow: View
+    private lateinit var mPasswordLayout: View
+    private lateinit var mPassword: EditText
+    private lateinit var mUsernameLayout: View
+    private lateinit var mUsername: EditText
+    private lateinit var mUserPasswordLayout: View
+    private lateinit var mUserPassword: EditText
 
     private val mInstallPKCS12Launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -74,8 +81,18 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.fab_save)
-            userActionSaveProfile()
+        if (v.id == R.id.show_import_log_button)
+            toggleImportLog()
+    }
+
+    private fun toggleImportLog() {
+        if (mLogContainer.visibility == View.VISIBLE) {
+            mLogContainer.visibility = View.GONE
+            mShowLogButton.let { (it as? Button)?.setText(R.string.show_import_log) }
+        } else {
+            mLogContainer.visibility = View.VISIBLE
+            mShowLogButton.let { (it as? Button)?.setText(R.string.hide_import_log) }
+        }
     }
 
     private fun doRequestSDCardPermission(requestCode: Int) {
@@ -138,17 +155,22 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
             return true
         }
 
-        mResult!!.mCompatMode = Utils.mapCompatMode(mCompatmode.selectedItemPosition)
-
-        val selectedTLSProfile = translSelectionToProfileName(mTLSProfile.selectedItemPosition)
-        if (selectedTLSProfile != "legacy" || !mResult!!.mTlSCertProfile.isNullOrEmpty()) {
-            mResult!!.mTlSCertProfile = selectedTLSProfile
-        }
-
         /* If you need compability with such an old version or such a low security profile
          * there is a high chance that the legacy provider is needed as well */
-        if (mResult!!.mCompatMode in 1..20400 || selectedTLSProfile == "insecure")
+        if (mResult!!.mCompatMode in 1..20400 || mResult!!.mTlSCertProfile == "insecure")
             mResult!!.mUseLegacyProvider = true;
+
+        if (mPasswordLayout.visibility == View.VISIBLE) {
+            val pw = mPassword.text.toString()
+            if (pw.isNotEmpty())
+                mResult!!.mKeyPassword = pw
+        }
+
+        if (mUsernameLayout.visibility == View.VISIBLE)
+            mResult!!.mUsername = mUsername.text.toString()
+
+        if (mUserPasswordLayout.visibility == View.VISIBLE)
+            mResult!!.mPassword = mUserPassword.text.toString()
 
         val intent = installPKCS12()
 
@@ -165,6 +187,12 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
             editor.apply()
         }
 
+        if (mMakeFavoriteProfile.isChecked) {
+            val defaultPrefs = Preferences.getDefaultSharedPreferences(this)
+            val favorites = HashSet(defaultPrefs.getStringSet("favoriteProfiles", emptySet()) ?: emptySet())
+            favorites.add(mResult!!.uuidString)
+            defaultPrefs.edit().putStringSet("favoriteProfiles", favorites).apply()
+        }
 
         return true
     }
@@ -596,51 +624,31 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         }
     }
 
-    private fun translateTLSProfileToSelection(tlsprofile: String?): Int {
-        return when (tlsprofile) {
-            "insecure" -> 0
-            "legacy" -> 1
-            "preferred" -> 2
-            "suiteb" -> 3
-            else -> 1
-        }
-    }
-
-    private fun translSelectionToProfileName(selection: Int): String {
-        return when (selection) {
-            0 -> "insecure"
-            1 -> "legacy"
-            2 -> "preferred"
-            3 -> "suiteb"
-            else -> "legacy"
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val v  = layoutInflater.inflate(R.layout.config_converter, null)
         setUpEdgeEdgeInsetsListener(v, R.id.root_layout_config_converter)
         setContentView(v)
 
-        val fab_button = findViewById<ImageButton?>(R.id.fab_save)
-        if (fab_button != null) {
-            fab_button.setOnClickListener(this)
-            findViewById<View>(R.id.fab_footerspace).visibility = View.VISIBLE
-        }
-
-        mLogLayout = findViewById<View>(R.id.config_convert_root) as LinearLayout
-
+        mLogLayout = findViewById<View>(R.id.import_log_container) as LinearLayout
+        mLogContainer = findViewById<View>(R.id.import_log_container) as LinearLayout
+        mShowLogButton = findViewById(R.id.show_import_log_button)
+        mShowLogButton.setOnClickListener(this)
 
         mProfilename = findViewById<View>(R.id.profilename) as EditText
         mProfilenameLabel = findViewById<View>(R.id.profilename_label) as TextView
 
-        mCompatmode = findViewById(R.id.compatmode) as Spinner
-        mCompatmodeLabel = findViewById(R.id.compatmode_label) as TextView
+        mMakeDefaultProfile = findViewById(R.id.make_default_profile) as CompoundButton
+        mMakeDefaultProfileRow = findViewById(R.id.make_default_profile_row)
+        mMakeFavoriteProfile = findViewById(R.id.make_favorite_profile) as CompoundButton
+        mMakeFavoriteProfileRow = findViewById(R.id.make_favorite_profile_row)
 
-        mTLSProfile = findViewById(R.id.tls_profile) as Spinner
-        mTLSProfileLabel = findViewById(R.id.tls_profile_label) as TextView
-
-        mMakeDefaultProfile = findViewById(R.id.make_default_profile ) as CompoundButton
+        mPasswordLayout = findViewById(R.id.import_password_layout)
+        mPassword = findViewById(R.id.import_password) as EditText
+        mUsernameLayout = findViewById(R.id.import_username_layout)
+        mUsername = findViewById(R.id.import_username) as EditText
+        mUserPasswordLayout = findViewById(R.id.import_userpassword_layout)
+        mUserPassword = findViewById(R.id.import_userpassword) as EditText
 
         if (savedInstanceState != null && savedInstanceState.containsKey(VPNPROFILE)) {
             mResult = BundleCompat.getSerializable(savedInstanceState, VPNPROFILE, VpnProfile::class.java)
@@ -648,8 +656,6 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
             mEmbeddedPwFile = savedInstanceState.getString("pwfile")
             mSourceUri = BundleCompat.getParcelable(savedInstanceState, "mSourceUri", Uri::class.java)
             mProfilename.setText(mResult!!.mName)
-            mCompatmode.setSelection(Utils.mapCompatVer(mResult!!.mCompatMode))
-            mTLSProfile.setSelection(translateTLSProfileToSelection(mResult?.mTlSCertProfile))
 
             if (savedInstanceState.containsKey("logentries")) {
 
@@ -747,6 +753,8 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
         val mProgress: ProgressBar
         withContext(Dispatchers.Main)
         {
+            // Show the log area while importing so the progress spinner is visible
+            mLogContainer.visibility = View.VISIBLE
             mProgress = ProgressBar(this@ConfigConverter)
             addViewToLog(mProgress)
         }
@@ -791,19 +799,31 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
                 mProfilenameLabel.visibility = View.VISIBLE
                 mProfilename.setText(result.name)
 
-                mCompatmode.visibility = View.VISIBLE
-                mCompatmodeLabel.visibility = View.VISIBLE
-                mCompatmode.setSelection(Utils.mapCompatVer(result.mCompatMode))
-
-                mTLSProfile.visibility = View.VISIBLE
-                mTLSProfileLabel.visibility = View.VISIBLE
+                mMakeDefaultProfileRow.visibility = View.VISIBLE
                 mMakeDefaultProfile.visibility = View.VISIBLE
                 val noProfilesYet = ProfileManager.getAlwaysOnVPN(this@ConfigConverter) == null
                 mMakeDefaultProfile.isChecked = noProfilesYet
                 mMakeDefaultProfile.isEnabled = true
-                mTLSProfile.setSelection(translateTLSProfileToSelection(result.mTlSCertProfile))
+
+                mMakeFavoriteProfileRow.visibility = View.VISIBLE
+                mMakeFavoriteProfile.visibility = View.VISIBLE
+
+                if (result.requireTLSKeyPassword())
+                    mPasswordLayout.visibility = View.VISIBLE
+
+                if (result.isUserPWAuth()) {
+                    mUsernameLayout.visibility = View.VISIBLE
+                    mUserPasswordLayout.visibility = View.VISIBLE
+                    mUsername.setText(result.mUsername)
+                    mUserPassword.setText(result.mPassword)
+                }
 
                 log(R.string.import_done)
+
+                // Collapse the import log behind a button now that the import succeeded
+                mLogContainer.visibility = View.GONE
+                (mShowLogButton as? Button)?.setText(R.string.show_import_log)
+                mShowLogButton.visibility = View.VISIBLE
             }
         }
     }
@@ -834,7 +854,7 @@ class ConfigConverter : BaseActivity(), FileSelectCallback, View.OnClickListener
     }
 
     private fun addViewToLog(view: View?) {
-        mLogLayout.addView(view, mLogLayout.childCount - 1)
+        mLogLayout.addView(view)
     }
 
     private fun doImport(inputStream: InputStream) {

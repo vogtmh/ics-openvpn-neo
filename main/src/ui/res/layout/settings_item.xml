@@ -69,16 +69,11 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/settings_action"
-            android:layout_width="60dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:background="@drawable/settings_action_button_bg"
+            style="@style/Widget.OpenVPNNeo.SelectorButton"
             android:contentDescription="@string/configure_the_vpn"
             android:focusable="true"
             android:text="›"
-            android:textColor="?android:attr/textColorPrimary"
             android:textSize="18sp"
-            android:gravity="center"
             android:visibility="gone" />
 
     </LinearLayout>

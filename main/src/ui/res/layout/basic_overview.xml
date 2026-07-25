@@ -122,18 +122,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/connection_retries"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <Spinner
+        <com.mavodev.openvpnneo.views.SelectionField
             android:id="@+id/connectretrymax"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/crm_entries" />
+            android:layout_marginTop="8dp"
+            android:entries="@array/crm_entries"
+            app:selectionTitle="@string/connection_retries" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"

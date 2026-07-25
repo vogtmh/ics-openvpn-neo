@@ -20,16 +20,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dip"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="8dip"
+    android:layout_marginBottom="8dip"
     android:gravity="center_vertical">
 
-<Button
+<androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/file_select_button"
-            style="@style/accountSetupButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Widget.OpenVPNNeo.SelectorButton"
             android:layout_alignParentRight="true"
-            android:text="@string/file_select" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_open_file"
+            android:contentDescription="@string/file_select" />
 
     <Button
         android:id="@+id/file_clear_button"

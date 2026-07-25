@@ -85,7 +85,7 @@
                 android:name=".activities.ConfigConverter"
                 android:exported="true"
                 android:excludeFromRecents="true"
-                android:label="Convert Config File"
+                android:label="@string/import_profile_title"
                 android:taskAffinity=".ConfigConverter"
                 android:uiOptions="splitActionBarWhenNarrow"
                 tools:ignore="ExportedActivity">

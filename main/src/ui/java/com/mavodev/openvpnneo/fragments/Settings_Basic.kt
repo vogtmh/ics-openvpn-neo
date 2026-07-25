@@ -12,18 +12,16 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.CompoundButton
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.VpnProfile
 import com.mavodev.openvpnneo.views.FileSelectLayout
+import com.mavodev.openvpnneo.views.SelectionField
 
-internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListener,
+internal class Settings_Basic : KeyChainSettingsFragment(),
     FileSelectLayout.FileSelectCallback, CompoundButton.OnCheckedChangeListener {
 
     private lateinit var mClientCert: FileSelectLayout
@@ -31,8 +29,8 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
     private lateinit var mClientKey: FileSelectLayout
     private lateinit var mUseLzo: CompoundButton
     private lateinit var mUseLegacyProvider: CompoundButton
-    private lateinit var mType: Spinner
-    private lateinit var mCompatMode: Spinner
+    private lateinit var mType: SelectionField
+    private lateinit var mCompatMode: SelectionField
     private lateinit var mpkcs12: FileSelectLayout
     private lateinit var mCrlFile: FileSelectLayout
     private lateinit var mPKCS12Password: TextView
@@ -47,7 +45,7 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
     private lateinit var mMakeFavoriteProfile: CompoundButton
 
     private val fileselects = SparseArray<FileSelectLayout>()
-    private lateinit var mAuthRetry: Spinner
+    private lateinit var mAuthRetry: SelectionField
 
     private fun addFileSelectLayout(fsl: FileSelectLayout, type: Utils.FileType) {
         val i = fileselects.size() + CHOOSE_FILE_OFFSET
@@ -91,8 +89,7 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
         mCaCert.setShowClear()
         mCrlFile.setShowClear()
 
-        mType.onItemSelectedListener = this
-        mAuthRetry.onItemSelectedListener = this
+        mType.onSelectionChanged = { changeType(it) }
         mEnablePeerFingerprint.setOnCheckedChangeListener(this)
 
         // Profile name, private key password and the default-profile toggle are shared
@@ -128,12 +125,6 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
             if (fsl === mClientKey) {
                 changeType(mType.selectedItemPosition)
             }
-        }
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if (parent === mType) {
-            changeType(position)
         }
     }
 
@@ -208,6 +199,10 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
         mUseLzo.isChecked = mProfile.mUseLzo
         mUseLegacyProvider.isChecked = mProfile.mUseLegacyProvider
         mType.setSelection(mProfile.mAuthenticationType)
+        // setSelection() intentionally does not fire onSelectionChanged, so reveal the
+        // sections for the current auth type explicitly (a real Spinner used to do this
+        // via its selection listener).
+        changeType(mProfile.mAuthenticationType)
         mCompatMode.setSelection(Utils.mapCompatVer(mProfile.mCompatMode))
         mpkcs12.setData(mProfile.mPKCS12Filename, requireActivity())
         mPKCS12Password.text = mProfile.mPKCS12Password
@@ -254,9 +249,6 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
         super.onSaveInstanceState(outState)
         savePreferences()
         outState.putString(requireActivity().packageName + "profileUUID", mProfile.getUUID().toString())
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {

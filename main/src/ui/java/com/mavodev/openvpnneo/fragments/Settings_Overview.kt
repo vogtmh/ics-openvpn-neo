@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +19,7 @@ import androidx.core.widget.doAfterTextChanged
 import com.mavodev.openvpnneo.R
 import com.mavodev.openvpnneo.activities.VPNPreferences
 import com.mavodev.openvpnneo.core.Connection
+import com.mavodev.openvpnneo.views.SelectionField
 
 /**
  * A user friendly "Basic" tab exposing the most commonly used profile settings:
@@ -33,7 +33,7 @@ class Settings_Overview : Settings_Fragment() {
     private lateinit var mKeyPassLayout: View
     private lateinit var mMakeDefaultProfile: CompoundButton
     private lateinit var mMakeFavoriteProfile: CompoundButton
-    private lateinit var mConnectRetryMax: Spinner
+    private lateinit var mConnectRetryMax: SelectionField
     private lateinit var mConnectRetry: EditText
     private lateinit var mConnectRetryMaxTime: EditText
     private lateinit var mServerRecyclerView: RecyclerView

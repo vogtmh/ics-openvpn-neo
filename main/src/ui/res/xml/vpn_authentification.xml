@@ -11,7 +11,7 @@
             android:title="@string/settings_auth"
             app:iconSpaceReserved="false" />
     <PreferenceCategory android:title="@string/tls_settings">
-        <ListPreference
+        <com.mavodev.openvpnneo.views.SelectorListPreference
                 android:entries="@array/tls_profile_entries"
                 android:entryValues="@array/tls_profile_values"
                 android:key="tls_profile"
@@ -38,7 +38,7 @@
                 android:title="@string/enter_tlscn_title"
                 android:widgetLayout="@layout/ovpn_preference_dialog_widget" />
 
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:dependency="checkRemoteCN"
                 android:dialogMessage="Field  in  the X.509 certificate subject to be used as the username (default=CN)."
                 android:key="remotex509name"
@@ -55,7 +55,7 @@
                 android:title="@string/useTLSAuth" 
                 app:iconSpaceReserved="false" />
 
-        <Preference
+        <com.mavodev.openvpnneo.views.SelectorPreference
                 android:dependency="useTLSAuth"
 
                 android:key="tlsAuthFile"
@@ -63,7 +63,7 @@
                 android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
+        <com.mavodev.openvpnneo.views.SelectorListPreference
                 android:dependency="useTLSAuth"
 
                 android:entries="@array/tls_directions_entries"
@@ -75,7 +75,7 @@
                 app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/encryption">
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:dialogMessage="@string/chipher_dialog_message"
                 android:dialogTitle="@string/cipher_dialog_title"
                 android:key="dataciphers"
@@ -83,7 +83,7 @@
                 android:title="@string/encryption_cipher"
                 android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:dialogMessage="@string/auth_dialog_message"
                 android:dialogTitle="@string/auth_dialog_title"
                 android:key="auth"

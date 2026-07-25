@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Big-pill switch widget used by the profile-editor preference tabs so their
+  ~ toggles match the MaterialSwitch used everywhere else (settings screen and the
+  ~ custom-layout tabs). Wired via android:widgetLayout on
+  ~ @style/Widget.OpenVPNNeo.Preference.Switch. The id must be
+  ~ @android:id/switch_widget (the view SwitchPreference binds to). The switch is
+  ~ not itself clickable: the preference row drives it via Checkable.setChecked,
+  ~ which keeps the toggle in sync for every preference type.
+  -->
+<com.google.android.material.materialswitch.MaterialSwitch
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/switch_widget"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@null"
+    android:clickable="false"
+    android:focusable="false" />

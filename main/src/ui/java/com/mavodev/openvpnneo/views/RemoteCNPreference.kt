@@ -7,6 +7,7 @@ package com.mavodev.openvpnneo.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.DialogPreference
+import androidx.preference.PreferenceViewHolder
 import com.mavodev.openvpnneo.R
 
 class RemoteCNPreference : DialogPreference {
@@ -36,4 +37,9 @@ class RemoteCNPreference : DialogPreference {
     }
 
     override fun getDialogLayoutResource(): Int = R.layout.tlsremote
+
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
+        super.onBindViewHolder(holder)
+        SelectorPreferenceBinder.bind(this, holder)
+    }
 }

@@ -21,14 +21,14 @@
             app:iconSpaceReserved="false" />
 
     <PreferenceCategory android:title="IP">
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:dependency="usePull"
                 android:dialogMessage="@string/ipv4_dialog_title"
                 android:key="ipv4_address"
                 android:title="@string/ipv4_address"
                 android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:dependency="usePull"
                 android:dialogMessage="@string/ipv6_dialog_tile"
                 android:key="ipv6_address"
@@ -50,18 +50,18 @@
                 android:title="@string/override_dns"
                 app:iconSpaceReserved="false" />
 
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:key="searchdomain"
                 android:title="@string/searchdomain"
                 android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 app:useSimpleSummaryProvider="true" />
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:dialogMessage="@string/dns1_summary"
                 android:key="dns1"
                 android:title="@string/dns_server"
                 android:widgetLayout="@layout/ovpn_preference_dialog_widget"
                 />
-        <EditTextPreference
+        <com.mavodev.openvpnneo.views.SelectorEditTextPreference
                 android:dialogMessage="@string/secondary_dns_message"
                 android:key="dns2"
                 android:title="@string/backup_dns"

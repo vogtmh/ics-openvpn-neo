@@ -32,7 +32,7 @@ class FileSelectLayout : LinearLayout, View.OnClickListener {
     val data: String? get() = mData
     private var mFragment: FileSelectCallback? = null
     private var mTaskId = 0
-    private lateinit var mSelectButton: Button
+    private lateinit var mSelectButton: View
     private var fileType: Utils.FileType? = null
     private var mTitle: String? = null
     private var mShowClear = false

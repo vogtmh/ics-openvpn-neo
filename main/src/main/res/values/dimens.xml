@@ -17,4 +17,9 @@
     <dimen name="round_button_diameter">56dp</dimen>
     <dimen name="switchbar_pad">16dp</dimen>
     <dimen name="vpn_setting_padding">16dp</dimen>
+
+    <!-- Shared size for the profile-editor selector controls so the arrow "›" button
+         and the "open file" pill buttons match the MaterialSwitch toggles. -->
+    <dimen name="selector_control_width">52dp</dimen>
+    <dimen name="selector_control_height">32dp</dimen>
 </resources>

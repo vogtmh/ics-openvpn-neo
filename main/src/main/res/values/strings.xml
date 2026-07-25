@@ -47,6 +47,9 @@
     <string name="profilename">Profile Name</string>
     <string name="set_as_default_profile">Set as default profile</string>
     <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="import_profile_title">Import profile</string>
+    <string name="show_import_log">Show import log</string>
+    <string name="hide_import_log">Hide import log</string>
     <string name="tab_favorites">Favs</string>
     <string name="tab_all_profiles">All</string>
     <string name="about_credits">Credits</string>
