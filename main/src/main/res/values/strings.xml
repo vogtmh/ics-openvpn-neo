@@ -46,6 +46,9 @@
     <string name="duplicate_profile_name">Please enter a unique Profile Name</string>
     <string name="profilename">Profile Name</string>
     <string name="set_as_default_profile">Set as default profile</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="tab_favorites">Favs</string>
+    <string name="tab_all_profiles">All</string>
     <string name="about_credits">Credits</string>
     <string name="about_versions">Component versions</string>
     <string name="about_licenses">Open source licenses</string>

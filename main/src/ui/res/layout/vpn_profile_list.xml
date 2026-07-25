@@ -3,6 +3,7 @@
   ~ Distributed under the GNU GPL v2 with additional terms. For full terms see the file doc/LICENSE.txt
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -113,6 +114,38 @@
         android:src="@drawable/ic_menu_hamburger"
         android:background="@drawable/fab_style"
         android:contentDescription="@string/menu_title" />
+
+    <!-- Pill-shaped Favorites / All switcher (shown only when favorites exist).
+         Match the FABs' 56dp height + 16dp bottom margin and centre the buttons
+         vertically so the pill lines up with the two floating buttons. -->
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/favorites_switcher"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"
+        android:elevation="8dp"
+        android:visibility="gone"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        tools:visibility="visible">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_tab_favorites"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_favorites" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_tab_all"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_all_profiles" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <!-- <include layout="@layout/profile_list_fabs" /> -->
 

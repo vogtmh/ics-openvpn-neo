@@ -44,6 +44,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.mavodev.openvpnneo.LaunchVPN
 import com.mavodev.openvpnneo.R
@@ -77,6 +78,11 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     protected var mEditProfile: VpnProfile? = null
     private var mAdapter: ProfileAdapter? = null
     private var mRecyclerView: RecyclerView? = null
+    private var mSwitcher: MaterialButtonToggleGroup? = null
+    /** Currently selected list tab (TAB_FAVORITES or TAB_ALL). */
+    private var activeTab: String = TAB_ALL
+    /** Guards the switcher listener while we sync its checked state programmatically. */
+    private var suppressTabListener: Boolean = false
     private var mEmptyView: View? = null
     private var mLastIntent: Intent? = null
     private var defaultVPN: VpnProfile? = null
@@ -91,8 +97,6 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     private var connectingState: String? = null // Latest OpenVPN state string while connecting
     private var highlightedUuids: Set<String> = emptySet()
     private lateinit var countryInfoRepository: CountryInfoRepository
-    /** True while the list is grouped by country, so per-row flags are hidden (shown on headers). */
-    private var groupedByCountry: Boolean = false
 
     override fun updateState(
         state: String?,
@@ -402,6 +406,18 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
             sheet.show(parentFragmentManager, MainMenuBottomSheet.TAG)
         }
 
+        // Set up the Favorites / All profiles pill switcher
+        mSwitcher = v.findViewById(R.id.favorites_switcher)
+        activeTab = Preferences.getDefaultSharedPreferences(requireContext())
+            .getString(PREF_ACTIVE_TAB, TAB_ALL) ?: TAB_ALL
+        mSwitcher?.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked || suppressTabListener) return@addOnButtonCheckedListener
+            activeTab = if (checkedId == R.id.btn_tab_favorites) TAB_FAVORITES else TAB_ALL
+            Preferences.getDefaultSharedPreferences(requireContext()).edit()
+                .putString(PREF_ACTIVE_TAB, activeTab).apply()
+            populateVpnList()
+        }
+
         newvpntext.setText(
             HtmlCompat.fromHtml(
                 getString(R.string.add_new_vpn_hint),
@@ -441,17 +457,52 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
 
     private fun populateVpnList() {
         val prefs = Preferences.getDefaultSharedPreferences(requireActivity())
-        val mode = prefs.getString(PREF_SORT_MODE, SORT_AZ) ?: SORT_AZ
         this.pM.refreshVPNList(requireContext())
         val allvpn = this.pM.getProfiles().filterNotNull()
 
+        val favoriteSet = favoriteUuids()
+        val favProfiles = allvpn.filter { favoriteSet.contains(it.getUUIDString()) }
+        val hasFavorites = favProfiles.isNotEmpty()
+
+        // The switcher only exists once there is at least one favorite. When the last
+        // favorite is removed, fall back to the "All profiles" tab.
+        if (!hasFavorites) activeTab = TAB_ALL
+        updateSwitcherVisibility(hasFavorites)
+
+        val source = if (activeTab == TAB_FAVORITES) favProfiles else allvpn
+        val mode = prefs.getString(sortModeKey(), defaultSortMode()) ?: defaultSortMode()
+
         val rows: List<ListRow> = when (mode) {
-            SORT_COUNTRY -> buildCountryRows(allvpn)
-            SORT_LRU -> allvpn.sortedWith(VpnProfileLRUComparator()).map { ListRow.ProfileItem(it) }
-            else -> allvpn.sortedWith(VpnProfileNameComparator()).map { ListRow.ProfileItem(it) }
+            SORT_COUNTRY -> buildCountryRows(source)
+            SORT_LRU -> source.sortedWith(VpnProfileLRUComparator()).map { ListRow.ProfileItem(it) }
+            else -> source.sortedWith(VpnProfileNameComparator()).map { ListRow.ProfileItem(it) }
         }
-        groupedByCountry = mode == SORT_COUNTRY
         mAdapter?.submitList(rows) { updateEmptyView(rows.isEmpty()) }
+    }
+
+    private fun favoriteUuids(): Set<String> =
+        Preferences.getDefaultSharedPreferences(requireActivity())
+            .getStringSet(PREF_FAVORITES, emptySet()) ?: emptySet()
+
+    /** Preference key holding the sort mode for the currently active tab. */
+    private fun sortModeKey(): String =
+        if (activeTab == TAB_FAVORITES) PREF_SORT_MODE_FAV else PREF_SORT_MODE
+
+    /** Default sort mode per tab: favorites grouped by country, all profiles A–Z. */
+    private fun defaultSortMode(): String =
+        if (activeTab == TAB_FAVORITES) SORT_COUNTRY else SORT_AZ
+
+    /** Shows/hides the Favorites/All switcher and keeps its checked button in sync. */
+    private fun updateSwitcherVisibility(hasFavorites: Boolean) {
+        val switcher = mSwitcher ?: return
+        switcher.visibility = if (hasFavorites) View.VISIBLE else View.GONE
+        if (!hasFavorites) return
+        val targetId = if (activeTab == TAB_FAVORITES) R.id.btn_tab_favorites else R.id.btn_tab_all
+        if (switcher.checkedButtonId != targetId) {
+            suppressTabListener = true
+            switcher.check(targetId)
+            suppressTabListener = false
+        }
     }
 
     /** Groups profiles by their (flag) country, honouring the collapsed/expanded state. */
@@ -471,7 +522,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
             val groupProfiles = groups.getValue(key).sortedWith(nameComparator)
             val isCollapsed = collapsed.contains(collapseKey(key))
             rows.add(ListRow.GroupHeader(key, countryTitle(key), groupProfiles.size, isCollapsed))
-            if (!isCollapsed) groupProfiles.forEach { rows.add(ListRow.ProfileItem(it)) }
+            if (!isCollapsed) groupProfiles.forEach { rows.add(ListRow.ProfileItem(it, showFlag = false)) }
         }
         return rows
     }
@@ -506,7 +557,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
     /** Shows the sort/grouping dropdown anchored to the header button. */
     fun showSortMenu(anchor: View) {
         val prefs = Preferences.getDefaultSharedPreferences(requireActivity())
-        val current = prefs.getString(PREF_SORT_MODE, SORT_AZ) ?: SORT_AZ
+        val current = prefs.getString(sortModeKey(), defaultSortMode()) ?: defaultSortMode()
         val popup = PopupMenu(requireContext(), anchor)
         popup.menu.add(Menu.NONE, MENU_SORT_AZ, Menu.NONE, getString(R.string.sort_menu_az))
         popup.menu.add(Menu.NONE, MENU_SORT_LRU, Menu.NONE, getString(R.string.sort_menu_lru))
@@ -524,7 +575,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
                 MENU_SORT_COUNTRY -> SORT_COUNTRY
                 else -> SORT_AZ
             }
-            prefs.edit().putString(PREF_SORT_MODE, mode).apply()
+            prefs.edit().putString(sortModeKey(), mode).apply()
             populateVpnList()
             true
         }
@@ -812,7 +863,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             when (val row = getItem(position)) {
                 is ListRow.GroupHeader -> bindHeader(holder as GroupHeaderViewHolder, row)
-                is ListRow.ProfileItem -> bindProfile(holder as ProfileViewHolder, row.profile)
+                is ListRow.ProfileItem -> bindProfile(holder as ProfileViewHolder, row.profile, row.showFlag)
             }
         }
 
@@ -828,7 +879,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
             holder.root.setOnClickListener { toggleCountryCollapsed(row.countryCode) }
         }
 
-        private fun bindProfile(holder: ProfileViewHolder, profile: VpnProfile) {
+        private fun bindProfile(holder: ProfileViewHolder, profile: VpnProfile, showFlag: Boolean) {
             holder.title.text = profile.getName()
             holder.row.setOnClickListener { startOrStopVPN(profile) }
             holder.settings.setOnClickListener { editVPN(profile) }
@@ -836,7 +887,7 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
             // Load country flag for this profile. While grouped by country the flag is
             // shown once on the group header; keep the row's flag slot INVISIBLE (not GONE)
             // so each profile title stays aligned with the country name after the flag.
-            if (groupedByCountry) {
+            if (!showFlag) {
                 holder.flag.visibility = View.INVISIBLE
             } else {
                 holder.flag.visibility = View.VISIBLE
@@ -916,7 +967,12 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
         private val MENU_IMPORT_PROFILE = Menu.FIRST + 1
         private val MENU_IMPORT_AS = Menu.FIRST + 3
         private const val PREF_SORT_MODE = "profileSortMode"
+        private const val PREF_SORT_MODE_FAV = "profileSortModeFav"
         private const val PREF_COLLAPSED_COUNTRIES = "collapsedCountries"
+        private const val PREF_FAVORITES = "favoriteProfiles"
+        private const val PREF_ACTIVE_TAB = "profileActiveTab"
+        private const val TAB_FAVORITES = "favorites"
+        private const val TAB_ALL = "all"
         private const val SORT_AZ = "az"
         private const val SORT_LRU = "lru"
         private const val SORT_COUNTRY = "country"
@@ -944,7 +1000,8 @@ class VPNProfileList : Fragment(), View.OnClickListener, StateListener, AddProfi
                 oldItem is ListRow.ProfileItem && newItem is ListRow.ProfileItem ->
                     oldItem.profile.getUUIDString() == newItem.profile.getUUIDString() &&
                         oldItem.profile.getName() == newItem.profile.getName() &&
-                        oldItem.profile.mVersion == newItem.profile.mVersion
+                        oldItem.profile.mVersion == newItem.profile.mVersion &&
+                        oldItem.showFlag == newItem.showFlag
                 else -> false
             }
         }
@@ -995,5 +1052,5 @@ private sealed class ListRow {
         val collapsed: Boolean,
     ) : ListRow()
 
-    data class ProfileItem(val profile: VpnProfile) : ListRow()
+    data class ProfileItem(val profile: VpnProfile, val showFlag: Boolean = true) : ListRow()
 }

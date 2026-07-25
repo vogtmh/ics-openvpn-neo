@@ -44,6 +44,7 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
     private lateinit var mEnablePeerFingerprint: CompoundButton
     private lateinit var mPeerFingerprints: EditText
     private lateinit var mMakeDefaultProfile: CompoundButton
+    private lateinit var mMakeFavoriteProfile: CompoundButton
 
     private val fileselects = SparseArray<FileSelectLayout>()
     private lateinit var mAuthRetry: Spinner
@@ -75,6 +76,7 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
         mEnablePeerFingerprint = mView.findViewById(R.id.enable_peer_fingerprint)
         mPeerFingerprints = mView.findViewById(R.id.peer_fingerprint)
         mMakeDefaultProfile = mView.findViewById(R.id.make_default_profile)
+        mMakeFavoriteProfile = mView.findViewById(R.id.make_favorite_profile)
 
         mUserName = mView.findViewById(R.id.auth_username)
         mPassword = mView.findViewById(R.id.auth_password)
@@ -99,6 +101,7 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
         mProfileName.doAfterTextChanged { mProfile.mName = it.toString() }
         mKeyPassword.doAfterTextChanged { mProfile.mKeyPassword = it.toString() }
         mMakeDefaultProfile.setOnCheckedChangeListener(this)
+        mMakeFavoriteProfile.setOnCheckedChangeListener(this)
 
         initKeychainViews(mView)
 
@@ -219,6 +222,9 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
         val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(activity)
         val currentDefaultUUID = defaultPrefs.getString("alwaysOnVpn", "")
         mMakeDefaultProfile.isChecked = mProfile.getUUIDString() == currentDefaultUUID
+        mMakeFavoriteProfile.isChecked =
+            defaultPrefs.getStringSet("favoriteProfiles", emptySet())
+                ?.contains(mProfile.getUUIDString()) == true
     }
 
     override fun savePreferences() {
@@ -258,7 +264,17 @@ internal class Settings_Basic : KeyChainSettingsFragment(), OnItemSelectedListen
             mPeerFingerprints.visibility = if (isChecked) View.VISIBLE else View.GONE
         } else if (buttonView === mMakeDefaultProfile) {
             setDefaultProfile(isChecked)
+        } else if (buttonView === mMakeFavoriteProfile) {
+            setFavoriteProfile(isChecked)
         }
+    }
+
+    private fun setFavoriteProfile(makeFavorite: Boolean) {
+        val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(activity)
+        val favorites = HashSet(defaultPrefs.getStringSet("favoriteProfiles", emptySet()) ?: emptySet())
+        if (makeFavorite) favorites.add(mProfile.getUUIDString())
+        else favorites.remove(mProfile.getUUIDString())
+        defaultPrefs.edit().putStringSet("favoriteProfiles", favorites).apply()
     }
 
     private fun setDefaultProfile(makeDefault: Boolean) {

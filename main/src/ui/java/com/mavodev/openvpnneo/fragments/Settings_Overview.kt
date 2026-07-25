@@ -32,6 +32,7 @@ class Settings_Overview : Settings_Fragment() {
     private lateinit var mKeyPassword: EditText
     private lateinit var mKeyPassLayout: View
     private lateinit var mMakeDefaultProfile: CompoundButton
+    private lateinit var mMakeFavoriteProfile: CompoundButton
     private lateinit var mConnectRetryMax: Spinner
     private lateinit var mConnectRetry: EditText
     private lateinit var mConnectRetryMaxTime: EditText
@@ -46,6 +47,7 @@ class Settings_Overview : Settings_Fragment() {
         mKeyPassword = v.findViewById(R.id.key_password)
         mKeyPassLayout = v.findViewById(R.id.basic_keypass_layout)
         mMakeDefaultProfile = v.findViewById(R.id.make_default_profile)
+        mMakeFavoriteProfile = v.findViewById(R.id.make_favorite_profile)
         mConnectRetryMax = v.findViewById(R.id.connectretrymax)
         mConnectRetry = v.findViewById(R.id.connectretry)
         mConnectRetryMaxTime = v.findViewById(R.id.connectretrymaxtime)
@@ -87,6 +89,9 @@ class Settings_Overview : Settings_Fragment() {
         val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(activity)
         val currentDefaultUUID = defaultPrefs.getString("alwaysOnVpn", "")
         mMakeDefaultProfile.isChecked = mProfile.getUUIDString() == currentDefaultUUID
+        mMakeFavoriteProfile.isChecked =
+            defaultPrefs.getStringSet("favoriteProfiles", emptySet())
+                ?.contains(mProfile.getUUIDString()) == true
     }
 
     override fun savePreferences() {
@@ -111,6 +116,15 @@ class Settings_Overview : Settings_Fragment() {
         mProfileName.doAfterTextChanged { mProfile.mName = it.toString() }
         mKeyPassword.doAfterTextChanged { mProfile.mKeyPassword = it.toString() }
         mMakeDefaultProfile.setOnCheckedChangeListener { _, isChecked -> setDefaultProfile(isChecked) }
+        mMakeFavoriteProfile.setOnCheckedChangeListener { _, isChecked -> setFavoriteProfile(isChecked) }
+    }
+
+    private fun setFavoriteProfile(makeFavorite: Boolean) {
+        val defaultPrefs = PreferenceManager.getDefaultSharedPreferences(activity)
+        val favorites = HashSet(defaultPrefs.getStringSet("favoriteProfiles", emptySet()) ?: emptySet())
+        if (makeFavorite) favorites.add(mProfile.getUUIDString())
+        else favorites.remove(mProfile.getUUIDString())
+        defaultPrefs.edit().putStringSet("favoriteProfiles", favorites).apply()
     }
 
     private fun setDefaultProfile(makeDefault: Boolean) {

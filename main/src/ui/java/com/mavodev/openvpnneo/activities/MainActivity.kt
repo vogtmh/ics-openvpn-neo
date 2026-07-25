@@ -927,21 +927,40 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
     // Animation methods for smooth mini chart transitions
     /**
      * Ensures the mini chart matches the current connection state. The chart is
-     * normally created on the LEVEL_CONNECTED transition; if that transition was
-     * missed because this screen was not in the foreground (e.g. the user connected
-     * and immediately opened the log screen), this re-creates and shows it from the
-     * traffic history that is already being collected. Safe to call repeatedly.
+     * normally created/removed on the LEVEL_CONNECTED / LEVEL_NOTCONNECTED transitions;
+     * if such a transition was missed or a hide animation was interrupted while this
+     * screen was not in the foreground (e.g. the user connected, opened the log screen
+     * and disconnected from there), the chart could be left in the wrong state. This
+     * queries the authoritative current level and forces the chart open or closed to
+     * match. Safe to call repeatedly.
      */
     private fun reconcileMiniChart() {
-        if (lastKnownLevel != ConnectionStatus.LEVEL_CONNECTED) return
+        val level = VpnStatus.getLastLevel()
+        lastKnownLevel = level
 
-        if (!chartInitialized) {
-            initializeMiniChart()
-            chartInitialized = true
-            registerByteCountListener()
+        when (level) {
+            ConnectionStatus.LEVEL_CONNECTED -> {
+                if (!chartInitialized) {
+                    initializeMiniChart()
+                    chartInitialized = true
+                    registerByteCountListener()
+                }
+                showMiniChartImmediate()
+                updateMiniChart()
+            }
+            ConnectionStatus.LEVEL_NOTCONNECTED,
+            ConnectionStatus.LEVEL_AUTH_FAILED,
+            ConnectionStatus.LEVEL_NONETWORK -> {
+                // The connection is closed/failed — make sure the graph is gone even if
+                // its hide animation never completed while we were in the background.
+                hideMiniChartImmediate()
+                unregisterByteCountListener()
+                cleanupMiniChart()
+            }
+            else -> {
+                // Transient states (connecting, paused, waiting): leave the chart as-is.
+            }
         }
-        showMiniChartImmediate()
-        updateMiniChart()
     }
 
     /** Shows the mini chart container at full height without animating (used when reconciling). */
@@ -949,6 +968,15 @@ class MainActivity : BaseActivity(), VpnStatus.StateListener, VpnStatus.ByteCoun
         miniChartContainer?.let { container ->
             container.visibility = View.VISIBLE
             container.layoutParams?.height = 160.dpToPx()
+            container.requestLayout()
+        }
+    }
+
+    /** Hides the mini chart container immediately without animating (used when reconciling). */
+    private fun hideMiniChartImmediate() {
+        miniChartContainer?.let { container ->
+            container.layoutParams?.height = 0
+            container.visibility = View.GONE
             container.requestLayout()
         }
     }

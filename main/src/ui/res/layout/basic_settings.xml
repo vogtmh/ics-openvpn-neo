@@ -57,6 +57,28 @@
                 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/mark_as_favorite"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/make_favorite_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
         <TextView
                 style="@style/item"
                 android:text="@string/compat_mode_label"
