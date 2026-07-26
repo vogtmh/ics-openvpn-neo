@@ -28,8 +28,8 @@ android {
         applicationId = "com.mavodev.openvpnneo"
         minSdk = 26
         targetSdk = 36
-        versionCode = 16
-        versionName = "1.9.764"
+        versionCode = 17
+        versionName = "2.0.764"
         externalNativeBuild {
             cmake {
                 //arguments+= "-DCMAKE_VERBOSE_MAKEFILE=1"
@@ -136,7 +136,13 @@ android {
 
     splits {
         abi {
-            isEnable = true
+            // ABI splits produce multiple APKs, which conflicts with building an
+            // Android App Bundle (the bundle handles per-ABI splitting itself).
+            // Only enable ABI splits for APK builds, not when a bundle task runs.
+            val isBuildingBundle = gradle.startParameter.taskNames.any {
+                it.contains("Bundle", ignoreCase = true)
+            }
+            isEnable = !isBuildingBundle
             reset()
             include("x86", "x86_64", "armeabi-v7a", "arm64-v8a")
             isUniversalApk = true
